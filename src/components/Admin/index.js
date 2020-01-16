@@ -1,13 +1,24 @@
-import React from 'react';
-import * as ROLES from '../../constants/roles';
-const AdminPage = () => (
-  <div>
-    <h1>Admin</h1>
-    <p>
-      Restricted area! Only users with the admin role are authorized.
-    </p>
-  </div>
-);
-const condition = authUser =>
-  authUser && !!authUser.roles[ROLES.ADMIN];
+import React, { Component } from 'react';
+import { withFirebase } from '../Firebase';
+import { AuthUserContext, withAuthorization } from '../Session';
+
+class AdminPage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: false,
+      users: [],
+    };
+  }
+
+  render() {
+    const { users, loading } = this.state;
+    return (
+      <div>
+        <h1>Admin</h1>
+      </div>
+    );
+  }
+}
+const condition = authUser => !!authUser;
 export default withAuthorization(condition)(AdminPage);
