@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import AppBar from '@material-ui/core/AppBar';
+
 
 import SignOutButton from '../SignOut';
 import * as ROUTES from '../../constants/routes';
