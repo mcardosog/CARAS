@@ -85,4 +85,4 @@ npm install semantic-ui-css
 ```
 
 To be able to see the css of Semantic UI, you must import the Semantic UI theme into the entry file of the application. In
-this case, that would be *index.js*. To import, simply add `import 'semantic-ui-css/semantic.min.css'` inside *index.js*
+this case, that would be **index.js**. To import, simply add `import 'semantic-ui-css/semantic.min.css'` inside **index.js**
