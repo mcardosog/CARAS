@@ -1,6 +1,8 @@
 import app from 'firebase/app'
 import 'firebase/auth';
 import 'firebase/database';
+import 'firebase/storage';
+import image from "react-firebase-file-uploader/lib/utils/image";
 
 const config = {
     apiKey: "AIzaSyCz5H3RlwJowAPSAXi9Lvcc2oyPmLBeuIg",
@@ -25,12 +27,17 @@ const config = {
 
     doCreateUserWithEmailAndPassword = (email, password) =>
         this.auth.createUserWithEmailAndPassword(email, password);
+
     doSignInWithEmailAndPassword = (email, password) =>
         this.auth.signInWithEmailAndPassword(email, password);
+
     doSignOut = () => this.auth.signOut();
+
     doPasswordReset = email => this.auth.sendPasswordResetEmail(email);
+
     doPasswordUpdate = password =>
         this.auth.currentUser.updatePassword(password);
+
     doDeleteUser = () => {
         var user = this.auth.currentUser;
         console.log(user);
@@ -51,6 +58,63 @@ const config = {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    test() {
+        console.log("YESSSSSS!!!!!!");
+    }
+
+    uploadImage(organization, userID, imageBlob) {
+
+
+
+        var storageRef = app.storage().ref();
+
+        // File or Blob named mountains.jpg
+        var file = imageBlob;
+
+        var metadata = {
+            contentType: 'image/jpeg'
+        };
+
+        // Upload file and metadata to the object 'images/mountains.jpg'
+        var uploadTask = storageRef.child('images/'+organization+'/'+userID+'/'+file.name).put(file, metadata);
+
+        // Listen for state changes, errors, and completion of the upload.
+        uploadTask.on(app.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
+            function(snapshot) {
+                // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log('Upload is ' + progress + '% done');
+                switch (snapshot.state) {
+                    case app.storage.TaskState.PAUSED: // or 'paused'
+                        console.log('Upload is paused');
+                        break;
+                    case app.storage.TaskState.RUNNING: // or 'running'
+                        console.log('Upload is running');
+                        break;
+                }
+            }, function(error) {
+
+                // A full list of error codes is available at
+                // https://firebase.google.com/docs/storage/web/handle-errors
+                switch (error.code) {
+                    case 'storage/unauthorized':
+                        // User doesn't have permission to access the object
+                        break;
+                    case 'storage/canceled':
+                        // User canceled the upload
+                        break;
+                    case 'storage/unknown':
+                        // Unknown error occurred, inspect error.serverResponse
+                        break;
+                }
+            }, function() {
+                // Upload completed successfully, now we can get the download URL
+                uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                    console.log('File available at', downloadURL);
+                });
+            });
     }
 
     insertRequest = (description, file, name, userID) => {

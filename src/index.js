@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-//import '@tensorflow/tfjs-node';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 
