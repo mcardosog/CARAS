@@ -66,3 +66,23 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `npm run build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+
+## UI-UI Branch
+This branch contains all the main UI components. They will be located in `/src/UIComponents`.
+
+### Dependencies
+UI components are using the Semantic UI React package. This package is already added to the dependencies in package.json,
+, therefore to update, you simply need to run `npm install `. If that doesn't work, then you can install the 
+dependency yoursel by running:
+```
+npm install semantic-ui-react
+```
+
+Additionally, you will also ned to install the Semantic UI basic theme. This theme can be customized later down the line.
+```
+npm install semantic-ui-css
+```
+
+To be able to see the css of Semantic UI, you must import the Semantic UI theme into the entry file of the application. In
+this case, that would be *index.js*. To import, simply add `import 'semantic-ui-css/semantic.min.css'` inside *index.js*
