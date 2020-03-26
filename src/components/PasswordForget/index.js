@@ -14,10 +14,13 @@ import {
 
 const PasswordForgetPage = () => (
   <Grid 
-    textAlign = 'center' 
     verticalAlign = 'middle'
+    textAlign = 'center'
   >
-    <Grid.Column style={{ maxWidth: 450 }}>
+    <Grid.Column  
+    verticalAlign = 'middle'
+    style={{ maxWidth: 450 }}
+    >
       <PasswordForgetForm />
     </Grid.Column>
   </Grid> 
@@ -55,24 +58,25 @@ class PasswordForgetFormBase extends Component {
     		<Header as ='h2' color ='teal' textAlign = 'center'>Password Reset</Header>
     		<Form size = 'small' onSubmit={this.onSubmit} >
     		    <Segment stacked>
-    		        <Form.Input
-						fuid
-						name = "email"
-						icon = 'user'
-						value = {email}
-    		            type = 'text'
-    		            onChange = {this.onChange}
-    		            iconPosition = 'left'
-    		            placeholder = 'email@host.com'
-    		        />
-    		        <Button 
-    		            color = 'teal'
-						fluid
-						disabled = {isInvalid}
-    		            type = 'submit'
-    		            size = 'large'
-    		        >Reset My Password</Button>
+    		      <Form.Input
+						    fuid
+                name = 'email'
+                label = 'Email'
+						    icon = 'user'
+						    value = {email}
+    		        type = 'text'
+    		        onChange = {this.onChange}
+    		        iconPosition = 'left'
+    		        placeholder = 'email@host.com'
+    		      />
     		    </Segment>
+            <Button 
+    		      color = 'teal'
+						  fluid
+						  disabled = {isInvalid}
+    		      type = 'submit'
+    		      size = 'large'
+    		    >Reset My Password</Button>
     		    {error && <p>{error.message}</p>}
     		</Form>
 		</>
