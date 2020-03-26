@@ -9,13 +9,13 @@ import * as ROUTES from '../../constants/routes';
 import { AuthUserContext } from '../Session';
 
 const Navigation = () => (
-  <div>
+  <>
     <AuthUserContext.Consumer>
       {authUser =>
         authUser ? <NavigationAuth /> : <NavigationNonAuth />
       }
     </AuthUserContext.Consumer>
-  </div>
+  </>
 );
 
 const NavigationAuth = () => (
@@ -38,14 +38,17 @@ const NavigationAuth = () => (
   </ul>
 );
 const NavigationNonAuth = () => (
-  <ul>
-    <li>
-      <Link to={ROUTES.LANDING}>Landing</Link>
-    </li>
-    <li>
-      <Link to={ROUTES.SIGN_IN}>Sign In</Link>
-    </li>
-  </ul>
+    <Menu>
+        <Menu.Menu position="right">
+            <Dropdown item icon="bars" floating>
+                <Dropdown.Menu>
+                    <Dropdown.Item as={Link} to={ROUTES.LANDING} text="Home" />
+                    <Dropdown.Item as={Link} to={ROUTES.SIGN_IN} text="Sign-In" />
+                    <Dropdown.Item text="Discussion" />
+                </Dropdown.Menu>
+            </Dropdown>
+        </Menu.Menu>
+    </Menu>
 );
 
 export default Navigation;
