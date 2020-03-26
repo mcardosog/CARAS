@@ -81,41 +81,8 @@ const INITIAL_STATE = {
       username === '';
 
     return (
-	// 	<form onSubmit={this.onSubmit}>
-    //     <input
-    //     name="username"
-    //     value={username}
-    //     onChange={this.onChange}
-    //     type="text"
-    //     placeholder="Full Name"
-    //   />
-    //   <input
-    //     name="email"
-    //     value={email}
-    //     onChange={this.onChange}
-    //     type="text"
-    //     placeholder="Email Address"
-    //   />
-    //   <input
-    //     name="passwordOne"
-    //     value={passwordOne}
-    //     onChange={this.onChange}
-    //     type="password"
-    //     placeholder="Password"
-    //   />
-    //   <input
-    //     name="passwordTwo"
-    //     value={passwordTwo}
-    //     onChange={this.onChange}
-    //     type="password"
-    //     placeholder="Confirm Password"
-    //   />
-    //   <button disabled={isInvalid} type="submit">
-    //   Sign Up
-    //   </button>
-    //   {error && <p>{error.message}</p>}
-	// </form>
-		//  <Header as ='h2' color ='teal' textAlign = 'center'>SignUp</Header>
+      <>
+		<Header as ='h2' color ='teal' textAlign = 'center'>Sign Up</Header>
 		<Form size = 'small' onSubmit={this.onSubmit} >
 		    <Segment stacked>
 				<Form.Input
@@ -178,6 +145,7 @@ const INITIAL_STATE = {
 				/>)
 			}
 		</Form>
+    </>
     );
   }
 }

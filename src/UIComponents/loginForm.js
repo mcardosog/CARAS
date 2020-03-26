@@ -10,7 +10,7 @@ import {
 export default function LoginForm({onChange, onSubmit, email, password, error, isInvalid}) {
     return (
         <>
-        <Header as ='h2' color ='teal' textAlign = 'center'>Log-in</Header>
+        <Header as ='h2' color ='teal' textAlign = 'center'>Sign in</Header>
         <Form size = 'small' onSubmit={onSubmit} >
             <Segment stacked>
                 <Form.Input

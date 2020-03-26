@@ -42,10 +42,10 @@ const NavigationAuth = () => (
 const NavigationNonAuth = () => (
     <Menu>
         <Menu.Menu position='left'>
-            <Menu.Item as={Link} to={ROUTES.SIGN_IN} text='Sign-In' />
+            <Menu.Item as={Link} to={ROUTES.LANDING} icon='home'/>
         </Menu.Menu>
-        <Menu.Menu position='left'>
-            <Menu.Item as={Link} to={ROUTES.SIGN_IN} icon='user'/>
+        <Menu.Menu position='right'>
+            <Menu.Item as={Link} to={ROUTES.SIGN_IN}>Sign-In</Menu.Item>
         </Menu.Menu>
     </Menu>
 );
