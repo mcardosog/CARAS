@@ -33,14 +33,14 @@ export default function LoginForm({onChange, onSubmit, email, password, errors, 
                     placeholder  = 'password'
                     type = 'password'
                 />
-                <Button 
-                    color = 'teal'
-                    fluid
-                    disabled = {isInvalid}
-                    type = 'submit'
-                    size = 'large'
-                >Login</Button>
             </Segment>
+            <Button 
+                color = 'teal'
+                fluid
+                disabled = {isInvalid}
+                type = 'submit'
+                size = 'large'
+            >Login</Button>
             {/* {errors && <Message
                             error
                         >{errors.message}</Message>} */}
