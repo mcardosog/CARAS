@@ -41,14 +41,11 @@ const NavigationAuth = () => (
 );
 const NavigationNonAuth = () => (
     <Menu>
-        <Menu.Menu position="right">
-            <Dropdown item icon="bars" floating>
-                <Dropdown.Menu>
-                    <Dropdown.Item as={Link} to={ROUTES.LANDING} text="Home" />
-                    <Dropdown.Item as={Link} to={ROUTES.SIGN_IN} text="Sign-In" />
-                    <Dropdown.Item text="Discussion" />
-                </Dropdown.Menu>
-            </Dropdown>
+        <Menu.Menu position='left'>
+            <Menu.Item as={Link} to={ROUTES.SIGN_IN} text='Sign-In' />
+        </Menu.Menu>
+        <Menu.Menu position='left'>
+            <Menu.Item as={Link} to={ROUTES.SIGN_IN} icon='user'/>
         </Menu.Menu>
     </Menu>
 );
