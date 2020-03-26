@@ -5,7 +5,6 @@ import * as ROUTES from '../../constants/routes';
 
 
 import { 
-	Message,
 	Grid,
 	Header,
 	Form,

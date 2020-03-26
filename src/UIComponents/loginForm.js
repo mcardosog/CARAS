@@ -2,12 +2,12 @@ import React from 'react';
 import { 
     Button, 
     Form, 
-    Grid, 
     Header, 
-    Segment 
+    Segment, 
+    Message
 } from 'semantic-ui-react';
 
-export default function LoginForm({onChange, onSubmit, email, password, error, isInvalid}) {
+export default function LoginForm({onChange, onSubmit, email, password, errors, isInvalid}) {
     return (
         <>
         <Header as ='h2' color ='teal' textAlign = 'center'>Sign in</Header>
@@ -41,7 +41,10 @@ export default function LoginForm({onChange, onSubmit, email, password, error, i
                     size = 'large'
                 >Login</Button>
             </Segment>
-            {error && <p>{error.message}</p>}
+            {/* {errors && <Message
+                            error
+                        >{errors.message}</Message>} */}
+            {errors && <p>{errors.message}</p>}
         </Form>
         </>
     );

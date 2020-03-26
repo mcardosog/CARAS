@@ -129,21 +129,15 @@ const INITIAL_STATE = {
 		            placeholder  = 'Confirm Password'
 		            type = 'password'
 		        />
-		        <Button 
-		            color = 'teal'
-					fluid
-					disabled = {isInvalid}
-		            type = 'submit'
-		            size = 'large'
-		        >Sign Up</Button>
 		    </Segment>
-		    {error && 
-				(<Message
-					error
-					header = 'Error'
-					content = {error.message}
-				/>)
-			}
+			<Button 
+		        color = 'teal'
+				fluid
+				disabled = {isInvalid}
+		        type = 'submit'
+		        size = 'large'
+		    >Sign Up</Button>
+            {error && <p>{error.message}</p>}
 		</Form>
     </>
     );

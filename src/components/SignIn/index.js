@@ -66,7 +66,7 @@ class SignInFormBase extends Component {
         onSubmit = {this.onSubmit}
         email = {email}
         password = {password}
-        error = {error}
+        errors = {error}
         isInvalid = {isInvalid}
       />
       </>

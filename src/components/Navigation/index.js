@@ -14,33 +14,62 @@ const Navigation = () => (
   <>
     <AuthUserContext.Consumer>
       {authUser =>
-        authUser ? <NavigationAuth /> : <NavigationNonAuth />
+        authUser ? <NavigationAuth user={authUser} /> : <NavigationNonAuth />
       }
     </AuthUserContext.Consumer>
   </>
 );
 
-const NavigationAuth = () => (
-  <ul>
-    <li>
-      <Link to={ROUTES.LANDING}>Landing</Link>
-    </li>
-    <li>
-      <Link to={ROUTES.HOME}>Home</Link>
-    </li>
-    <li>
-      <Link to={ROUTES.ACCOUNT}>Account</Link>
-    </li>
-    <li>
-      <Link to={ROUTES.ADMIN}>Admin</Link>
-    </li>
-    <li>
-      <SignOutButton />
-    </li>
-  </ul>
+const NavigationAuth = ({user}) => (
+  <Menu
+  inverted
+  borderless
+  fluid
+  >
+    <Menu.Menu position='left'>
+        <Menu.Item as={Link} to={ROUTES.HOME} icon='home'/>
+    </Menu.Menu>
+    <Menu.Menu position='right'>
+        <Dropdown
+          text={user.email}
+          item
+          floating
+          pointing
+        >
+          <Dropdown.Menu>
+            <Dropdown.Item as={Link} to={ROUTES.ACCOUNT}>Profile</Dropdown.Item>
+            <Dropdown.Item as={Link} to={ROUTES.ADMIN}>Admin Panel</Dropdown.Item>
+            <Dropdown.Item>
+              <SignOutButton/>
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+    </Menu.Menu>
+</Menu>
+  // <ul>
+  //   <li>
+  //     <Link to={ROUTES.LANDING}>Landing</Link>
+  //   </li>
+  //   <li>
+  //     <Link to={ROUTES.HOME}>Home</Link>
+  //   </li>
+  //   <li>
+  //     <Link to={ROUTES.ACCOUNT}>Account</Link>
+  //   </li>
+  //   <li>
+  //     <Link to={ROUTES.ADMIN}>Admin</Link>
+  //   </li>
+  //   <li>
+  //     <SignOutButton />
+  //   </li>
+  // </ul>
 );
 const NavigationNonAuth = () => (
-    <Menu>
+    <Menu
+      inverted
+      borderless
+      fluid
+    >
         <Menu.Menu position='left'>
             <Menu.Item as={Link} to={ROUTES.LANDING} icon='home'/>
         </Menu.Menu>
