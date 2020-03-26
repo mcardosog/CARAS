@@ -51,6 +51,19 @@ const config = {
     };
 
     //Data
+      getElementsInPath = (path) => {
+          var data = [];
+          var ref = this.db.ref(path);
+          ref.on('value',function (snapshot) {
+              snapshot.forEach(function (childSnapshot){
+                  data.push({
+                      uid:childSnapshot.key,
+                      value:childSnapshot.val()
+                  });
+              });
+          });
+          return data;
+      }
 
     deleteElement = (path, elementID) => {
         try {
@@ -64,21 +77,34 @@ const config = {
         console.log("YESSSSSS!!!!!!");
     }
 
+    getImages(organization, userID) {
+
+        var data = [];
+        var listRef = app.storage().ref().child('images/'+organization+'/'+userID+'/');
+
+        // Find all the prefixes and items.
+        listRef.listAll().then(function(res) {
+            res.items.forEach(function(itemRef) {
+                // All the items under listRef.
+                data.push(itemRef.getDownloadURL());
+
+            });
+        }).catch(function(error) {
+            console.log("Unable to load image set");
+        });
+        return data;
+    }
+
     uploadImage(organization, userID, imageBlob) {
-
-
-
         var storageRef = app.storage().ref();
-
         // File or Blob named mountains.jpg
         var file = imageBlob;
-
         var metadata = {
             contentType: 'image/jpeg'
         };
-
         // Upload file and metadata to the object 'images/mountains.jpg'
-        var uploadTask = storageRef.child('images/'+organization+'/'+userID+'/'+file.name).put(file, metadata);
+        let fileName = Date.now()+'.jpeg';
+        var uploadTask = storageRef.child('images/'+organization+'/'+userID+'/'+fileName).put(file, metadata);
 
         // Listen for state changes, errors, and completion of the upload.
         uploadTask.on(app.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
@@ -95,28 +121,38 @@ const config = {
                         break;
                 }
             }, function(error) {
-
-                // A full list of error codes is available at
                 // https://firebase.google.com/docs/storage/web/handle-errors
                 switch (error.code) {
                     case 'storage/unauthorized':
-                        // User doesn't have permission to access the object
+                        console.log("Error uploading: unauthorized ");
                         break;
                     case 'storage/canceled':
-                        // User canceled the upload
+                        console.log("Error uploading: canceled ");
                         break;
                     case 'storage/unknown':
-                        // Unknown error occurred, inspect error.serverResponse
+                        console.log("Error uploading: unknown");
                         break;
                 }
             }, function() {
-                // Upload completed successfully, now we can get the download URL
                 uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
                     console.log('File available at', downloadURL);
                 });
             });
     }
 
+    insertDescriptor = (organization, userID, descriptor) => {
+          this.db.ref('organizations/'+organization+'/'+userID+'/descriptors/').push({
+              date: Date.now(),
+              value: descriptor,
+          });
+
+      };
+
+     getDescriptors = (organization, userID) => {
+         const path = 'organizations/'+organization+'/'+userID+'/descriptors/';
+         return this.getElementsInPath(path);
+
+     };
     insertRequest = (description, file, name, userID) => {
         this.db.ref('requests').push({
             description: description,
@@ -167,20 +203,6 @@ const config = {
                         value:childSnapshot.val()
                     });
                 }
-            });
-        });
-        return data;
-    }
-
-    getElementsInPath = (path) => {
-        var data = [];
-        var ref = this.db.ref(path);
-        ref.on('value',function (snapshot) {
-            snapshot.forEach(function (childSnapshot){
-                data.push({
-                    uid:childSnapshot.key,
-                    value:childSnapshot.val()
-                });
             });
         });
         return data;

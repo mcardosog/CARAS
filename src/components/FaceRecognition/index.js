@@ -7,37 +7,79 @@ import 'react-html5-camera-photo/build/css/index.css';
 //
 class Face_Recognition extends Component {
 
-    constructor(props) {
+    constructor(props, organization) {
         super(props);
+        this.state = {
+            organization : organization
+        }
     }
 
     render() {
-
+        const organization = 'org1';
         const fb = this.props.firebase;
         const db = { 1:'Marco', 2:'Captain America', 3:'Captain Marvel', 4:'Hawkeye',                  //<----- DEBUG ONLY
                     5:'Jim Rhodes', 6:'Thor', 7:'Tony Stark', 8:'Adriana'};
+
         /**
          * @param userID
          * @returns {Promise<string[]>} set with user stored images
          */
         async function loadImageSet(userID) {
+
+            /*
             if (userID <= 0 || userID >= db.length) {
                 return null;
             }
+             */
+
+            let descriptionSet = await fb.getDescriptors(organization,'user1');
+            var descriptions = [];
+
+            for(var i=0; i<descriptionSet.length;i++) {
+                let d = descriptionSet[i];
+                descriptions.push(Float32Array.from((d.value.value)));
+            }
+            if(descriptions.length == 0) { return null; }
+
+            return new faceapi.LabeledFaceDescriptors('user1', descriptions);
+            /*
             const path = '/labeled_images';
             const labels = [db[userID]];
+            console.log(labels);
             return Promise.all(
                 labels.map(async label => {
                     const descriptions = []
                     var end = 2;
-                    for (let i = 1; i <= end; i++) {
+                    for (var i = 0; i <= end; i++) {
                         const img = await faceapi.fetchImage(`${path}/${label}/${i}.jpg`)
                         const detections = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
                         descriptions.push(detections.descriptor)
+
+                    }
+                    console.log(descriptions);
+                    return new faceapi.LabeledFaceDescriptors(label, descriptions)
+                })
+            )
+             */
+
+            /*
+            const path = '/labeled_images';
+            const labels = [db[userID]];
+            console.log(labels);
+            return Promise.all(
+                labels.map(async label => {
+                    const descriptions = []
+                    var end = 2;
+                    for (var i = 0; i <= end; i++) {
+                        const img = await faceapi.fetchImage(`${path}/${label}/${i}.jpg`)
+                        const detections = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
+                        descriptions.push(detections.descriptor)
+                        console.log(descriptions);
                     }
                     return new faceapi.LabeledFaceDescriptors(label, descriptions)
                 })
             )
+            */
         }
 
         /**
@@ -47,17 +89,18 @@ class Face_Recognition extends Component {
          * Function store the image a compare it with the corresponding userID to verify if it match
          */
         async function handleTakePhoto (dataUri) {
-
             const userID = document.getElementById("userId").value;
             if(userID == '') {
                 alert("Please enter an user id");
                 return;
             }
+
             const imageSet = await loadImageSet(userID);
             if(imageSet == null) {
                 alert("Invalid user id");
                 return;
             }
+            console.log('HERE');
             let blob = await fetch(dataUri).then(r => r.blob());    //Build Image
             const image = await faceapi.bufferToImage(blob);
             const detection = await faceapi.detectAllFaces(image).withFaceLandmarks().withFaceDescriptors();
@@ -65,6 +108,12 @@ class Face_Recognition extends Component {
                 alert("No face detected. Please try again.");
                 return;
             }
+
+            //console.log('DETECTION\n')
+            //console.log(detection[0].descriptor);
+
+            //fb.insertDescriptor('org1','user1',detection[0].descriptor);
+
 
             const faceMatcher = new faceapi.FaceMatcher(imageSet, 0.6);
             const displaySize = { width: image.width, height: image.height };
@@ -78,7 +127,8 @@ class Face_Recognition extends Component {
             const detectionsWithAgeAndGender = await faceapi.detectAllFaces(image).withAgeAndGender()
             console.log(detectionsWithAgeAndGender)
             //Yes / No
-            fb.uploadImage('test','1',blob);
+
+            //fb.uploadImage('test','1',blob);
 
         }
 
@@ -96,13 +146,19 @@ class Face_Recognition extends Component {
         ])
 
         return (
-            <div>
+            <div id={'MainControl'}>
                 <Camera
                     onTakePhoto = { (dataUri) => { handleTakePhoto(dataUri); } }
                 />
                 <div style={{marginLeft:"50%"}}>
-                    <p>User ID</p>
-                    <input accept={'text'} id={'userId'} />
+                    <div>
+                        <p>User ID</p>
+                        <input accept={'text'} id={'userId'} />
+                    </div>
+                    <div>
+                        <h2> INFORMATION </h2>
+
+                    </div>
                 </div>
             </div>
         );
