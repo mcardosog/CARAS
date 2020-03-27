@@ -1,12 +1,5 @@
-import React from 'react';
-import {
-    Button,
-    Form,
-    Header,
-    Segment,
-    Messagem,
-    Card
-} from 'semantic-ui-react';
+import React from "react";
+import { Button, Icon, Card, Grid } from "semantic-ui-react";
 
 export default function EventCard({ event }) {
     const attendance = (
@@ -15,6 +8,11 @@ export default function EventCard({ event }) {
             {event.attendance}/{event.size} Attendees
         </p>
     );
+
+    const deleteEvent = ({ event }) => {
+        console.log("deleted: " + event.name);
+    };
+
     return (
         <Grid.Column>
             <Card raised>
@@ -28,6 +26,7 @@ export default function EventCard({ event }) {
                     />
                     <Button
                         stackable
+                        onClick={deleteEvent({ event })}
                         color="red"
                         icon="trash"
                         size="tiny"
@@ -35,10 +34,10 @@ export default function EventCard({ event }) {
                     />
                     <Card.Header>{event.name}</Card.Header>
                     <Card.Meta>Created on </Card.Meta>
-                    <Card.Description>{event.Description}</Card.Description>
+                    <Card.Description>{event.description}</Card.Description>
                 </Card.Content>
                 <Card.Content extra>{attendance}</Card.Content>
             </Card>
-        </Grid.Column >
+        </Grid.Column>
     );
 }
