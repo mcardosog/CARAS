@@ -24,3 +24,7 @@ html, body {
   /* background-color: var(--primary) !important; */
   height: 64px;
 }
+
+.ui.card {
+    width: 50px;
+}
