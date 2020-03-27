@@ -5,7 +5,7 @@ export default function EventCard({ event }) {
     const attendance = (
         <p>
             <Icon name="user" />
-            {event.attendance}/{event.size} Attendees
+            {event.attendance}/{event.totalCount} Attendees
         </p>
     );
 
@@ -14,8 +14,9 @@ export default function EventCard({ event }) {
     };
 
     return (
-        <Grid.Column>
-            <Card raised>
+        <>
+            {/* <Grid.Column> */}
+            <Card fluid raised>
                 <Card.Content>
                     <Button
                         stackable
@@ -38,6 +39,7 @@ export default function EventCard({ event }) {
                 </Card.Content>
                 <Card.Content extra>{attendance}</Card.Content>
             </Card>
-        </Grid.Column>
+            {/* </Grid.Column> */}
+        </>
     );
 }

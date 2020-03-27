@@ -1,10 +1,16 @@
 ﻿import React from "react";
-import { Grid, Container, Button, Divider, Header } from "semantic-ui-react";
+import {
+    Grid,
+    Container,
+    Button,
+    Divider,
+    Header,
+    Card
+} from "semantic-ui-react";
 
-import EventCard from "./EventCard";
+import EventCard from "./eventCard";
 
 export default function EventPanel({ events }) {
-    console.log(events);
     return (
         <>
             <Grid>
@@ -23,13 +29,16 @@ export default function EventPanel({ events }) {
             <Divider horizontal>
                 <Header as="h2">Active Events</Header>
             </Divider>
+
             <Container>
-                <Grid stackable columns={3}>
+                <Grid stackable>
                     <Grid.Row verticalAlign="middle">
-                        {events &&
-                            events.map((event, index) => (
-                                <EventCard event={event} key={index} />
-                            ))}
+                        <Card.Group itemsPerRow={3}>
+                            {events &&
+                                events.map((event, index) => (
+                                    <EventCard event={event} key={index} />
+                                ))}
+                        </Card.Group>
                     </Grid.Row>
                 </Grid>
             </Container>

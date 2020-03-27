@@ -26,5 +26,5 @@ html, body {
 }
 
 .ui.card {
-    width: 350px;
+    width: 250px !important;
 }
