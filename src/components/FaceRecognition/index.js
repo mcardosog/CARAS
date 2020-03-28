@@ -13,7 +13,7 @@ class Face_Recognition extends Component {
 
     render() {
         const organization = this.props.children.organization;
-        const event = this.props.children.event;
+        const eventID = this.props.children.event;
 
         const fb = this.props.firebase;
         /**
@@ -35,18 +35,33 @@ class Face_Recognition extends Component {
          */
         async function handleTakePhoto (dataUri) {
 
+            //CHECK IF ELEMENT ID WAS ENTERED
             const userID = document.getElementById("userId").value;
             if(userID == '') {
                 alert("Please enter an user id");
                 return;
             }
 
+            //GET USER INFO, EVENT INFO AND VERIFY IF IT IS ALLOWED
+            const userInfo = await fb.getUserInformation(organization,userID);
+            const eventInfo = await fb.getEventInformation(organization,eventID);
+            if(eventInfo.notAllowedUsers.includes(userID)) {
+                alert('USER NOT ALLOWED');
+                return
+            }
+            if(eventInfo.minimumLevel > userInfo.level && !eventInfo.allowedUsers.includes(userID)) {
+                alert('USER NOT ALLOWED');
+                return
+            }
+
+            //LOAD DESCRIPTOR SET AND VERIFY IF IT IS VALID
             const descriptorSet =  await (loadUserDescriptor(userID));
             if(descriptorSet == null || descriptorSet.length == 0) {
                 alert("Invalid user id");
                 return;
             }
 
+            //LOAD WEBCAM CAPTURED IMAGE AND BUILD THE DESCRIPTOR SET
             let blob =  await fetch(dataUri).then(r => r.blob());    //Build Image
             const image =  await faceapi.bufferToImage(blob);
             const detection =  await faceapi.detectAllFaces(image).withFaceLandmarks().withFaceDescriptors();
@@ -55,14 +70,16 @@ class Face_Recognition extends Component {
                 return;
             }
 
+            //CREATE THE FACE MATCHER AND MATH THE DESCRIPTORS
             const faceMatcher = await new faceapi.FaceMatcher(descriptorSet, 0.6);
             const displaySize = { width: image.width, height: image.height };
             const resizedDetections = await faceapi.resizeResults(detection, displaySize);
             const results = resizedDetections.map(d => faceMatcher.findBestMatch(d.descriptor));
 
+            // RECOGNIZE AGE AND GENDER
             const detectionsWithAgeAndGender =  await faceapi.detectAllFaces(image).withAgeAndGender()
-            const userInfo = await fb.getUserInformation(organization,userID);
 
+            //#region MANAGE RESULT
             const faceAccuracy = (1 - results[0].distance)*100;
             const ageAccuracy = Math.abs(userInfo.age-detectionsWithAgeAndGender[0].age);
             const sexDetection = (detectionsWithAgeAndGender[0].gender == userInfo.sex);
@@ -91,8 +108,8 @@ class Face_Recognition extends Component {
                 console.log('AUTHENTICATION FAILED')
                 result = 'AUTHENTICATION FAILED';
             }
-
             document.getElementById("ResultText").innerHTML = 'RESULT: '+result;
+            //#endregion
 
             //fb.uploadImage('test','1',blob);
         }

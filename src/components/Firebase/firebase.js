@@ -173,16 +173,34 @@ const config = {
               'sex':''
           };
           const filter = ['email','firstName','lastName','age','level','sex'];
-          const tempDescriptors = await this.getElementsInPath(path, filter);
-          userInformation.age = tempDescriptors[0].value;
-          userInformation.email = tempDescriptors[1].value;
-          userInformation.firstName = tempDescriptors[2].value;
-          userInformation.lastName = tempDescriptors[3].value;
-          userInformation.level = tempDescriptors[4].value;
-          userInformation.sex = tempDescriptors[5].value;
+          const tempElement = await this.getElementsInPath(path, filter);
+          userInformation.age = tempElement[0].value;
+          userInformation.email = tempElement[1].value;
+          userInformation.firstName = tempElement[2].value;
+          userInformation.lastName = tempElement[3].value;
+          userInformation.level = tempElement[4].value;
+          userInformation.sex = tempElement[5].value;
 
           return userInformation;
       }
+
+      getEventInformation = async (organization, eventID) => {
+          const path = 'organizations/' + organization + '/events/' + eventID + '/';
+          var eventInformation = {
+              'allowedUsers':'',
+              'minimumLevel':'',
+              'notAllowedUsers':'',
+          };
+          const filter = ['allowedUsers','minimumLevel','notAllowedUsers'];
+          const tempElement = await this.getElementsInPath(path, filter);
+          eventInformation.allowedUsers = tempElement[0].value;
+          eventInformation.minLevel = tempElement[1].value;
+          eventInformation.notAllowedUsers = tempElement[2].value;
+
+          return eventInformation;
+      }
+
+
 
       getElementsByUserID = (path, userID) => {
           var data = [];
