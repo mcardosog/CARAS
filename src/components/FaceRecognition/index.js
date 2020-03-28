@@ -12,6 +12,7 @@ class Face_Recognition extends Component {
     }
 
     render() {
+        //TAKEN FROM CHILDREN IN THE CONSTRUCTOR
         const organization = this.props.children.organization;
         const eventID = this.props.children.event;
 
@@ -44,6 +45,11 @@ class Face_Recognition extends Component {
 
             //GET USER INFO, EVENT INFO AND VERIFY IF IT IS ALLOWED
             const userInfo = await fb.getUserInformation(organization,userID);
+            if(userInfo == null) {
+                alert("Invalid user id");
+                return;
+            }
+
             const eventInfo = await fb.getEventInformation(organization,eventID);
             if(eventInfo.notAllowedUsers.includes(userID)) {
                 alert('USER NOT ALLOWED');
@@ -111,7 +117,17 @@ class Face_Recognition extends Component {
             document.getElementById("ResultText").innerHTML = 'RESULT: '+result;
             //#endregion
 
-            //fb.uploadImage('test','1',blob);
+            if(result != 'AUTHENTICATION CORRECT') {
+                console.log('NO RECORDING ATTENDANCE');
+                return;
+            }
+
+            const respAttendance = await fb.markUserAttendace(organization,eventID,userID);
+            console.log(respAttendance);
+            if(respAttendance != null) {
+                alert('User '+userInfo.firstName+' '+userInfo.lastName+' '+
+                        'was registered already at '+ new Date(respAttendance).toLocaleString());
+            }
         }
 
         /**

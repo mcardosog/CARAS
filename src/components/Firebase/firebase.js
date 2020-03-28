@@ -148,7 +148,6 @@ const config = {
               date: Date.now(),
               value: descriptor,
           });
-
       };
 
       getDescriptors = async (organization, userID) => {
@@ -200,7 +199,24 @@ const config = {
           return eventInformation;
       }
 
-
+      markUserAttendace = async (organization, eventID, userID) => {
+          const path = 'organizations/' + organization + '/events/' + eventID + '/usersAttended/';
+          const tempElement = await this.getElementsInPath(path);
+          var timeStampIfRegistered = null;
+          for(var i = 0; i < tempElement.length; i++) {
+              let u = tempElement[i];
+              if(u.uid === userID) {
+                  timeStampIfRegistered = u.value;
+                  break;
+              }
+          }
+          if(timeStampIfRegistered != null) {
+              return timeStampIfRegistered;
+          }
+          else {
+              this.db.ref(path+userID).set(Date.now());
+          }
+      }
 
       getElementsByUserID = (path, userID) => {
           var data = [];
