@@ -23,7 +23,7 @@ const config = {
           this.db = app.database();
       }
 
-      //Auth
+      //#region AUTH
 
       doCreateUserWithEmailAndPassword = (email, password) =>
           this.auth.createUserWithEmailAndPassword(email, password);
@@ -50,26 +50,34 @@ const config = {
           });
       };
 
-      //Data
-      getElementsInPath = async (path) => {
+      //endregion
+
+      //#region DATA
+
+      getElementsInPath = async (path, filter = null) => {
           var data = [];
           var ref = this.db.ref(path);
           var snapshot = await ref.once('value');
-          snapshot.forEach(function (childSnapshot) {
-              data.push({
-                  uid: childSnapshot.key,
-                  value: childSnapshot.val()
-              });
-          });
-          return data;
-      }
 
-      deleteElement = (path, elementID) => {
-          try {
-              this.db.ref(path).child(elementID).remove();
-          } catch (error) {
-              console.log(error);
+          if(filter != null) {
+              snapshot.forEach(s => {
+                  if(filter.includes(s.key)) {
+                      data.push({
+                          uid: s.key,
+                          value: s.val()
+                      })
+                  }
+              });
           }
+          else {
+              snapshot.forEach(function (childSnapshot) {
+                  data.push({
+                      uid: childSnapshot.key,
+                      value: childSnapshot.val()
+                  });
+              });
+          }
+          return data;
       }
 
       getImages(organization, userID) {
@@ -144,7 +152,7 @@ const config = {
       };
 
       getDescriptors = async (organization, userID) => {
-          const path = 'organizations/' + organization + '/' + userID + '/descriptors/';
+          const path = 'organizations/' + organization + '/users/' + userID + '/descriptors/';
           const tempDescriptors = await this.getElementsInPath(path);
           const descriptors = [];
           for (var i = 0; i < tempDescriptors.length; i++) {
@@ -153,6 +161,28 @@ const config = {
           }
           return descriptors;
       };
+
+      getUserInformation = async (organization, userID) => {
+          const path = 'organizations/' + organization + '/users/' + userID + '/';
+          var userInformation = {
+              'email':'',
+              'firstName':'',
+              'lastName':'',
+              'age':0,
+              'level':0,
+              'sex':''
+          };
+          const filter = ['email','firstName','lastName','age','level','sex'];
+          const tempDescriptors = await this.getElementsInPath(path, filter);
+          userInformation.age = tempDescriptors[0].value;
+          userInformation.email = tempDescriptors[1].value;
+          userInformation.firstName = tempDescriptors[2].value;
+          userInformation.lastName = tempDescriptors[3].value;
+          userInformation.level = tempDescriptors[4].value;
+          userInformation.sex = tempDescriptors[5].value;
+
+          return userInformation;
+      }
 
       getElementsByUserID = (path, userID) => {
           var data = [];
@@ -169,6 +199,8 @@ const config = {
           });
           return data;
       }
+
+      //endregion
 
       // *** User API ***
       user = uid => this.db.ref(`users/${uid}`);

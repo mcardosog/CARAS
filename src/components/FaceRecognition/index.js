@@ -7,15 +7,14 @@ import 'react-html5-camera-photo/build/css/index.css';
 //
 class Face_Recognition extends Component {
 
-    constructor(props, organization) {
+    constructor(props) {
         super(props);
-        this.state = {
-            organization : organization
-        }
     }
 
     render() {
-        const organization = 'org1';
+        const organization = this.props.children.organization;
+        const event = this.props.children.event;
+
         const fb = this.props.firebase;
         /**
          * @param userID
@@ -47,6 +46,7 @@ class Face_Recognition extends Component {
                 alert("Invalid user id");
                 return;
             }
+
             let blob =  await fetch(dataUri).then(r => r.blob());    //Build Image
             const image =  await faceapi.bufferToImage(blob);
             const detection =  await faceapi.detectAllFaces(image).withFaceLandmarks().withFaceDescriptors();
@@ -59,13 +59,40 @@ class Face_Recognition extends Component {
             const displaySize = { width: image.width, height: image.height };
             const resizedDetections = await faceapi.resizeResults(detection, displaySize);
             const results = resizedDetections.map(d => faceMatcher.findBestMatch(d.descriptor));
-            results.forEach((result, i) => {
-                console.log( 'Subject '+i+' '+((1 - result.distance)*100)+'%');
-            })
 
             const detectionsWithAgeAndGender =  await faceapi.detectAllFaces(image).withAgeAndGender()
-            console.log(detectionsWithAgeAndGender)
-            //Yes / No
+            const userInfo = await fb.getUserInformation(organization,userID);
+
+            const faceAccuracy = (1 - results[0].distance)*100;
+            const ageAccuracy = Math.abs(userInfo.age-detectionsWithAgeAndGender[0].age);
+            const sexDetection = (detectionsWithAgeAndGender[0].gender == userInfo.sex);
+
+            console.log('FACE ACCURACY: '+faceAccuracy+' %')
+            console.log('AGE DIFFERENCE: '+ageAccuracy+' years')
+            console.log('SEX DETECTED: '+sexDetection)
+
+            var result = '';
+
+            if(ageAccuracy < 5 && sexDetection) {
+                if(faceAccuracy > 55) {
+                    console.log('AUTHENTICATION CORRECT')
+                    result = 'AUTHENTICATION CORRECT';
+                }
+                else if (faceAccuracy > 45) {
+                    console.log('PLEASE TRY AGAIN')
+                    result = 'PLEASE TRY AGAIN';
+                }
+                else {
+                    console.log('AUTHENTICATION FAILED')
+                    result = 'AUTHENTICATION FAILED';
+                }
+            }
+            else {
+                console.log('AUTHENTICATION FAILED')
+                result = 'AUTHENTICATION FAILED';
+            }
+
+            document.getElementById("ResultText").innerHTML = 'RESULT: '+result;
 
             //fb.uploadImage('test','1',blob);
         }
@@ -93,12 +120,7 @@ class Face_Recognition extends Component {
                         <p>User ID</p>
                         <input accept={'text'} id={'userId'} />
                     </div>
-                    <div>
-                        <h2> INFORMATION </h2>
-                        <p>Accuracy</p>
-                        <p>Age</p>
-                        <p>Sex</p>
-                    </div>
+                    <p id={'ResultText'}>RESULT:</p>
                 </div>
             </div>
         );

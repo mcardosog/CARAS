@@ -16,6 +16,7 @@ import { AuthUserContext } from '../Session';
 import * as ROUTES from '../../constants/routes';
 import { withFirebase } from '../Firebase';
 import FaceRecognition from '../FaceRecognition';
+import Recognizer from '../Recognizer';
 
 class App extends Component {
   constructor(props) {
@@ -44,7 +45,6 @@ class App extends Component {
                   <div>
                       <Navigation authUser={this.state.authUser} />
                       <Switch>
-
                           <Route exact path={ROUTES.LANDING} component={LandingPage} />
                           <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
                           <Route path={ROUTES.SIGN_IN} component={SignInPage} />
@@ -53,6 +53,7 @@ class App extends Component {
                           <Route path={ROUTES.ACCOUNT} component={AccountPage} />
                           <Route path={ROUTES.ADMIN} component={AdminPage} />
                           <Route path={ROUTES.FACE_RECOGNITION} component={FaceRecognition} />
+                          <Route path={ROUTES.RECOGNIZER} component={Recognizer} />
                       </Switch>
                   </div>
               </Router>
