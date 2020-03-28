@@ -8,7 +8,7 @@ import {
     Card
 } from "semantic-ui-react";
 
-import EventCard from "./eventCard";
+import EventCard from "./EventCard";
 
 export default function EventPanel({ events }) {
     return (
