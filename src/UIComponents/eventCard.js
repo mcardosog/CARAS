@@ -1,7 +1,9 @@
-import React from "react";
-import { Button, Icon, Card, Grid } from "semantic-ui-react";
+import React, { useState } from "react";
+import { Button, Icon, Card } from "semantic-ui-react";
 
 export default function EventCard({ event }) {
+    const [paused, setPaused] = useState(false);
+
     const attendance = (
         <p>
             <Icon name="user" />
@@ -9,28 +11,15 @@ export default function EventCard({ event }) {
         </p>
     );
 
-    const deleteEvent = ({ event }) => {
-        console.log("deleted: " + event.name);
-    };
-
     return (
         <>
-            {/* <Grid.Column> */}
             <Card fluid raised>
                 <Card.Content>
                     <Button
                         stackable
-                        color="blue"
-                        icon="eye"
-                        size="tiny"
-                        floated="right"
-                    />
-                    <Button
-                        stackable
-                        onClick={deleteEvent({ event })}
                         color="red"
-                        icon="trash"
-                        size="tiny"
+                        icon="stop"
+                        size="medium"
                         floated="right"
                     />
                     <Card.Header>{event.name}</Card.Header>
@@ -39,7 +28,6 @@ export default function EventCard({ event }) {
                 </Card.Content>
                 <Card.Content extra>{attendance}</Card.Content>
             </Card>
-            {/* </Grid.Column> */}
         </>
     );
 }
