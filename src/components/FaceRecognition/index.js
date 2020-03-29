@@ -122,7 +122,7 @@ class Face_Recognition extends Component {
                 return;
             }
 
-            const respAttendance = await fb.markUserAttendace(organization,eventID,userID);
+            const respAttendance = await fb.markUserAttendance(organization,eventID,userID);
             console.log(respAttendance);
             if(respAttendance != null) {
                 alert('User '+userInfo.firstName+' '+userInfo.lastName+' '+

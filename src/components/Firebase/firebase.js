@@ -144,11 +144,40 @@ const config = {
       }
 
       insertDescriptor = (organization, userID, descriptor) => {
-          this.db.ref('organizations/' + organization + '/' + userID + '/descriptors/').push({
+          this.db.ref('organizations/' + organization + '/users/' + userID + '/descriptors/').push({
               date: Date.now(),
               value: descriptor,
           });
       };
+
+      addUser = async (organization, userID, firstName, lastName, email, level, gender, age) => {
+          const path = 'organizations/' + organization + '/users/' + userID +'/';
+          if( await this.checkIfUserExist(organization,userID)) {
+              return false;
+          }
+          else {
+              await this.db.ref(path+'age').set(age);
+              await this.db.ref(path+'email').set(email);
+              await this.db.ref(path+'firstName').set(firstName);
+              await this.db.ref(path+'lastName').set(lastName);
+              await this.db.ref(path+'level').set(level);
+              await this.db.ref(path+'sex').set(gender);
+              return true;
+          }
+      }
+
+      checkIfUserExist = async (organization, userID) => {
+          const path = 'organizations/'+organization+'/users/';
+          const tempElement = await this.getElementsInPath(path);
+          var found = false;
+          for(var i = 0; i < tempElement.length; i++) {
+              if(tempElement[i].uid === userID) {
+                  found = true;
+                  break;
+              }
+          }
+          return found;
+      }
 
       getDescriptors = async (organization, userID) => {
           const path = 'organizations/' + organization + '/users/' + userID + '/descriptors/';
@@ -199,7 +228,7 @@ const config = {
           return eventInformation;
       }
 
-      markUserAttendace = async (organization, eventID, userID) => {
+      markUserAttendance = async (organization, eventID, userID) => {
           const path = 'organizations/' + organization + '/events/' + eventID + '/usersAttended/';
           const tempElement = await this.getElementsInPath(path);
           var timeStampIfRegistered = null;

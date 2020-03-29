@@ -17,6 +17,7 @@ import * as ROUTES from '../../constants/routes';
 import { withFirebase } from '../Firebase';
 import FaceRecognition from '../FaceRecognition';
 import Recognizer from '../Recognizer';
+import NewUser from "../NewUser";
 
 class App extends Component {
   constructor(props) {
@@ -54,6 +55,7 @@ class App extends Component {
                           <Route path={ROUTES.ADMIN} component={AdminPage} />
                           <Route path={ROUTES.FACE_RECOGNITION} component={FaceRecognition} />
                           <Route path={ROUTES.RECOGNIZER} component={Recognizer} />
+                          <Route path={ROUTES.NEWUSER} component={NewUser} />
                       </Switch>
                   </div>
               </Router>
