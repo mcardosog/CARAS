@@ -179,6 +179,14 @@ const config = {
           return found;
       }
 
+      getEventsPreview = async (organization) => {
+
+      }
+
+      getEvent = async (organization) => {
+
+      }
+
       getDescriptors = async (organization, userID) => {
           const path = 'organizations/' + organization + '/users/' + userID + '/descriptors/';
           const tempDescriptors = await this.getElementsInPath(path);

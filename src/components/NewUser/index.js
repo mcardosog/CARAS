@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withFirebase } from '../Firebase';
-import FaceDescriptors from "./FaceDescriptors";
+import CameraFaceDescriptor from "./CameraFaceDescriptor";
+import FileFaceDescriptor from "./FileFaceDescriptor";
 import CustomUploadButton from 'react-firebase-file-uploader/lib/CustomUploadButton';
 import { AuthUserContext, withAuthorization } from '../Session';
 
@@ -13,7 +14,6 @@ class NewUser extends Component {
     }
 
     async addUserClick() {
-
         const userID = document.getElementById('userID').value;
         const firstName = document.getElementById('firstName').value;
         const lastName = document.getElementById('lastName').value;
@@ -41,16 +41,35 @@ class NewUser extends Component {
             alert('User ID already in use. Verify if the user was already entered.')
             return;
         }
-        this.setState({
-            recognizer: <FaceDescriptors children={{'organization':organization,'userID':userID}} />,
-        });
+
+        document.getElementById('userID').disabled = true;
+        document.getElementById('firstName').disabled = true;
+        document.getElementById('lastName').disabled = true;
+        document.getElementById('email').disabled = true;
+        document.getElementById('level').disabled = true;
+        document.getElementById('gender').disabled = true;
+        document.getElementById('age').disabled = true;
+        document.getElementById('addUser').disabled = true;
+
+
+        const answer =  window.confirm("Do you want to user you camera to take user face descriptions? \n If you want to upload the images files press Cancel");
+        if(answer) {
+            this.setState({
+                recognizer: <CameraFaceDescriptor children={{'organization':organization,'userID':userID}} />,
+            });
+        }
+        else {
+            this.setState({
+                recognizer: <FileFaceDescriptor children={{'organization':organization,'userID':userID}} />,
+            });
+        }
     }
 
     render() {
         return (
             <div>
                 <h1>NEW USERS</h1>
-                <div>
+                <div id={'InputControls'}>
                     <p>User ID:</p>
                     <input id={'userID'}/>
                     <p>First Name:</p>
@@ -66,7 +85,7 @@ class NewUser extends Component {
                     <p>Age:</p>
                     <input id={'age'}/>
                     <br/>
-                    <button onClick={() => this.addUserClick() }>Insert User</button>
+                    <button id={'addUser'} onClick={() => this.addUserClick() }>Insert User</button>
                 </div>
                 <br/>
                 <div id={'FaceDescriptorArea'}>
