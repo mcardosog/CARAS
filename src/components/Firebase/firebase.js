@@ -166,12 +166,41 @@ const config = {
           }
       }
 
+      addEvent = async (organization, eventID, eventName, minimumLevel, allowedEmployees, notAllowedEmployees, description, eventDate) => {
+          const path = 'organizations/' + organization + '/events/' + eventID +'/';
+          if( await this.checkIfEventExist(organization,eventID)) {
+              return false;
+          }
+          else {
+              await this.db.ref(path+'name').set(eventName);
+              await this.db.ref(path+'minimumLevel').set(minimumLevel);
+              await this.db.ref(path+'allowedEmployees').set(allowedEmployees);
+              await this.db.ref(path+'notAllowedEmployees').set(notAllowedEmployees);
+              await this.db.ref(path+'description').set(description);
+              await this.db.ref(path+'eventDate').set(eventDate);
+              return true;
+          }
+      }
+
       checkIfUserExist = async (organization, userID) => {
           const path = 'organizations/'+organization+'/users/';
           const tempElement = await this.getElementsInPath(path);
           var found = false;
           for(var i = 0; i < tempElement.length; i++) {
               if(tempElement[i].uid === userID) {
+                  found = true;
+                  break;
+              }
+          }
+          return found;
+      }
+
+      checkIfEventExist = async (organization, eventID) => {
+          const path = 'organizations/'+organization+'/users/';
+          const tempElement = await this.getElementsInPath(path);
+          var found = false;
+          for(var i = 0; i < tempElement.length; i++) {
+              if(tempElement[i].uid === eventID) {
                   found = true;
                   break;
               }
