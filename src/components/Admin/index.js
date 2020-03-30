@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withFirebase } from '../Firebase';
 import CustomUploadButton from 'react-firebase-file-uploader/lib/CustomUploadButton';
 import { AuthUserContext, withAuthorization } from '../Session';
+import NewUser from "../NewUser";
 
 class AdminPage extends Component {
   constructor(props) {
@@ -18,6 +19,8 @@ class AdminPage extends Component {
       <div>
         <h1>Admin</h1>
         <p>Upload file</p>
+        <p>Add User</p>
+        <NewUser children={{'organization': this.props.firebase.getOrganization()}}/>
       </div>
     );
   }

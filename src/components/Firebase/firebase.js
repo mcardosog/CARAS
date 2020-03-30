@@ -179,6 +179,16 @@ const config = {
           return found;
       }
 
+      getOrganization = () => {
+          var admin = this.auth.currentUser;
+          if(admin != null){
+              return admin.displayName;
+          }
+          else{
+              return null;
+          }
+      }
+
       getDescriptors = async (organization, userID) => {
           const path = 'organizations/' + organization + '/users/' + userID + '/descriptors/';
           const tempDescriptors = await this.getElementsInPath(path);
