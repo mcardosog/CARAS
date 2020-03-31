@@ -53,8 +53,6 @@ class CameraFaceDescriptor extends Component {
 
 
     render() {
-
-
         /**
          * Load all modules for the face recognition AI.
          */
