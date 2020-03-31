@@ -166,7 +166,7 @@ const config = {
           }
       }
 
-      addEvent = async (organization, eventID, eventName, minimumLevel, allowedEmployees, notAllowedEmployees, description, eventDate) => {
+      addEvent = async (organization, eventID, eventName, minimumLevel, allowedEmployees, notAllowedEmployees, description, eventDate, passcode) => {
           const path = 'organizations/' + organization + '/events/' + eventID +'/';
           if( await this.checkIfEventExist(organization,eventID)) {
               return false;
@@ -178,6 +178,9 @@ const config = {
               await this.db.ref(path+'notAllowedEmployees').set(notAllowedEmployees);
               await this.db.ref(path+'description').set(description);
               await this.db.ref(path+'eventDate').set(eventDate);
+              await this.db.ref(path+'passcode').set(passcode);
+              await this.db.ref(path+'active').set(false);
+
               return true;
           }
       }
@@ -196,7 +199,7 @@ const config = {
       }
       
       checkIfEventExist = async (organization, eventID) => {
-          const path = 'organizations/'+organization+'/users/';
+          const path = 'organizations/'+organization+'/events/';
           const tempElement = await this.getElementsInPath(path);
           var found = false;
           for(var i = 0; i < tempElement.length; i++) {
