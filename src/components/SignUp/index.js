@@ -15,7 +15,7 @@ const SignUpPage = () => (
 const INITIAL_STATE = {
     name: '',
     lastName: '',
-    displayName: '',
+    companyName: '',
     email: '',
     username: '',
     passwordOne: '',
@@ -30,22 +30,21 @@ const INITIAL_STATE = {
     this.state = { ...INITIAL_STATE };
   }
   onSubmit = (event) => {
-    const { name, lastName, displayName, email, username, passwordOne } = this.state;
+    const { name, lastName, companyName, email, username, passwordOne } = this.state;
     this.props.firebase
     .doCreateUserWithEmailAndPassword(email, passwordOne)
     .then(authUser => {
       // Create a user in your Firebase realtime database
-        authUser.user.updateProfile({displayName: displayName}).
-        then(authUser => { return this.props.firebase.auth
-            .currentUser
+        return this.props.firebase
+            .user(authUser.user.uid)
             .set({
                 name,
                 lastName,
-                displayName,
+                companyName,
                 email,
                 username,
-            }); }) })
-
+            });
+    })
 
     .then(() => {
       this.setState({ ...INITIAL_STATE });
@@ -64,7 +63,7 @@ const INITIAL_STATE = {
     const {
         name,
         lastName,
-        displayName,
+        companyName,
         email,
         username,
         passwordOne,
@@ -79,7 +78,7 @@ const INITIAL_STATE = {
       username === '' ||
       name === '' ||
       lastName === '' ||
-      displayName === '';
+      companyName === '';
 
     return (
       <form onSubmit={this.onSubmit}>
@@ -98,8 +97,8 @@ const INITIAL_STATE = {
           placeholder="Last Name"
         />
         <input
-          name="displayName"
-          value={displayName}
+          name="companyName"
+          value={companyName}
           onChange={this.onChange}
           type="text"
           placeholder="Company Name"

@@ -208,10 +208,11 @@ const config = {
           return found;
       }
 
-      getOrganization = () => {
-          var admin = this.auth.currentUser;
+      getOrganization = async () => {
+          var userID = this.auth.currentUser.uid;
+          var admin = await this.getElementsInPath('users/', userID);
           if(admin != null){
-              return admin.displayName;
+              return admin[0].value.companyName;
           }
           else{
               return null;

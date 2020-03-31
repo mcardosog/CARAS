@@ -14,17 +14,23 @@ class AdminPage extends Component {
     };
   }
 
-  render() {
-    const { users, loading } = this.state;
+  async componentDidMount() {
+      const organization = await this.props.firebase.getOrganization();
+      this.setState({organization});
+  }
+
+    render() {
+    const {organization} = this.state;
+
     return (
       <div>
         <h1>Admin</h1>
         <p>Upload file</p>
         <p>Add User</p>
-        <NewUser children={{'organization': this.props.firebase.getOrganization()}}/>
+        <NewUser children={{'organization': organization}}/>
 
           <p>Add Event</p>
-          <NewEvent children={{'organization': this.props.firebase.getOrganization()}}/>
+          <NewEvent children={{'organization': organization}}/>
       </div>
     );
   }
