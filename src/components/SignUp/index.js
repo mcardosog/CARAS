@@ -13,8 +13,11 @@ const SignUpPage = () => (
   );
 
 const INITIAL_STATE = {
-    username: '',
+    name: '',
+    lastName: '',
+    displayName: '',
     email: '',
+    username: '',
     passwordOne: '',
     passwordTwo: '',
     error: null,
@@ -27,18 +30,23 @@ const INITIAL_STATE = {
     this.state = { ...INITIAL_STATE };
   }
   onSubmit = (event) => {
-    const { username, email, passwordOne } = this.state;
+    const { name, lastName, displayName, email, username, passwordOne } = this.state;
     this.props.firebase
     .doCreateUserWithEmailAndPassword(email, passwordOne)
     .then(authUser => {
       // Create a user in your Firebase realtime database
-      return this.props.firebase
-        .user(authUser.user.uid)
-        .set({
-          username,
-          email,
-        });
-    })
+        authUser.user.updateProfile({displayName: displayName}).
+        then(authUser => { return this.props.firebase.auth
+            .currentUser
+            .set({
+                name,
+                lastName,
+                displayName,
+                email,
+                username,
+            }); }) })
+
+
     .then(() => {
       this.setState({ ...INITIAL_STATE });
       this.props.history.push(ROUTES.HOME);
@@ -54,8 +62,11 @@ const INITIAL_STATE = {
 
   render() {
     const {
-        username,
+        name,
+        lastName,
+        displayName,
         email,
+        username,
         passwordOne,
         passwordTwo,
         error,
@@ -65,16 +76,33 @@ const INITIAL_STATE = {
       passwordOne !== passwordTwo ||
       passwordOne === '' ||
       email === '' ||
-      username === '';
+      username === '' ||
+      name === '' ||
+      lastName === '' ||
+      displayName === '';
 
     return (
       <form onSubmit={this.onSubmit}>
-          <input
-          name="username"
-          value={username}
+        <input
+          name="name"
+          value={name}
           onChange={this.onChange}
           type="text"
-          placeholder="Full Name"
+          placeholder="First Name"
+        />
+        <input
+          name="lastName"
+          value={lastName}
+          onChange={this.onChange}
+          type="text"
+          placeholder="Last Name"
+        />
+        <input
+          name="displayName"
+          value={displayName}
+          onChange={this.onChange}
+          type="text"
+          placeholder="Company Name"
         />
         <input
           name="email"
@@ -82,6 +110,13 @@ const INITIAL_STATE = {
           onChange={this.onChange}
           type="text"
           placeholder="Email Address"
+        />
+          <input
+          name="username"
+          value={username}
+          onChange={this.onChange}
+          type="text"
+          placeholder="Username"
         />
         <input
           name="passwordOne"

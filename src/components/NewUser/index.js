@@ -35,7 +35,7 @@ class NewUser extends Component {
             alert(error);
             return;
         }
-        const organization = 'org1'//this.props.children.organization;
+        const organization = this.props.children.organization;
         const userAdded = await this.props.firebase.addUser(organization,userID,firstName,lastName,email,level,gender,age);
         if(!userAdded) {
             alert('User ID already in use. Verify if the user was already entered.')
