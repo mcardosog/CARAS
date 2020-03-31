@@ -196,7 +196,7 @@ const config = {
       }
       
       checkIfEventExist = async (organization, eventID) => {
-          const path = 'organizations/'+organization+'/users/';
+          const path = 'organizations/'+organization+'/events/';
           const tempElement = await this.getElementsInPath(path);
           var found = false;
           for(var i = 0; i < tempElement.length; i++) {

@@ -15,14 +15,10 @@ class AdminPage extends Component {
   }
 
   render() {
-    const { users, loading } = this.state;
     return (
       <div>
         <h1>Admin</h1>
-        <p>Upload file</p>
-        <p>Add User</p>
         <NewUser children={{'organization': this.props.firebase.getOrganization()}}/>
-
           <p>Add Event</p>
           <NewEvent children={{'organization': this.props.firebase.getOrganization()}}/>
       </div>
