@@ -76,6 +76,11 @@ class Face_Recognition extends Component {
                 return;
             }
 
+            if(detection.length > 1) {
+                alert("Multiple faces detected. Please try again.");
+                return;
+            }
+
             //CREATE THE FACE MATCHER AND MATH THE DESCRIPTORS
             const faceMatcher = await new faceapi.FaceMatcher(descriptorSet, 0.6);
             const displaySize = { width: image.width, height: image.height };
