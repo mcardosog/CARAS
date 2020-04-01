@@ -243,11 +243,24 @@ const config = {
       getDescriptors = async (organization, userID) => {
           const path = 'organizations/' + organization + '/users/' + userID + '/descriptors/';
           const tempDescriptors = await this.getElementsInPath(path);
-          const descriptors = [];
+          var descriptors = [];
           for (var i = 0; i < tempDescriptors.length; i++) {
               let d = tempDescriptors[i];
-              descriptors.push(Float32Array.from((d.value.value)));
+              //descriptors.push(Float32Array.from((d.value.value)));
+              descriptors.push(d.value.value);
           }
+
+          var avg = [];
+          for(var i = 0; i < descriptors[0].length; i++) {
+              var iAVG = 0;
+              for(var j = 0; j < descriptors.length; j++) {
+                  iAVG += descriptors[j][i];
+              }
+              iAVG /= descriptors.length;
+              avg.push(iAVG);
+          }
+          descriptors = [Float32Array.from(avg)];
+          console.log(descriptors);
           return descriptors;
       };
 
