@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import { withFirebase } from '../components/Firebase';
 
 import { Form, Grid, Button } from "semantic-ui-react";
 
-export default function EventForm() {
+export default function EventForm({organization}) {
     const [values, setValues] = useState({
         id: "",
         name: "",
@@ -10,6 +11,7 @@ export default function EventForm() {
         active: "",
         minimum_level: "",
         allowed_users: [],
+        not_allowed_users: [],
         description: "",
         date: ""
     });
@@ -22,9 +24,23 @@ export default function EventForm() {
         setValues(formValues);
     };
 
-    var onSubmit = () => {
+    var onSubmit = async () => {
         console.log(formValues);
         setValues(formValues);
+
+        const eventAdded = await this.props.firebase.addEvent(
+            organization,
+            values.id,
+            values.name,
+            values.minimum_level,
+            values.allowed_users,
+            values.not_allowed_users,
+            values.description,
+            values.date,
+            values.code);
+        if(!eventAdded) {
+            alert('Event ID already in use. Verify if the event was already entered.');
+        }
     };
 
     return (

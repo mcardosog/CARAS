@@ -12,7 +12,7 @@ import {
 import EventCard from "../UIComponents/EventCard";
 import CreateEventForm from "../UIComponents/CreateEventForm";
 
-export default function EventPanel({ events }) {
+export default function EventPanel({ organization, events, addEvent }) {
     const [viewCreateEventForm, setViewCreateEventForm] = useState(false);
 
     const createEventModal = (
