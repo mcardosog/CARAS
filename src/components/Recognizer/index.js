@@ -12,14 +12,21 @@ class Recognizer extends Component {
         };
     }
 
-
-
     render() {
         const { users, loading } = this.state;
         return (
             <div>
                 <h1>RECOGNIZER</h1>
-                <Face_Recognition children={{'organization':'org1','event':'event1'}}/>
+                <div id={'Controls'}>
+                    <p>Company</p>
+                    <input/>
+                    <p>Event ID</p>
+                    <input/>
+                    <button>Access the Event</button>
+                </div>
+                <div id={'FaceRecognition'}>
+                    <Face_Recognition children={{'organization':'org1','event':'event1'}}/>
+                </div>
             </div>
         );
     }
