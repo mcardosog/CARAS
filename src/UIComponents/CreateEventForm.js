@@ -6,6 +6,7 @@ export default function EventForm() {
     const [values, setValues] = useState({
         id: "",
         name: "",
+        code: "",
         active: "",
         minimum_level: "",
         allowed_users: [],
@@ -13,47 +14,53 @@ export default function EventForm() {
         date: ""
     });
 
-    var formValues = {
-        id: "",
-        name: "",
-        active: "",
-        minimum_level: "",
-        allowed_users: [],
-        description: "",
-        date: ""
-    };
+    var formValues = values;
 
     var onChange = (name, value) => {
         formValues[name] = value;
-        setValues(formValues);
         console.log(formValues);
+        setValues(formValues);
     };
 
     var onSubmit = () => {
+        console.log(formValues);
         setValues(formValues);
-        console.log(values);
     };
+
     return (
         <Grid>
             <Grid.Row>
                 <Grid.Column>
                     <Form noValidate onSubmit={onSubmit}>
-                        <Form.Input
-                            label="Event Name"
-                            name="name"
-                            type="text"
-                            // value={values.name}
-                            onChange={(param, data) => {
-                                onChange("name", data.value);
-                            }}
-                        />
+                        <Form.Group>
+                            <Form.Input
+                                label="Event Name"
+                                name="name"
+                                type="text"
+                                maxLength="15"
+                                // value={values.name}
+                                onChange={(param, data) => {
+                                    onChange(data.name, data.value);
+                                }}
+                            />
+                            <Form.Input
+                                label="Event Code"
+                                name="code"
+                                type="text"
+                                // value={values.code}
+                                maxLength="5"
+                                onChange={(param, data) => {
+                                    onChange(data.name, data.value.toUpperCase());
+                                }}
+                            />
+                        </Form.Group>
                         <Form.TextArea
                             label="Description"
                             name="description"
                             type="text"
                             // value={values.description}
                             onChange={(param, data) => {
-                                onChange("description", data.value);
+                                onChange(data.name, data.value);
                             }}
                         />
                         <Button type="submit">Add Allowed Users</Button>
