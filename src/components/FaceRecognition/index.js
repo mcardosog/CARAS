@@ -63,7 +63,7 @@ class Face_Recognition extends Component {
             //LOAD DESCRIPTOR SET AND VERIFY IF IT IS VALID
             const descriptorSet =  await (loadUserDescriptor(userID));
             if(descriptorSet == null || descriptorSet.length == 0) {
-                alert("Invalid user id");
+                alert("Unable to process. Invalid user ID or user has no face descriptors stored");
                 return;
             }
 

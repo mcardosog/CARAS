@@ -246,10 +246,12 @@ const config = {
           var descriptors = [];
           for (var i = 0; i < tempDescriptors.length; i++) {
               let d = tempDescriptors[i];
-              //descriptors.push(Float32Array.from((d.value.value)));
               descriptors.push(d.value.value);
           }
 
+          if(descriptors.length === 0) {
+              return descriptors;
+          }
           var avg = [];
           for(var i = 0; i < descriptors[0].length; i++) {
               var iAVG = 0;
@@ -276,6 +278,7 @@ const config = {
           };
           const filter = ['email','firstName','lastName','age','level','sex'];
           const tempElement = await this.getElementsInPath(path, filter);
+          console.log(tempElement);
           userInformation.age = tempElement[0].value;
           userInformation.email = tempElement[1].value;
           userInformation.firstName = tempElement[2].value;
@@ -322,21 +325,40 @@ const config = {
           }
       }
 
-      //getUserAttendaceReport
+      getUserAttendaceReport = async (organization, eventID) => {
+          const path = 'organizations/' + organization + '/events/' + eventID + '/usersAttended/';
+          const tempElement = await this.getElementsInPath(path);
+          return tempElement;
+      }
 
       //modifyUser
 
       //modifyEvent
 
-      //deleteUser
+      deleteUser = async (organization, userID) => {
+          const path = 'organizations/' + organization + '/users/' + userID + '/';
+          this.db.ref(path).remove();
+      }
 
-      //deleteEvent
+      deleteEvent = async (organization, eventID) => {
+          const path = 'organizations/' + organization + '/events/' + eventID + '/';
+          this.db.ref(path).remove();
+      }
 
-      //activateEvent
+      activateEvent = async (organization, eventID) => {
+          const path = 'organizations/' + organization + '/events/' + eventID + '/active/';
+          this.db.ref(path).set(true);
+      }
 
-      //stopEvent
+      stopEvent = async (organization, eventID) => {
+          const path = 'organizations/' + organization + '/events/' + eventID + '/active/';
+          this.db.ref(path).set(false);
+      }
 
-      //deleteUsersDescriptors
+      deleteUsersDescriptors = async (organization, userID) => {
+          const path = 'organizations/' + organization + '/users/' + userID + '/descriptors/';
+          this.db.ref(path).remove();
+      }
 
       getEventsPreview = async (organization) => {
           var eventResult = [];
