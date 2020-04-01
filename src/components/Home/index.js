@@ -11,7 +11,9 @@ class HomePage extends Component {
         super(props);
         this.state = {
             organization: '',
-            events: []
+            addEvent: null,
+            events: [],
+            updateEvents: null,
         }
     }
 
@@ -19,24 +21,28 @@ class HomePage extends Component {
         const organization = await this.props.firebase.getOrganization();
         const events = await this.props.firebase.getEventsPreview(organization);
         const addEvent = this.props.firebase.addEvent;
+        const updateEvents  = async () => {
+            const events =  await this.props.firebase.getEventsPreview(this.state.organization);
+            this.setState({ events: events });
+        }
         this.setState({
             organization: organization,
             events: events,
-            addEvent : addEvent
+            addEvent : addEvent,
+            updateEvents: updateEvents,
         });
     }
 
-    async updateEvent() {
-        const events = await this.props.firebase.getEventsPreview(this.state.organization);
-        this.setState({ events: events });
-    }
-
     render() {
-        const {organization, events, addEvent} = this.state;
-
+        const {organization, events, addEvent, updateEvents} = this.state;
         return (
             <>
-                <EventPanel events={events} organization={organization} addEvent={addEvent}/>
+                <EventPanel
+                    events={events}
+                    organization={organization}
+                    addEvent={addEvent}
+                    updateEvents={ updateEvents }
+                />
             </>
         )
     }

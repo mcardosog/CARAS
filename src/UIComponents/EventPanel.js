@@ -12,8 +12,12 @@ import {
 import EventCard from "../UIComponents/EventCard";
 import CreateEventForm from "../UIComponents/CreateEventForm";
 
-export default function EventPanel({ organization, events, addEvent }) {
+export default function EventPanel({ organization, events, addEvent, updateEvents}) {
     const [viewCreateEventForm, setViewCreateEventForm] = useState(false);
+
+    const closeModal = () => {
+        setViewCreateEventForm(false);
+    }
 
     const createEventModal = (
         <Modal
@@ -25,7 +29,13 @@ export default function EventPanel({ organization, events, addEvent }) {
             closeOnDimmerClick={false}
         >
             <Modal.Header as="h1">New Event</Modal.Header>
-            <Modal.Content content={<CreateEventForm />} />
+            <Modal.Content>
+                <CreateEventForm
+                    organization={organization}
+                    addEvent={addEvent}
+                    updateEvents={updateEvents}
+                    closeModal = {closeModal}/>
+            </Modal.Content>
         </Modal>
     );
 
