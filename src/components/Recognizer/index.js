@@ -17,6 +17,8 @@ class Recognizer extends Component {
         const event = document.getElementById('event').value;
         const eventPasscode = document.getElementById('passcode').value;
 
+        console.log(await this.props.firebase.getUsersPreview('marcoINC'));
+
         if(organization.length == 0 || event.length == 0 || eventPasscode.length == 0) {
             alert('Please fill out all the fields.')
             return;

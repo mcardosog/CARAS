@@ -322,20 +322,62 @@ const config = {
           }
       }
 
-      getElementsByUserID = (path, userID) => {
-          var data = [];
-          var ref = this.db.ref(path);
-          ref.on('value', function (snapshot) {
-              snapshot.forEach(function (childSnapshot) {
-                  if (childSnapshot.val().userID === userID) {
-                      data.push({
-                          uid: childSnapshot.key,
-                          value: childSnapshot.val()
-                      });
-                  }
-              });
-          });
-          return data;
+      //getUserAttendaceReport
+
+      //modifyUser
+
+      //modifyEvent
+
+      //deleteUser
+
+      //deleteEvent
+
+      //activateEvent
+
+      //stopEvent
+
+      //deleteUsersDescriptors
+
+      getEventsPreview = async (organization) => {
+          var eventResult = [];
+          const path = 'organizations/' + organization + '/events/';
+          const tempElement = await this.getElementsInPath(path);
+
+          for(var i=0; i < tempElement.length; i++) {
+              var eventInformation = {
+                  'active':'',
+                  'eventDate':'',
+                  'minimumLevel':'',
+                  'name':'',
+              };
+              eventInformation.active = tempElement[i].value.active;
+              eventInformation.eventDate = tempElement[i].value.eventDate;
+              eventInformation.minimumLevel = tempElement[i].value.minimumLevel;
+              eventInformation.name = tempElement[i].value.name;
+              eventResult.push(eventInformation);
+          }
+          return eventResult;
+      }
+
+      getUsersPreview = async (organization) => {
+          var userResults = [];
+          const path = 'organizations/' + organization + '/users/';
+          const tempElement = await this.getElementsInPath(path);
+
+          for(var i=0; i < tempElement.length; i++) {
+              var userInformation = {
+                  'firstName':'',
+                  'lastName':'',
+                  'level':'',
+                  'email':'',
+              };
+              userInformation.firstName = tempElement[i].value.firstName;
+              userInformation.lastName = tempElement[i].value.lastName;
+              userInformation.level = tempElement[i].value.level;
+              userInformation.email = tempElement[i].value.email;
+              userResults.push(userInformation);
+          }
+          return userResults;
       }
 
       //endregion
