@@ -7,7 +7,7 @@ export default function EventCard({ event }) {
     const attendance = (
         <p>
             <Icon name="user" />
-            {event.attendance}/{event.totalCount} Attendees
+            {/*{event.attendance}/{event.totalCount} Attendees*/}
         </p>
     );
 
@@ -23,10 +23,10 @@ export default function EventCard({ event }) {
                         floated="right"
                     />
                     <Card.Header>{event.name}</Card.Header>
-                    <Card.Meta>Created on </Card.Meta>
+                    <Card.Meta>Created on {event.eventDate} </Card.Meta>
                     <Card.Description>{event.description}</Card.Description>
                 </Card.Content>
-                <Card.Content extra>{attendance}</Card.Content>
+                {/*<Card.Content extra>{attendance}</Card.Content>*/}
             </Card>
         </>
     );

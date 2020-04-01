@@ -376,13 +376,15 @@ const config = {
                   'eventDate':'',
                   'minimumLevel':'',
                   'name':'',
-                  'eventID':''
+                  'eventID':'',
+                  'description':''
               };
               eventInformation.active = tempElement[i].value.active;
               eventInformation.eventDate = tempElement[i].value.eventDate;
               eventInformation.minimumLevel = tempElement[i].value.minimumLevel;
               eventInformation.name = tempElement[i].value.name;
               eventInformation.eventID = tempElement[i].uid;
+              eventInformation.description = tempElement[i].value.description;
               eventResult.push(eventInformation);
           }
           return eventResult;

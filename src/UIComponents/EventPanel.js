@@ -1,16 +1,34 @@
-﻿import React from "react";
+﻿import React, { useState } from "react";
 import {
     Grid,
     Container,
     Button,
     Divider,
     Header,
-    Card
+    Card,
+    Modal
 } from "semantic-ui-react";
 
-import EventCard from "./EventCard";
+import EventCard from "../UIComponents/EventCard";
+import CreateEventForm from "../UIComponents/CreateEventForm";
 
-export default function EventPanel({ events }) {
+export default function EventPanel({ organization, events, addEvent }) {
+    const [viewCreateEventForm, setViewCreateEventForm] = useState(false);
+
+    const createEventModal = (
+        <Modal
+            closeIcon
+            onClose={() => setViewCreateEventForm(false)}
+            open={viewCreateEventForm}
+            size="small"
+            closeOnEscape={true}
+            closeOnDimmerClick={false}
+        >
+            <Modal.Header as="h1">New Event</Modal.Header>
+            <Modal.Content content={<CreateEventForm />} />
+        </Modal>
+    );
+
     return (
         <>
             <Grid>
@@ -21,6 +39,9 @@ export default function EventPanel({ events }) {
                             icon="add"
                             labelPosition="left"
                             floated="right"
+                            onClick={() => {
+                                setViewCreateEventForm(true);
+                            }}
                         />
                     </Grid.Column>
                 </Grid.Row>
@@ -42,6 +63,7 @@ export default function EventPanel({ events }) {
                     </Grid.Row>
                 </Grid>
             </Container>
+            {createEventModal}
         </>
     );
 }
