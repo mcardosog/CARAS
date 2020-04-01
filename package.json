@@ -19,7 +19,9 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.3.0",
     "react-webcam": "^5.0.0",
-    "recompose": "^0.30.0"
+    "recompose": "^0.30.0",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^0.88.2"
   },
   "scripts": {
     "start": "react-scripts start",
