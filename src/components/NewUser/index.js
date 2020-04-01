@@ -51,6 +51,7 @@ class NewUser extends Component {
         document.getElementById('age').disabled = true;
         document.getElementById('addUser').disabled = true;
 
+        this.props.userUpdate();
 
         const answer =  window.confirm("Do you want to user you camera to take user face descriptions? \n If you want to upload the images files press Cancel");
         if(answer) {

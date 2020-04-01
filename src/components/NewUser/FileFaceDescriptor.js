@@ -17,12 +17,6 @@ class FileFaceDescriptor extends Component {
         const userID = this.props.children.userID;
         const fb = this.props.firebase;
 
-        /**
-         * @param dataUri contains uri of the picture taken from the camera
-         * @returns {Promise<void>}
-         *
-         * Function store the image a compare it with the corresponding userID to verify if it match
-         */
 
         async function processPhotos () {
             var count = 0;
@@ -36,7 +30,6 @@ class FileFaceDescriptor extends Component {
 
             for(var i=0; i< images.length; i++) {
                 if(images[i].length > 0) {
-                    //console.log(images[i][0]);
                     const response = await handlePhoto(images[i][0])
                     if (response) { count++; }
                 }
@@ -64,9 +57,7 @@ class FileFaceDescriptor extends Component {
             await fb.insertDescriptor(organization,userID,detection[0].descriptor);
             return true;
         }
-        /**
-         * Load all modules for the face recognition AI.
-         */
+
         Promise.all([
             faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
             faceapi.nets.faceLandmark68Net.loadFromUri('/models'),

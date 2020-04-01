@@ -6,22 +6,24 @@ import { withFirebase } from '../Firebase';
 import 'react-html5-camera-photo/build/css/index.css';
 //
 class Face_Recognition extends Component {
-
     constructor(props) {
         super(props);
     }
 
     render() {
-        //TAKEN FROM CHILDREN IN THE CONSTRUCTOR
+        //INPUTS FROM CHILDREN IN THE CONSTRUCTOR
         const organization = this.props.children.organization;
         const eventID = this.props.children.event;
 
+        //INSTANCE OF FIREBASE
         const fb = this.props.firebase;
+
         /**
          * @param userID
-         * @returns {LabeledFaceDescriptors} set with user stored images
+         * @returns {Promise<null|LabeledFaceDescriptors>}
+         * LOADS USER DESCRIPTORS FORM DATABASE AND CREATE LABELEDFACEDESCRIPTOR
+         * INSTANCE. INSTANCE USED TO COMPARE USER IMAGE
          */
-
         async function loadUserDescriptor(userID) {
             let descriptionSet = await fb.getDescriptors(organization,userID);
             if(descriptionSet.length == 0) { return null; }
@@ -29,10 +31,9 @@ class Face_Recognition extends Component {
         }
 
         /**
-         * @param dataUri contains uri of the picture taken from the camera
+         * @param dataUri: TAKEN IMAGE DATA
          * @returns {Promise<void>}
-         *
-         * Function store the image a compare it with the corresponding userID to verify if it match
+         * VERIFIES IF THE IMAGE IS VALID AND GET USER INFORMATION
          */
         async function handleTakePhoto (dataUri) {
 
@@ -63,7 +64,7 @@ class Face_Recognition extends Component {
             //LOAD DESCRIPTOR SET AND VERIFY IF IT IS VALID
             const descriptorSet =  await (loadUserDescriptor(userID));
             if(descriptorSet == null || descriptorSet.length == 0) {
-                alert("Invalid user id");
+                alert("Unable to process. Invalid user ID or user has no face descriptors stored");
                 return;
             }
 
@@ -101,12 +102,12 @@ class Face_Recognition extends Component {
 
             var result = '';
 
-            if(ageAccuracy < 5 && sexDetection) {
+            if(ageAccuracy < 7 && sexDetection) {
                 if(faceAccuracy > 55) {
                     console.log('AUTHENTICATION CORRECT')
                     result = 'AUTHENTICATION CORRECT';
                 }
-                else if (faceAccuracy > 45) {
+                else if (faceAccuracy > 50) {
                     console.log('PLEASE TRY AGAIN')
                     result = 'PLEASE TRY AGAIN';
                 }
@@ -136,7 +137,7 @@ class Face_Recognition extends Component {
         }
 
         /**
-         * Load all modules for the face recognition AI.
+         * LOADS ALL MODULES FO THE FACEAPI
          */
         Promise.all([
             faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
