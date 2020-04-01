@@ -54,6 +54,11 @@ const config = {
 
       //#region DATA
 
+      /**
+       * @param path
+       * @param filter: If filter is passed only fields in the filter will be returned
+       * @returns {Promise<[]>}: array with data
+       */
       getElementsInPath = async (path, filter = null) => {
           var data = [];
           var ref = this.db.ref(path);
@@ -79,6 +84,8 @@ const config = {
           }
           return data;
       }
+
+      //#region IMAGES
 
       getImages(organization, userID) {
 
@@ -143,12 +150,9 @@ const config = {
               });
       }
 
-      insertDescriptor = (organization, userID, descriptor) => {
-          this.db.ref('organizations/' + organization + '/users/' + userID + '/descriptors/').push({
-              date: Date.now(),
-              value: descriptor,
-          });
-      };
+      //#endregion
+
+      //#region USERS
 
       addUser = async (organization, userID, firstName, lastName, email, level, gender, age) => {
           const path = 'organizations/' + organization + '/users/' + userID +'/';
@@ -166,78 +170,76 @@ const config = {
           }
       }
 
-      addEvent = async (organization, eventID, eventName, minimumLevel, allowedusers, notAllowedUsers, description, eventDate, passcode) => {
-          const path = 'organizations/' + organization + '/events/' + eventID +'/';
-          if( await this.checkIfEventExist(organization,eventID)) {
-              return false;
+      getUserInformation = async (organization, userID) => {
+          const path = 'organizations/' + organization + '/users/' + userID + '/';
+          var userInformation = {
+              'email':'',
+              'firstName':'',
+              'lastName':'',
+              'age':0,
+              'level':0,
+              'sex':''
+          };
+          const filter = ['email','firstName','lastName','age','level','sex'];
+          const tempElement = await this.getElementsInPath(path, filter);
+          userInformation.age = tempElement[0].value;
+          userInformation.email = tempElement[1].value;
+          userInformation.firstName = tempElement[2].value;
+          userInformation.lastName = tempElement[3].value;
+          userInformation.level = tempElement[4].value;
+          userInformation.sex = tempElement[5].value;
+
+          return userInformation;
+      }
+
+      markUserAttendance = async (organization, eventID, userID) => {
+          const path = 'organizations/' + organization + '/events/' + eventID + '/usersAttended/';
+          const tempElement = await this.getElementsInPath(path);
+          var timeStampIfRegistered = null;
+          for(var i = 0; i < tempElement.length; i++) {
+              let u = tempElement[i];
+              if(u.uid === userID) {
+                  timeStampIfRegistered = u.value;
+                  break;
+              }
+          }
+          if(timeStampIfRegistered != null) {
+              return timeStampIfRegistered;
           }
           else {
-              await this.db.ref(path+'name').set(eventName);
-              await this.db.ref(path+'minimumLevel').set(minimumLevel);
-              await this.db.ref(path+'allowedUsers').set(allowedusers);
-              await this.db.ref(path+'notAllowedUsers').set(notAllowedUsers);
-              await this.db.ref(path+'description').set(description);
-              await this.db.ref(path+'eventDate').set(eventDate);
-              await this.db.ref(path+'passcode').set(passcode);
-              await this.db.ref(path+'active').set(false);
-
-              return true;
+              this.db.ref(path+userID).set(Date.now());
           }
       }
 
-      checkIfUserExist = async (organization, userID) => {
-          const path = 'organizations/'+organization+'/users/';
+      deleteUser = async (organization, userID) => {
+          const path = 'organizations/' + organization + '/users/' + userID + '/';
+          this.db.ref(path).remove();
+      }
+
+      getUsersPreview = async (organization) => {
+          var userResults = [];
+          const path = 'organizations/' + organization + '/users/';
           const tempElement = await this.getElementsInPath(path);
-          var found = false;
-          for(var i = 0; i < tempElement.length; i++) {
-              if(tempElement[i].uid === userID) {
-                  found = true;
-                  break;
-              }
+
+          for(var i=0; i < tempElement.length; i++) {
+              var userInformation = {
+                  'firstName':'',
+                  'lastName':'',
+                  'level':'',
+                  'email':'',
+              };
+              userInformation.firstName = tempElement[i].value.firstName;
+              userInformation.lastName = tempElement[i].value.lastName;
+              userInformation.level = tempElement[i].value.level;
+              userInformation.email = tempElement[i].value.email;
+              userResults.push(userInformation);
           }
-          return found;
-      }
-      
-      checkIfEventExist = async (organization, eventID) => {
-          const path = 'organizations/'+organization+'/events/';
-          const tempElement = await this.getElementsInPath(path);
-          var found = false;
-          for(var i = 0; i < tempElement.length; i++) {
-              if(tempElement[i].uid === eventID) {
-                  found = true;
-                  break;
-              }
-          }
-          return found;
+          return userResults;
       }
 
-      loginIntoEvent = async (organization, eventID, passcode) => {
-          const path = 'organizations/'+organization+'/events/';
-          const tempElement = await this.getElementsInPath(path);
-          var login = false;
-          for(var i = 0; i < tempElement.length; i++) {
-              if(tempElement[i].uid === eventID) {
-                  if(tempElement[i].value.passcode === passcode && tempElement[i].value.active === true) {
-                      login = true;
-                  }
-                  else {
-                      login = false;
-                  }
-                  break;
-              }
-          }
-          return login;
-      }
-
-      getOrganization = async () => {
-          var userID = this.auth.currentUser.uid;
-          var admin = await this.getElementsInPath('users/', userID);
-          if(admin != null){
-              return admin[0].value.companyName;
-          }
-          else{
-              return null;
-          }
+      deleteUsersDescriptors = async (organization, userID) => {
+          const path = 'organizations/' + organization + '/users/' + userID + '/descriptors/';
+          this.db.ref(path).remove();
       }
 
       getDescriptors = async (organization, userID) => {
@@ -262,31 +264,74 @@ const config = {
               avg.push(iAVG);
           }
           descriptors = [Float32Array.from(avg)];
-          console.log(descriptors);
           return descriptors;
       };
 
-      getUserInformation = async (organization, userID) => {
-          const path = 'organizations/' + organization + '/users/' + userID + '/';
-          var userInformation = {
-              'email':'',
-              'firstName':'',
-              'lastName':'',
-              'age':0,
-              'level':0,
-              'sex':''
-          };
-          const filter = ['email','firstName','lastName','age','level','sex'];
-          const tempElement = await this.getElementsInPath(path, filter);
-          console.log(tempElement);
-          userInformation.age = tempElement[0].value;
-          userInformation.email = tempElement[1].value;
-          userInformation.firstName = tempElement[2].value;
-          userInformation.lastName = tempElement[3].value;
-          userInformation.level = tempElement[4].value;
-          userInformation.sex = tempElement[5].value;
+      insertDescriptor = (organization, userID, descriptor) => {
+          this.db.ref('organizations/' + organization + '/users/' + userID + '/descriptors/').push({
+              date: Date.now(),
+              value: descriptor,
+          });
+      };
 
-          return userInformation;
+      checkIfUserExist = async (organization, userID) => {
+          const path = 'organizations/'+organization+'/users/';
+          const tempElement = await this.getElementsInPath(path);
+          var found = false;
+          for(var i = 0; i < tempElement.length; i++) {
+              if(tempElement[i].uid === userID) {
+                  found = true;
+                  break;
+              }
+          }
+          return found;
+      }
+
+      getUserAttendaceReport = async (organization, eventID) => {
+          const path = 'organizations/' + organization + '/events/' + eventID + '/usersAttended/';
+          const tempElement = await this.getElementsInPath(path);
+          return tempElement;
+      }
+
+      //#endregion
+
+      //#region EVENTS
+
+      addEvent = async (organization, eventID, eventName, minimumLevel, allowedusers, notAllowedUsers, description, eventDate, passcode) => {
+          const path = 'organizations/' + organization + '/events/' + eventID +'/';
+          if( await this.checkIfEventExist(organization,eventID)) {
+              return false;
+          }
+          else {
+              await this.db.ref(path+'name').set(eventName);
+              await this.db.ref(path+'minimumLevel').set(minimumLevel);
+              await this.db.ref(path+'allowedUsers').set(allowedusers);
+              await this.db.ref(path+'notAllowedUsers').set(notAllowedUsers);
+              await this.db.ref(path+'description').set(description);
+              await this.db.ref(path+'eventDate').set(eventDate);
+              await this.db.ref(path+'passcode').set(passcode);
+              await this.db.ref(path+'active').set(false);
+
+              return true;
+          }
+      }
+
+      loginIntoEvent = async (organization, eventID, passcode) => {
+          const path = 'organizations/'+organization+'/events/';
+          const tempElement = await this.getElementsInPath(path);
+          var login = false;
+          for(var i = 0; i < tempElement.length; i++) {
+              if(tempElement[i].uid === eventID) {
+                  if(tempElement[i].value.passcode === passcode && tempElement[i].value.active === true) {
+                      login = true;
+                  }
+                  else {
+                      login = false;
+                  }
+                  break;
+              }
+          }
+          return login;
       }
 
       getEventInformation = async (organization, eventID) => {
@@ -298,46 +343,11 @@ const config = {
           };
           const filter = ['allowedUsers','minimumLevel','notAllowedUsers'];
           const tempElement = await this.getElementsInPath(path, filter);
-          console.log(tempElement);
           eventInformation.allowedUsers = tempElement[0].value;
           eventInformation.minimumLevel = tempElement[1].value;
           eventInformation.notAllowedUsers = tempElement[2].value;
 
           return eventInformation;
-      }
-
-      markUserAttendance = async (organization, eventID, userID) => {
-          const path = 'organizations/' + organization + '/events/' + eventID + '/usersAttended/';
-          const tempElement = await this.getElementsInPath(path);
-          var timeStampIfRegistered = null;
-          for(var i = 0; i < tempElement.length; i++) {
-              let u = tempElement[i];
-              if(u.uid === userID) {
-                  timeStampIfRegistered = u.value;
-                  break;
-              }
-          }
-          if(timeStampIfRegistered != null) {
-              return timeStampIfRegistered;
-          }
-          else {
-              this.db.ref(path+userID).set(Date.now());
-          }
-      }
-
-      getUserAttendaceReport = async (organization, eventID) => {
-          const path = 'organizations/' + organization + '/events/' + eventID + '/usersAttended/';
-          const tempElement = await this.getElementsInPath(path);
-          return tempElement;
-      }
-
-      //modifyUser
-
-      //modifyEvent
-
-      deleteUser = async (organization, userID) => {
-          const path = 'organizations/' + organization + '/users/' + userID + '/';
-          this.db.ref(path).remove();
       }
 
       deleteEvent = async (organization, eventID) => {
@@ -355,11 +365,6 @@ const config = {
           this.db.ref(path).set(false);
       }
 
-      deleteUsersDescriptors = async (organization, userID) => {
-          const path = 'organizations/' + organization + '/users/' + userID + '/descriptors/';
-          this.db.ref(path).remove();
-      }
-
       getEventsPreview = async (organization) => {
           var eventResult = [];
           const path = 'organizations/' + organization + '/events/';
@@ -371,36 +376,47 @@ const config = {
                   'eventDate':'',
                   'minimumLevel':'',
                   'name':'',
+                  'eventID':''
               };
               eventInformation.active = tempElement[i].value.active;
               eventInformation.eventDate = tempElement[i].value.eventDate;
               eventInformation.minimumLevel = tempElement[i].value.minimumLevel;
               eventInformation.name = tempElement[i].value.name;
+              eventInformation.eventID = tempElement[i].uid;
               eventResult.push(eventInformation);
           }
           return eventResult;
       }
 
-      getUsersPreview = async (organization) => {
-          var userResults = [];
-          const path = 'organizations/' + organization + '/users/';
+      checkIfEventExist = async (organization, eventID) => {
+          const path = 'organizations/'+organization+'/events/';
           const tempElement = await this.getElementsInPath(path);
-
-          for(var i=0; i < tempElement.length; i++) {
-              var userInformation = {
-                  'firstName':'',
-                  'lastName':'',
-                  'level':'',
-                  'email':'',
-              };
-              userInformation.firstName = tempElement[i].value.firstName;
-              userInformation.lastName = tempElement[i].value.lastName;
-              userInformation.level = tempElement[i].value.level;
-              userInformation.email = tempElement[i].value.email;
-              userResults.push(userInformation);
+          var found = false;
+          for(var i = 0; i < tempElement.length; i++) {
+              if(tempElement[i].uid === eventID) {
+                  found = true;
+                  break;
+              }
           }
-          return userResults;
+          return found;
       }
+
+      //#endregion
+
+      //#region ORGANIZATIONS
+
+      getOrganization = async () => {
+          var userID = this.auth.currentUser.uid;
+          var admin = await this.getElementsInPath('users/', userID);
+          if(admin != null){
+              return admin[0].value.companyName;
+          }
+          else{
+              return null;
+          }
+      }
+
+      //#endregion
 
       //endregion
 

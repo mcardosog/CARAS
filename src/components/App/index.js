@@ -35,6 +35,7 @@ class App extends Component {
           },
       );
   }
+
   componentWillUnmount() {
       this.listener();
   }
@@ -53,7 +54,6 @@ class App extends Component {
                           <Route path={ROUTES.HOME} component={HomePage} />
                           <Route path={ROUTES.ACCOUNT} component={AccountPage} />
                           <Route path={ROUTES.ADMIN} component={AdminPage} />
-                          <Route path={ROUTES.FACE_RECOGNITION} component={FaceRecognition} />
                           <Route path={ROUTES.RECOGNIZER} component={Recognizer} />
                           <Route path={ROUTES.NEWUSER} component={NewUser} />
                       </Switch>
@@ -62,6 +62,7 @@ class App extends Component {
           </AuthUserContext.Provider>
       );
   }
+
 }
 
 export default withFirebase(App);

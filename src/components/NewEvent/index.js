@@ -11,7 +11,6 @@ class NewEvent extends Component {
     }
 
     async addEventClick() {
-
         const eventID = document.getElementById('eventID').value;
         const eventName = document.getElementById('eventName').value;
         const minimumLevel = document.getElementById('minimumLevel').value;
@@ -38,6 +37,8 @@ class NewEvent extends Component {
         if(!eventAdded) {
             alert('Event ID already in use. Verify if the event was already entered.');
         }
+
+        this.props.eventUpdate();
 
     }
 

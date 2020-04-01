@@ -6,22 +6,24 @@ import { withFirebase } from '../Firebase';
 import 'react-html5-camera-photo/build/css/index.css';
 //
 class Face_Recognition extends Component {
-
     constructor(props) {
         super(props);
     }
 
     render() {
-        //TAKEN FROM CHILDREN IN THE CONSTRUCTOR
+        //INPUTS FROM CHILDREN IN THE CONSTRUCTOR
         const organization = this.props.children.organization;
         const eventID = this.props.children.event;
 
+        //INSTANCE OF FIREBASE
         const fb = this.props.firebase;
+
         /**
          * @param userID
-         * @returns {LabeledFaceDescriptors} set with user stored images
+         * @returns {Promise<null|LabeledFaceDescriptors>}
+         * LOADS USER DESCRIPTORS FORM DATABASE AND CREATE LABELEDFACEDESCRIPTOR
+         * INSTANCE. INSTANCE USED TO COMPARE USER IMAGE
          */
-
         async function loadUserDescriptor(userID) {
             let descriptionSet = await fb.getDescriptors(organization,userID);
             if(descriptionSet.length == 0) { return null; }
@@ -29,10 +31,9 @@ class Face_Recognition extends Component {
         }
 
         /**
-         * @param dataUri contains uri of the picture taken from the camera
+         * @param dataUri: TAKEN IMAGE DATA
          * @returns {Promise<void>}
-         *
-         * Function store the image a compare it with the corresponding userID to verify if it match
+         * VERIFIES IF THE IMAGE IS VALID AND GET USER INFORMATION
          */
         async function handleTakePhoto (dataUri) {
 
@@ -136,7 +137,7 @@ class Face_Recognition extends Component {
         }
 
         /**
-         * Load all modules for the face recognition AI.
+         * LOADS ALL MODULES FO THE FACEAPI
          */
         Promise.all([
             faceapi.nets.faceRecognitionNet.loadFromUri('/models'),

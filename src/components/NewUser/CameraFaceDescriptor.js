@@ -14,12 +14,6 @@ class CameraFaceDescriptor extends Component {
         }
     }
 
-    /**
-     * @param dataUri contains uri of the picture taken from the camera
-     * @returns {Promise<void>}
-     *
-     * Function store the image a compare it with the corresponding userID to verify if it match
-     */
     handleTakePhoto = async (dataUri) => {
 
         if(this.state.remainingPhotos == 0) {
@@ -51,11 +45,7 @@ class CameraFaceDescriptor extends Component {
 
     }
 
-
     render() {
-        /**
-         * Load all modules for the face recognition AI.
-         */
         Promise.all([
             faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
             faceapi.nets.faceLandmark68Net.loadFromUri('/models'),

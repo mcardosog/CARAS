@@ -5,6 +5,5 @@ export const HOME = '/home';
 export const ACCOUNT = '/account';
 export const ADMIN = '/admin';
 export const PASSWORD_FORGET = '/pw-forget';
-export const FACE_RECOGNITION = '/face-recognition';
 export const RECOGNIZER = '/recognizer';
 export const NEWUSER = '/newuser';
