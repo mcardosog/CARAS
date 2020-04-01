@@ -19,6 +19,7 @@ class NewEvent extends Component {
         const notAllowedEmployees = document.getElementById('notAllowedEmployees').value;
         const description = document.getElementById('description').value;
         const eventDate = document.getElementById('eventDate').value;
+        const passCode = document.getElementById('passcode').value;
 
         var error = 'All fields must be filled. Please enter a value for: ';
         if(eventID === '') { error+=' eventID'; }
@@ -26,13 +27,14 @@ class NewEvent extends Component {
         if(minimumLevel === '') { error+=' Minimum Level'; }
         if(description === '') { error+=' Description'; }
         if(eventDate === '') { error+=' Event Date'; }
+        if(passCode === '') {error+=' Pass Code'}
 
         if(error !== 'All fields must be filled. Please enter a value for: ') {
             alert(error);
             return;
         }
         const organization = this.props.children.organization;
-        const eventAdded = await this.props.firebase.addEvent(organization, eventID, eventName, minimumLevel, allowedEmployees, notAllowedEmployees, description, eventDate);
+        const eventAdded = await this.props.firebase.addEvent(organization, eventID, eventName, minimumLevel, allowedEmployees, notAllowedEmployees, description, eventDate, passCode);
         if(!eventAdded) {
             alert('Event ID already in use. Verify if the event was already entered.');
         }
@@ -56,6 +58,8 @@ class NewEvent extends Component {
                     <input id={'notAllowedEmployees'}/>
                     <p>Description:</p>
                     <input id={'description'}/>
+                    <p>Pass Code:</p>
+                    <input id={'passcode'}/>
                     <p>Event Date:</p>
                     <input id={'eventDate'}/>
                     <br/>
