@@ -15,8 +15,8 @@ class NewEvent extends Component {
         const eventID = document.getElementById('eventID').value;
         const eventName = document.getElementById('eventName').value;
         const minimumLevel = document.getElementById('minimumLevel').value;
-        const allowedEmployees = document.getElementById('allowedEmployees').value;
-        const notAllowedEmployees = document.getElementById('notAllowedEmployees').value;
+        const allowedUsers = document.getElementById('allowedUsers').value;
+        const notAllowedUsers = document.getElementById('notAllowedUsers').value;
         const description = document.getElementById('description').value;
         const eventDate = document.getElementById('eventDate').value;
         const passCode = document.getElementById('passcode').value;
@@ -34,7 +34,7 @@ class NewEvent extends Component {
             return;
         }
         const organization = this.props.children.organization;
-        const eventAdded = await this.props.firebase.addEvent(organization, eventID, eventName, minimumLevel, allowedEmployees, notAllowedEmployees, description, eventDate, passCode);
+        const eventAdded = await this.props.firebase.addEvent(organization, eventID, eventName, minimumLevel, allowedUsers, notAllowedUsers, description, eventDate, passCode);
         if(!eventAdded) {
             alert('Event ID already in use. Verify if the event was already entered.');
         }
@@ -53,9 +53,9 @@ class NewEvent extends Component {
                     <p>Minimum Level:</p>
                     <input id={'minimumLevel'}/>
                     <p>Allowed Employees ID:</p>
-                    <input id={'allowedEmployees'}/>
+                    <input id={'allowedUsers'}/>
                     <p>Not Allowed Employees ID:</p>
-                    <input id={'notAllowedEmployees'}/>
+                    <input id={'notAllowedUsers'}/>
                     <p>Description:</p>
                     <input id={'description'}/>
                     <p>Pass Code:</p>

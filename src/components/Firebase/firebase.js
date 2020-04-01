@@ -166,7 +166,7 @@ const config = {
           }
       }
 
-      addEvent = async (organization, eventID, eventName, minimumLevel, allowedEmployees, notAllowedEmployees, description, eventDate, passcode) => {
+      addEvent = async (organization, eventID, eventName, minimumLevel, allowedusers, notAllowedUsers, description, eventDate, passcode) => {
           const path = 'organizations/' + organization + '/events/' + eventID +'/';
           if( await this.checkIfEventExist(organization,eventID)) {
               return false;
@@ -174,8 +174,8 @@ const config = {
           else {
               await this.db.ref(path+'name').set(eventName);
               await this.db.ref(path+'minimumLevel').set(minimumLevel);
-              await this.db.ref(path+'allowedEmployees').set(allowedEmployees);
-              await this.db.ref(path+'notAllowedEmployees').set(notAllowedEmployees);
+              await this.db.ref(path+'allowedUsers').set(allowedusers);
+              await this.db.ref(path+'notAllowedUsers').set(notAllowedUsers);
               await this.db.ref(path+'description').set(description);
               await this.db.ref(path+'eventDate').set(eventDate);
               await this.db.ref(path+'passcode').set(passcode);
@@ -209,6 +209,24 @@ const config = {
               }
           }
           return found;
+      }
+
+      loginIntoEvent = async (organization, eventID, passcode) => {
+          const path = 'organizations/'+organization+'/events/';
+          const tempElement = await this.getElementsInPath(path);
+          var login = false;
+          for(var i = 0; i < tempElement.length; i++) {
+              if(tempElement[i].uid === eventID) {
+                  if(tempElement[i].value.passcode === passcode && tempElement[i].value.active === true) {
+                      login = true;
+                  }
+                  else {
+                      login = false;
+                  }
+                  break;
+              }
+          }
+          return login;
       }
 
       getOrganization = async () => {
@@ -264,8 +282,9 @@ const config = {
           };
           const filter = ['allowedUsers','minimumLevel','notAllowedUsers'];
           const tempElement = await this.getElementsInPath(path, filter);
+          console.log(tempElement);
           eventInformation.allowedUsers = tempElement[0].value;
-          eventInformation.minLevel = tempElement[1].value;
+          eventInformation.minimumLevel = tempElement[1].value;
           eventInformation.notAllowedUsers = tempElement[2].value;
 
           return eventInformation;

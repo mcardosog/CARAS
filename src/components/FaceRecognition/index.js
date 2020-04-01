@@ -102,7 +102,7 @@ class Face_Recognition extends Component {
             var result = '';
 
             if(ageAccuracy < 5 && sexDetection) {
-                if(faceAccuracy > 55) {
+                if(faceAccuracy > 49) {
                     console.log('AUTHENTICATION CORRECT')
                     result = 'AUTHENTICATION CORRECT';
                 }
