@@ -46,7 +46,8 @@ export default function EventPanel({ organization, events, addEvent, updateEvent
                     organization={organization}
                     addEvent={addEvent}
                     updateEvents={updateEvents}
-                    closeModal = {closeModal}/>
+                    closeModal = {closeModal}
+                />
             </Modal.Content>
         </Modal>
     );

@@ -8,9 +8,10 @@ import * as ROUTES from '../../constants/routes';
 import {Grid, Header, Form, Segment, Button, Container} from 'semantic-ui-react';
 const SignUpPage = () => (
     <Grid 
+    textAlign='left'
         centered
   	>
-		<Grid.Column verticalAlign='middle' width='6' textAlign="left" >
+		<Grid.Column verticalAlign='middle' width='6'>
 			<SignUpForm />
 		</Grid.Column>
   	</Grid>
@@ -88,29 +89,24 @@ class SignUpFormBase extends Component {
             <>
                 <Header as ='h2' color ='teal' textAlign = 'center'>Sign Up</Header>
                 <Form size = "large" onSubmit={this.onSubmit} >
-                    <Segment>
+                    <Segment fluid stacked>
                         <Form.Group>
                             <Form.Input
-                                fuid
                                 name = 'name'
                                 label = 'First Name'
                                 value = {name}
                                 type = 'text'
                                 onChange = {this.onChange}
-                                iconPosition = 'left'
                             />
                             <Form.Input
-                                fuid
                                 name = 'lastName'
                                 label = 'Last Name'
                                 value = {lastName}
                                 type = 'text'
                                 onChange = {this.onChange}
-                                iconPosition = 'left'
                             />
                         </Form.Group>  
                         <Form.Input
-                            fuid
                             name = 'companyName'
                             label = 'Company'
                             icon = 'building'
@@ -120,7 +116,6 @@ class SignUpFormBase extends Component {
                             iconPosition = 'left'
                         />
                         <Form.Input
-                            fuid
                             name = 'username'
                             label = 'Username'
                             icon = 'user'
@@ -131,7 +126,6 @@ class SignUpFormBase extends Component {
                             placeholder = 'username'
                         />
                         <Form.Input
-                            fuid
                             label = 'Email'
                             name = 'email'
                             icon = 'mail'
@@ -142,7 +136,6 @@ class SignUpFormBase extends Component {
                             placeholder = 'email@host.com'
                         />
                         <Form.Input
-                            fluid
                             icon = 'lock'
                             name = 'passwordOne'
                             label = 'Password'
@@ -153,7 +146,6 @@ class SignUpFormBase extends Component {
                             type = 'password'
                         />
                         <Form.Input
-                            fluid
                             icon = 'lock'
                             name = 'passwordTwo'
                             value = {passwordTwo}

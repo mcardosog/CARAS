@@ -77,9 +77,10 @@ export default function EventForm({organization, addEvent, updateEvents, closeMo
             values.code);
         if(!eventAdded) {
             alert('Event ID already in use. Verify if the event was already entered.');
+        } else {
+            closeModal();
+            updateEvents();
         }
-        closeModal();
-        updateEvents();
     };
 
     return (
@@ -180,6 +181,7 @@ export default function EventForm({organization, addEvent, updateEvents, closeMo
                         </Form.Group>
                         <Button
                             content="Cancel"
+                            size='large'
                             color="red"
                             icon="cancel"
                             labelPosition="left"
@@ -192,6 +194,7 @@ export default function EventForm({organization, addEvent, updateEvents, closeMo
                             type="submit"
                             disabled={isValid}
                             content="Submit"
+                            size='large'
                             color="green"
                             icon="check"
                             labelPosition="left"
