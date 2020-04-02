@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { Button, Icon, Card } from "semantic-ui-react";
 
 export default function EventCard({ event }) {
-    const [paused, setPaused] = useState(false);
-
+    const [paused, setPaused] = useState(event.active);
     const attendance = (
         <p>
             <Icon name="user" />
@@ -15,12 +14,16 @@ export default function EventCard({ event }) {
         <>
             <Card fluid raised>
                 <Card.Content>
-                    <Button
-                        stackable
-                        color="red"
-                        icon="stop"
-                        size="medium"
-                        floated="right"
+                <Button
+                    stackable='true'
+                    color={(paused ? "red" : "blue")}
+                    icon={(paused ? "stop" : "play")}
+                    onClick={() => {
+                        setPaused(!paused);
+                        console.log("clicked");
+                    }}
+                    size="medium"
+                    floated="right"
                     />
                     <Card.Header>{event.name}</Card.Header>
                     <Card.Meta>Created on {event.eventDate} </Card.Meta>

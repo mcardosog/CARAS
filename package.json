@@ -18,6 +18,7 @@
     "react-html5-camera-photo": "^1.5.4",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.3.0",
+    "react-semantic-ui-datepickers": "^2.4.0",
     "react-webcam": "^5.0.0",
     "recompose": "^0.30.0",
     "semantic-ui-css": "^2.4.1",
