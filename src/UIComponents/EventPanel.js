@@ -12,7 +12,7 @@ import {
 import EventCard from "../UIComponents/EventCard";
 import CreateEventForm from "../UIComponents/CreateEventForm";
 
-export default function EventPanel({ organization, events, addEvent, updateEvents}) {
+export default function EventPanel({ organization, events, addEvent, updateEvents, activateEvent}) {
     const [viewCreateEventForm, setViewCreateEventForm] = useState(false);
 
     const activeEvents = [];
@@ -81,7 +81,13 @@ export default function EventPanel({ organization, events, addEvent, updateEvent
                         <Card.Group itemsPerRow={3}>
                             {activeEvents &&
                                 activeEvents.map((event, index) => (
-                                    <EventCard event={event} key={index} />
+                                    <EventCard 
+                                        event={event} 
+                                        key={index} 
+                                        organization={organization} 
+                                        updateEvents={updateEvents} 
+                                        activateEvent = {activateEvent}
+                                    />
                                 ))}
                         </Card.Group>
                     </Grid.Row>
@@ -97,7 +103,13 @@ export default function EventPanel({ organization, events, addEvent, updateEvent
                         <Card.Group itemsPerRow={3}>
                             {inactiveEvents &&
                                 inactiveEvents.map((event, index) => (
-                                    <EventCard event={event} key={index} />
+                                    <EventCard 
+                                        event={event} 
+                                        key={index} 
+                                        organization={organization} 
+                                        updateEvents={updateEvents} 
+                                        activateEvent = {activateEvent}
+                                    />
                                 ))}
                         </Card.Group>
                     </Grid.Row>

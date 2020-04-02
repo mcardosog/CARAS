@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Button, Icon, Card } from "semantic-ui-react";
 
-export default function EventCard({ event }) {
-    const [paused, setPaused] = useState(event.active);
+export default function EventCard({ event, organization, activateEvent, updateEvents }) {
+    // const [paused, setPaused] = useState(event.active);
     const attendance = (
         <p>
             <Icon name="user" />
@@ -16,11 +16,11 @@ export default function EventCard({ event }) {
                 <Card.Content>
                 <Button
                     stackable='true'
-                    color={(paused ? "red" : "blue")}
-                    icon={(paused ? "stop" : "play")}
+                    color={(event.active ? "red" : "blue")}
+                    icon={(event.active ? "stop" : "play")}
                     onClick={() => {
-                        setPaused(!paused);
-                        console.log("clicked");
+                        activateEvent(organization, event.id);
+                        updateEvents();
                     }}
                     size="medium"
                     floated="right"

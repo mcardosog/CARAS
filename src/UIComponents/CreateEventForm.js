@@ -141,7 +141,7 @@ export default function EventForm({organization, addEvent, updateEvents, closeMo
                             <Form.Dropdown
                                 label = "Minimum Level"
                                 name = "minimum_level"
-                                placeholder = "Level 1 - 5"
+                                placeholder = "1 - 5"
                                 fluid
                                 selection
                                 // value={checkInData.company}
