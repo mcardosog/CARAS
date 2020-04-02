@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Icon, Card } from "semantic-ui-react";
 
-export default function EventCard({ event, organization, activateEvent, updateEvents }) {
+export default function EventCard({ event, organization, activateEvent, updateEvents, stopEvent }) {
     // const [paused, setPaused] = useState(event.active);
     const attendance = (
         <p>
@@ -19,7 +19,9 @@ export default function EventCard({ event, organization, activateEvent, updateEv
                     color={(event.active ? "red" : "blue")}
                     icon={(event.active ? "stop" : "play")}
                     onClick={() => {
-                        activateEvent(organization, event.id);
+                        event.active
+                            ? (stopEvent(organization,event.eventID))
+                            : (activateEvent(organization, event.eventID));
                         updateEvents();
                     }}
                     size="medium"

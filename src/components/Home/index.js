@@ -14,7 +14,8 @@ class HomePage extends Component {
             addEvent: null,
             events: [],
             updateEvents: null,
-            activateEvent: null
+            activateEvent: null,
+            stopEvent: null
         }
     }
 
@@ -23,6 +24,7 @@ class HomePage extends Component {
         const events = await this.props.firebase.getEventsPreview(organization);
         const addEvent = this.props.firebase.addEvent;
         const activateEvent = this.props.firebase.activateEvent;
+        const stopEvent = this.props.firebase.stopEvent;
         
         const updateEvents  = async () => {
             const events =  await this.props.firebase.getEventsPreview(this.state.organization);
@@ -33,12 +35,13 @@ class HomePage extends Component {
             events: events,
             addEvent : addEvent,
             updateEvents: updateEvents,
-            activateEvent: activateEvent
+            activateEvent: activateEvent,
+            stopEvent: stopEvent
         });
     }
 
     render() {
-        const {organization, events, addEvent, updateEvents, activateEvent} = this.state;
+        const {organization, events, addEvent, updateEvents, activateEvent, stopEvent} = this.state;
         return (
             <>
                 <EventPanel
@@ -47,6 +50,7 @@ class HomePage extends Component {
                     addEvent={addEvent}
                     updateEvents={ updateEvents }
                     activateEvent={activateEvent}
+                    stopEvent={stopEvent}
                 />
             </>
         )
