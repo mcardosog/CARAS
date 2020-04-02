@@ -15,6 +15,18 @@ import CreateEventForm from "../UIComponents/CreateEventForm";
 export default function EventPanel({ organization, events, addEvent, updateEvents}) {
     const [viewCreateEventForm, setViewCreateEventForm] = useState(false);
 
+    const activeEvents = [];
+    const inactiveEvents = [];
+
+    if(events) {
+        events.forEach(event => {
+            if (event.active){
+                activeEvents.push(event);
+            }else {
+                inactiveEvents.push(event);}
+        });
+    }
+
     const closeModal = () => {
         setViewCreateEventForm(false);
     }
@@ -41,6 +53,7 @@ export default function EventPanel({ organization, events, addEvent, updateEvent
 
     return (
         <>
+        <Container>
             <Grid>
                 <Grid.Row>
                     <Grid.Column>
@@ -56,6 +69,7 @@ export default function EventPanel({ organization, events, addEvent, updateEvent
                     </Grid.Column>
                 </Grid.Row>
             </Grid>
+        </Container>
 
             <Divider horizontal>
                 <Header as="h2">Active Events</Header>
@@ -65,8 +79,24 @@ export default function EventPanel({ organization, events, addEvent, updateEvent
                 <Grid stackable>
                     <Grid.Row verticalAlign="middle">
                         <Card.Group itemsPerRow={3}>
-                            {events &&
-                                events.map((event, index) => (
+                            {activeEvents &&
+                                activeEvents.map((event, index) => (
+                                    <EventCard event={event} key={index} />
+                                ))}
+                        </Card.Group>
+                    </Grid.Row>
+                </Grid>
+            </Container>
+
+            <Divider horizontal>
+                <Header as="h2">Inactive Events</Header>
+            </Divider>
+            <Container>
+                <Grid stackable>
+                    <Grid.Row verticalAlign="middle">
+                        <Card.Group itemsPerRow={3}>
+                            {inactiveEvents &&
+                                inactiveEvents.map((event, index) => (
                                     <EventCard event={event} key={index} />
                                 ))}
                         </Card.Group>
