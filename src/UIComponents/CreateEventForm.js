@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { withFirebase } from '../components/Firebase';
 
-import { Form, Grid, Button } from "semantic-ui-react";
+import { Form, Grid, Button, Icon } from "semantic-ui-react";
+import SemanticDatepicker from 'react-semantic-ui-datepickers';
 
 export default function EventForm({organization, addEvent, updateEvents, closeModal}) {
     const [values, setValues] = useState({
@@ -16,12 +17,51 @@ export default function EventForm({organization, addEvent, updateEvents, closeMo
         date: ""
     });
 
+    const [isValid, setIsValid] = useState(true);
+
+    const options = [
+        {
+            key: '1',
+            text:'1',
+            value:'1'
+        },
+        {
+            key: '2',
+            text:'2',
+            value:'2'
+        },
+        {
+            key: '3',
+            text:'3',
+            value:'3'
+        },
+        {
+            key: '4',
+            text:'4',
+            value:'4'
+        },
+        {
+            key: '5',
+            text:'5',
+            value:'5'
+        }
+    ]
+
     var formValues = values;
+
+    var valid = isValid;
 
     var onChange = (name, value) => {
         formValues[name] = value;
-        console.log(formValues);
         setValues(formValues);
+        valid = values.name === "" || 
+                values.code === "" ||
+                values.minimum_level === "" || 
+                values.allowedUsers === "" ||
+                values.notAllowedUsers === "" ||
+                values.description === "" ||
+                values.date === "";
+        setIsValid(valid);
     };
 
     var onSubmit = async () => {
@@ -98,6 +138,36 @@ export default function EventForm({organization, addEvent, updateEvents, closeMo
                                     onChange(data.name, data.value);
                                 }}
                             />
+                            <Form.Dropdown
+                                label = "Minimum Level"
+                                name = "minimum_level"
+                                placeholder = "1 - 5"
+                                fluid
+                                selection
+                                // value={checkInData.company}
+                                options = {options}
+                                onChange={(param, data) => {
+                                  onChange(data.name, data.value);
+                                }}
+                            />
+                            <Form.Field
+                                content={
+                                    <SemanticDatepicker 
+                                        name="date" 
+                                        label="Start Date"
+                                        onChange={(param, data) => {
+                                            /* Convert the date object to a string. Locale means that the format of the string will
+                                             * be in accordance to the region using the application.
+                                             * For the use it will be MM/DD/YYYY
+                                             */
+                                            const dateString = data.value.toLocaleDateString();
+                                            onChange(data.name, dateString)}
+                                        }
+                                    />
+                                }
+                            />
+                        </Form.Group>
+                        <Form.Group>
                             <Form.Input
                                 label="Not Allowed Users"
                                 name="notAllowedUsers"
@@ -109,7 +179,24 @@ export default function EventForm({organization, addEvent, updateEvents, closeMo
                             />
                         </Form.Group>
                         <Button
-                            type="submit">Submit</Button>
+                            content="Cancel"
+                            color="red"
+                            icon="cancel"
+                            labelPosition="left"
+                            floated="right"
+                            onClick = {()=>{
+                                closeModal();
+                            }}
+                        />
+                        <Button
+                            type="submit"
+                            disabled={isValid}
+                            content="Submit"
+                            color="green"
+                            icon="check"
+                            labelPosition="left"
+                            floated="right"
+                        />
                     </Form>
                 </Grid.Column>
             </Grid.Row>

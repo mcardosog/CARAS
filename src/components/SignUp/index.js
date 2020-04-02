@@ -81,62 +81,95 @@ class SignUpFormBase extends Component {
             companyName === '';
 
         return (
-            <form onSubmit={this.onSubmit}>
-                <input
-                    name="name"
-                    value={name}
-                    onChange={this.onChange}
-                    type="text"
-                    placeholder="First Name"
-                />
-                <input
-                    name="lastName"
-                    value={lastName}
-                    onChange={this.onChange}
-                    type="text"
-                    placeholder="Last Name"
-                />
-                <input
-                    name="companyName"
-                    value={companyName}
-                    onChange={this.onChange}
-                    type="text"
-                    placeholder="Company Name"
-                />
-                <input
-                    name="email"
-                    value={email}
-                    onChange={this.onChange}
-                    type="text"
-                    placeholder="Email Address"
-                />
-                <input
-                    name="username"
-                    value={username}
-                    onChange={this.onChange}
-                    type="text"
-                    placeholder="Username"
-                />
-                <input
-                    name="passwordOne"
-                    value={passwordOne}
-                    onChange={this.onChange}
-                    type="password"
-                    placeholder="Password"
-                />
-                <input
-                    name="passwordTwo"
-                    value={passwordTwo}
-                    onChange={this.onChange}
-                    type="password"
-                    placeholder="Confirm Password"
-                />
-                <button disabled={isInvalid} type="submit">
-                    Sign Up
-                </button>
-
-                {error && <p>{error.message}</p>}
-            </form>
+            <>
+                <Header as ='h2' color ='teal' textAlign = 'center'>Sign Up</Header>
+                <Form size = 'small' onSubmit={this.onSubmit} >
+                    <Segment stacked>
+                        <Form.Group>
+                            <Form.Input
+                                fuid
+                                name = 'name'
+                                label = 'First Name'
+                                value = {name}
+                                type = 'text'
+                                onChange = {this.onChange}
+                                iconPosition = 'left'
+                            />
+                            <Form.Input
+                                fuid
+                                name = 'lastName'
+                                label = 'Last Name'
+                                value = {lastName}
+                                type = 'text'
+                                onChange = {this.onChange}
+                                iconPosition = 'left'
+                            />
+                        </Form.Group>  
+                        <Form.Input
+                            fuid
+                            name = 'companyName'
+                            label = 'Company'
+                            icon = 'building'
+                            value = {companyName}
+                            type = 'text'
+                            onChange = {this.onChange}
+                            iconPosition = 'left'
+                        />
+                        <Form.Input
+                            fuid
+                            name = 'username'
+                            label = 'Username'
+                            icon = 'user'
+                            value = {username}
+                            type = 'text'
+                            onChange = {this.onChange}
+                            iconPosition = 'left'
+                            placeholder = 'username'
+                        />
+                        <Form.Input
+                            fuid
+                            label = 'Email'
+                            name = 'email'
+                            icon = 'mail'
+                            value = {email}
+                            type = 'text'
+                            onChange = {this.onChange}
+                            iconPosition = 'left'
+                            placeholder = 'email@host.com'
+                        />
+                        <Form.Input
+                            fluid
+                            icon = 'lock'
+                            name = 'passwordOne'
+                            label = 'Password'
+                            value = {passwordOne}
+                            iconPosition = 'left'
+                            onChange = {this.onChange}
+                            placeholder  = 'Password'
+                            type = 'password'
+                        />
+                        <Form.Input
+                            fluid
+                            icon = 'lock'
+                            name = 'passwordTwo'
+                            value = {passwordTwo}
+                            label = 'Confirm Password'
+                            iconPosition = 'left'
+                            onChange = {this.onChange}
+                            placeholder  = 'Confirm Password'
+                            type = 'password'
+                        />
+                    </Segment>
+                    <Button 
+                        color = 'teal'
+                        fluid
+                        disabled = {isInvalid}
+                        type = 'submit'
+                        size = 'large'
+                    >Sign Up</Button>
+                    {error && <p>{error.message}</p>}
+                </Form>
+            </>
         );
     }
 }
