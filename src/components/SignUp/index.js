@@ -5,11 +5,15 @@ import { compose } from 'recompose';
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
 
+import {Grid, Header, Form, Segment, Button, Container} from 'semantic-ui-react';
 const SignUpPage = () => (
-    <div>
-        <h1>SignUp</h1>
-        <SignUpForm />
-    </div>
+    <Grid 
+        centered
+  	>
+		<Grid.Column verticalAlign='middle' width='6' textAlign="left" >
+			<SignUpForm />
+		</Grid.Column>
+  	</Grid>
 );
 
 const INITIAL_STATE = {
@@ -83,8 +87,8 @@ class SignUpFormBase extends Component {
         return (
             <>
                 <Header as ='h2' color ='teal' textAlign = 'center'>Sign Up</Header>
-                <Form size = 'small' onSubmit={this.onSubmit} >
-                    <Segment stacked>
+                <Form size = "large" onSubmit={this.onSubmit} >
+                    <Segment>
                         <Form.Group>
                             <Form.Input
                                 fuid
@@ -169,7 +173,7 @@ class SignUpFormBase extends Component {
                     >Sign Up</Button>
                     {error && <p>{error.message}</p>}
                 </Form>
-            </>
+                </>
         );
     }
 }
