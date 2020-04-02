@@ -37,10 +37,25 @@ class Face_Recognition extends Component {
          */
         async function handleTakePhoto (dataUri) {
 
+            //LOAD WEBCAM CAPTURED IMAGE AND BUILD THE DESCRIPTOR SET
+            let blob =  await fetch(dataUri).then(r => r.blob());    //Build Image
+            const image =  await faceapi.bufferToImage(blob);
+            const detection =  await faceapi.detectAllFaces(image).withFaceLandmarks().withFaceDescriptors();
+            if(detection.length === 0) {
+                alert("No face detected. Please try again.");
+                return;
+            }
+
+            if(detection.length > 1) {
+                alert("Multiple faces detected. Please try again.");
+                return;
+            }
+
             //CHECK IF ELEMENT ID WAS ENTERED
             const userID = document.getElementById("userId").value;
             if(userID == '') {
-                alert("Please enter an user id");
+                alert("No user ID detected. Process will take longer to detect user");
+                await handleTakePhotoNoUserID(image, detection);
                 return;
             }
 
@@ -68,20 +83,6 @@ class Face_Recognition extends Component {
                 return;
             }
 
-            //LOAD WEBCAM CAPTURED IMAGE AND BUILD THE DESCRIPTOR SET
-            let blob =  await fetch(dataUri).then(r => r.blob());    //Build Image
-            const image =  await faceapi.bufferToImage(blob);
-            const detection =  await faceapi.detectAllFaces(image).withFaceLandmarks().withFaceDescriptors();
-            if(detection.length === 0) {
-                alert("No face detected. Please try again.");
-                return;
-            }
-
-            if(detection.length > 1) {
-                alert("Multiple faces detected. Please try again.");
-                return;
-            }
-
             //CREATE THE FACE MATCHER AND MATH THE DESCRIPTORS
             const faceMatcher = await new faceapi.FaceMatcher(descriptorSet, 0.6);
             const displaySize = { width: image.width, height: image.height };
@@ -95,6 +96,74 @@ class Face_Recognition extends Component {
             const faceAccuracy = (1 - results[0].distance)*100;
             const ageAccuracy = Math.abs(userInfo.age-detectionsWithAgeAndGender[0].age);
             const sexDetection = (detectionsWithAgeAndGender[0].gender == userInfo.sex);
+
+            await evaluateResult(faceAccuracy,ageAccuracy,sexDetection,userID,userInfo);
+
+        }
+
+        async function handleTakePhotoNoUserID(image, detection) {
+
+            //GET ALL USERS DESCRIPTORS
+            const usersDescriptors = await fb.getAllUsersDescriptions(organization);
+            var bestValue = 0;
+            var index = -1;
+
+            var bestFaceAccuracy =0;
+            var bestAgeAccuracy =0;
+            var bestSexDetection =0;
+
+            for (var i =0; i < usersDescriptors.length; i++) {
+                const current = usersDescriptors[i];
+                if (current.descriptors === null || current.descriptors.length <= 0) {
+                    continue;
+                }
+                const descriptorSet = new faceapi.LabeledFaceDescriptors(current.userID, current.descriptors);
+
+                //CREATE THE FACE MATCHER AND MATH THE DESCRIPTORS
+                const faceMatcher = await new faceapi.FaceMatcher(descriptorSet, 0.6);
+                const displaySize = {width: image.width, height: image.height};
+                const resizedDetections = await faceapi.resizeResults(detection, displaySize);
+                const results = resizedDetections.map(d => faceMatcher.findBestMatch(d.descriptor));
+                // RECOGNIZE AGE AND GENDER
+                const detectionsWithAgeAndGender = await faceapi.detectAllFaces(image).withAgeAndGender();
+
+                const faceAccuracy = (1 - results[0].distance) * 100;
+                const ageAccuracy = Math.abs(current.userInfo.age - detectionsWithAgeAndGender[0].age);
+                const sexDetection = (detectionsWithAgeAndGender[0].gender == current.userInfo.sex);
+
+                if (faceAccuracy > bestFaceAccuracy) {
+                    bestFaceAccuracy = faceAccuracy;
+                    bestAgeAccuracy = ageAccuracy;
+                    bestSexDetection = sexDetection;
+                    index = i;
+                }
+            }
+
+            if(index < 0) {
+                alert('Unable to locate user.');
+                return;
+            }
+
+            const userID = usersDescriptors[index].userID;
+
+            //GET USER INFO, EVENT INFO AND VERIFY IF IT IS ALLOWED
+            const userInfo = usersDescriptors[index].userInfo;
+
+            const eventInfo = await fb.getEventInformation(organization,eventID);
+            if(eventInfo.notAllowedUsers.includes(userID)) {
+                alert('USER NOT ALLOWED');
+                return
+            }
+            if(eventInfo.minimumLevel > userInfo.level && !eventInfo.allowedUsers.includes(userID)) {
+                alert('USER NOT ALLOWED');
+                return
+            }
+
+            await evaluateResult(bestFaceAccuracy,bestAgeAccuracy,bestSexDetection,userID,userInfo);
+
+        }
+
+        async function evaluateResult (faceAccuracy, ageAccuracy, sexDetection, userID, userInfo) {
 
             console.log('FACE ACCURACY: '+faceAccuracy+' %')
             console.log('AGE DIFFERENCE: '+ageAccuracy+' years')
@@ -132,7 +201,7 @@ class Face_Recognition extends Component {
             console.log(respAttendance);
             if(respAttendance != null) {
                 alert('User '+userInfo.firstName+' '+userInfo.lastName+' '+
-                        'was registered already at '+ new Date(respAttendance).toLocaleString());
+                    'was registered already at '+ new Date(respAttendance).toLocaleString());
             }
         }
 

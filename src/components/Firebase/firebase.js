@@ -154,6 +154,22 @@ const config = {
 
       //#region USERS
 
+      getAllUsersDescriptions = async (organization) => {
+          const path = 'organizations/' + organization + '/users/';
+          const tempElement = await this.getElementsInPath(path);
+          var userDesciptors = [];
+          for(var i=0; i < tempElement.length; i++) {
+              const user = tempElement[i];
+              const element = {
+                  userID: user.uid,
+                  userInfo: await this.getUserInformation(organization, user.uid),
+                  descriptors: await this.getDescriptors(organization, user.uid)
+              }
+              userDesciptors.push(element);
+          }
+          return userDesciptors;
+      }
+
       addUser = async (organization, userID, firstName, lastName, email, level, gender, age) => {
           const path = 'organizations/' + organization + '/users/' + userID +'/';
           if( await this.checkIfUserExist(organization,userID)) {
@@ -242,6 +258,19 @@ const config = {
           this.db.ref(path).remove();
       }
 
+      getDescriptorsAVG = async (descriptors) => {
+          var avg = [];
+          for(var i = 0; i < descriptors[0].length; i++) {
+              var iAVG = 0;
+              for(var j = 0; j < descriptors.length; j++) {
+                  iAVG += descriptors[j][i];
+              }
+              iAVG /= descriptors.length;
+              avg.push(iAVG);
+          }
+          return avg;
+      }
+
       getDescriptors = async (organization, userID) => {
           const path = 'organizations/' + organization + '/users/' + userID + '/descriptors/';
           const tempDescriptors = await this.getElementsInPath(path);
@@ -254,6 +283,7 @@ const config = {
           if(descriptors.length === 0) {
               return descriptors;
           }
+          /*
           var avg = [];
           for(var i = 0; i < descriptors[0].length; i++) {
               var iAVG = 0;
@@ -263,7 +293,10 @@ const config = {
               iAVG /= descriptors.length;
               avg.push(iAVG);
           }
-          descriptors = [Float32Array.from(avg)];
+           */
+          //descriptors = [Float32Array.from(avg)];
+
+          descriptors = [Float32Array.from(await this.getDescriptorsAVG(descriptors))];
           return descriptors;
       };
 
