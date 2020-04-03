@@ -166,6 +166,7 @@ class NewUser extends Component {
         this.setState({user});
     }
 
+
     render() {
         const {
             userID,
@@ -294,11 +295,21 @@ class NewUser extends Component {
                                         content="Cancel"
                                         size='large'
                                         color="red"
-                                        type='cancel'
+                                        type='button'
                                         icon="cancel"
                                         labelPosition="left"
                                         floated="right"
                                         onClick={()=>{
+                                            user = {
+                                                userID: '',
+                                                firstName: '',
+                                                lastName: '',
+                                                email: '',
+                                                level: '',
+                                                gender: '',
+                                                age: ''
+                                            }
+                                            this.setState(user);
                                             this.props.closeModal();
                                         }}
                                     />
