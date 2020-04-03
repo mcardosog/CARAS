@@ -5,7 +5,7 @@ import FileFaceDescriptor from "./FileFaceDescriptor";
 import CustomUploadButton from 'react-firebase-file-uploader/lib/CustomUploadButton';
 import { AuthUserContext, withAuthorization } from '../Session';
 
-import {Form, Button, Grid} from 'semantic-ui-react';
+import {Form, Button, Grid, Modal} from 'semantic-ui-react';
 
 const genderOptions = [
     {
@@ -58,11 +58,13 @@ var user = {
     age: ''
 }
 
+var imageModal;
 
 class NewUser extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            viewImageModal: false,
             recognizer: '',
             user: {
                 userID: '',
@@ -133,16 +135,30 @@ class NewUser extends Component {
             this.setState({
                 recognizer: <CameraFaceDescriptor children={{'organization':organization,'userID':userID}} />,
             });
+            this.setState({viewImageModal: true})
         }
         else {
             this.setState({
                 recognizer: <FileFaceDescriptor children={{'organization':organization,'userID':userID}} />,
             });
+            this.setState({viewImageModal: true})
         }
-    }
 
-    async componentDidMount(){
-        console.log(this.props.children);
+        imageModal = (
+            <Modal
+                open={this.state.viewImageModal}
+                size='large'
+                closeOnDimmerClick={false}
+            >
+                <Modal.Header as='h1' content={answer ? 'Take Pictures' : 'Choose Your Pictures'}/>
+                <Modal.Content content={
+                    answer
+                        ? (<CameraFaceDescriptor children={{'organization':organization,'userID':userID}} />)
+                        : (<FileFaceDescriptor children={{'organization':organization,'userID':userID}} />)
+                    }
+                />
+            </Modal>
+        )
     }
 
     onChange = (event, {name, value}) => {
@@ -301,10 +317,11 @@ class NewUser extends Component {
                     </Grid.Row>
                 </Grid>
                 
-                <br/>
+                {imageModal}
+                {/* <br/>
                 <div id={'FaceDescriptorArea'}>
                     {this.state.recognizer}
-                </div>
+                </div> */}
             </>
         );
     }
