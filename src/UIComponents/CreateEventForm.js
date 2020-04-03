@@ -59,8 +59,6 @@ export default function EventForm({organization, addEvent, updateEvents, closeMo
         valid = values.name === "" || 
                 values.code === "" ||
                 values.minimum_level === "" || 
-                values.allowedUsers === "" ||
-                values.notAllowedUsers === "" ||
                 values.description === "" ||
                 values.date === "";
         setIsValid(valid);
