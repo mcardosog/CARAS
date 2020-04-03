@@ -51,6 +51,10 @@ class UserPanel extends Component {
         });
     }
 
+    closeModal = () => {
+        this.setState({createUserModal: false});
+    }
+
     render() {
         const {organization, users, addUser, deleteUser, updateUsers, createUserModal} = this.state;
         
@@ -64,7 +68,7 @@ class UserPanel extends Component {
                 closeOnDimmerClick={false}
             >
                 <Modal.Header as='h1' content='New User'/>
-                <Modal.Content content={<NewUser children={{'organization': organization}} userUpdate={updateUsers} />}/>
+                <Modal.Content content={<NewUser children={{'organization': organization}} closeModal={this.closeModal} userUpdate={updateUsers} />}/>
             </Modal>
         );
         
@@ -80,6 +84,7 @@ class UserPanel extends Component {
                                 <Button
                                     content="Add User"
                                     icon="add"
+                                    color="green"
                                     labelPosition="left"
                                     floated="right"
                                     onClick={()=>{
@@ -110,15 +115,41 @@ class UserPanel extends Component {
                     <Container>
                     <Grid>
                         <Grid.Row>
-                            <Table unstackable>
+                            <Table size='large' verticalAlign='middle' celled compact unstackable>
                                 <Table.Header>
-                                    <Table.Row textAlign='center'>
+                                    <Table.Row >
                                         <Table.HeaderCell>First Name </Table.HeaderCell>
                                         <Table.HeaderCell>Last Name  </Table.HeaderCell>
                                         <Table.HeaderCell>Level      </Table.HeaderCell>
+                                        <Table.HeaderCell>View      </Table.HeaderCell>
+                                        <Table.HeaderCell>Delete      </Table.HeaderCell>
                                     </Table.Row>
                                 </Table.Header>
                                 <Table.Body>
+                                    {users.map((user, index) => (
+                                         <Table.Row key={index}>
+                                            <Table.Cell>{user.firstName}</Table.Cell>
+                                            <Table.Cell>{user.lastName}</Table.Cell>
+                                            <Table.Cell>{user.level}</Table.Cell>
+                                            <Table.Cell collapsing textAlign='center'>
+                                                <Button
+                                                    color='blue'
+                                                    icon = "info"
+                                                />
+                                            </Table.Cell>
+                                            <Table.Cell collapsing textAlign='center' >
+                                                <Button
+                                                    color='red'
+                                                    icon = "delete"
+                                                    onClick={async () =>{
+                                                        deleteUser(organization, user.userID).then(()=>{
+                                                            updateUsers();
+                                                        })
+                                                    }}
+                                                />
+                                            </Table.Cell>
+                                        </Table.Row>
+                                    ))}
                                 </Table.Body>
                              </Table>
                         </Grid.Row>

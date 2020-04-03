@@ -278,9 +278,13 @@ class NewUser extends Component {
                                         content="Cancel"
                                         size='large'
                                         color="red"
+                                        type='cancel'
                                         icon="cancel"
                                         labelPosition="left"
                                         floated="right"
+                                        onClick={()=>{
+                                            this.props.closeModal();
+                                        }}
                                     />
                                     <Button
                                         type="submit"
