@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Button, Icon, Card } from "semantic-ui-react";
+import GridColumn from "semantic-ui-react/dist/commonjs/collections/Grid/GridColumn";
+import GridRow from "semantic-ui-react/dist/commonjs/collections/Grid/GridRow";
 
-export default function EventCard({ event, organization, activateEvent, updateEvents, stopEvent }) {
+export default function EventCard({ event, organization, activateEvent, updateEvents, stopEvent , deleteEvent}) {
     // const [paused, setPaused] = useState(event.active);
     const attendance = (
         <p>
@@ -29,7 +31,13 @@ export default function EventCard({ event, organization, activateEvent, updateEv
                     />
                     <Card.Header>{event.name}</Card.Header>
                     <Card.Meta>Created on {event.eventDate} </Card.Meta>
-                    <Card.Description>{event.description}</Card.Description>
+                    <Card.Description> {event.description} </Card.Description>
+                    <i className="trash icon" style={{'margin-left':'90%', 'cursor':'pointer'}}
+                        onClick={()=>{
+                            deleteEvent(organization,event.eventID);
+                            updateEvents();
+                        }}
+                    />
                 </Card.Content>
                 {/*<Card.Content extra>{attendance}</Card.Content>*/}
             </Card>

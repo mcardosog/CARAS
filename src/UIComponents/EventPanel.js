@@ -12,7 +12,7 @@ import {
 import EventCard from "../UIComponents/EventCard";
 import CreateEventForm from "../UIComponents/CreateEventForm";
 
-export default function EventPanel({organization, events, addEvent, updateEvents, activateEvent, stopEvent}) {
+export default function EventPanel({organization, events, addEvent, updateEvents, activateEvent, stopEvent, deleteEvent}) {
 
     const [viewCreateEventForm, setViewCreateEventForm] = useState(false);
 
@@ -90,6 +90,7 @@ export default function EventPanel({organization, events, addEvent, updateEvents
                                         updateEvents={updateEvents} 
                                         activateEvent = {activateEvent}
                                         stopEvent = {stopEvent}
+                                        deleteEvent = {deleteEvent}
                                     />
                                 ))}
                         </Card.Group>
@@ -112,6 +113,7 @@ export default function EventPanel({organization, events, addEvent, updateEvents
                                         organization={organization} 
                                         updateEvents={updateEvents} 
                                         activateEvent = {activateEvent}
+                                        deleteEvent = {deleteEvent}
                                     />
                                 ))
                             }
