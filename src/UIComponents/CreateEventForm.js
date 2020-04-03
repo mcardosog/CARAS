@@ -161,8 +161,14 @@ export default function EventForm({organization, addEvent, updateEvents, closeMo
                                              * be in accordance to the region using the application.
                                              * For the use it will be MM/DD/YYYY
                                              */
-                                            const dateString = data.value.toLocaleDateString();
-                                            onChange(data.name, dateString)}
+                                            try {
+                                                const dateString = data.value.toLocaleDateString();
+                                                onChange(data.name, dateString)
+                                            }
+                                            catch (e) {
+                                                onChange(data.name, '');
+                                            }
+                                        }
                                         }
                                     />
                                 }
