@@ -37,7 +37,7 @@ export default function EventPanel({organization, events, addEvent, updateEvents
             closeIcon
             onClose={() => setViewCreateEventForm(false)}
             open={viewCreateEventForm}
-            size="small"
+            size='large'
             closeOnEscape={true}
             closeOnDimmerClick={false}
         >

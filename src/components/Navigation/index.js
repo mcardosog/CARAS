@@ -7,7 +7,8 @@ import { AuthUserContext } from '../Session';
 
 import {
     Menu,
-    Dropdown
+    Dropdown,
+    Icon
 } from 'semantic-ui-react';
 
 const Navigation = () => (
@@ -39,6 +40,7 @@ const NavigationAuth = ({user}) => (
           <Dropdown.Menu>
             <Dropdown.Item as={Link} to={ROUTES.ACCOUNT}>Profile</Dropdown.Item>
             <Dropdown.Item as={Link} to={ROUTES.ADMIN}>Admin Panel</Dropdown.Item>
+            <Dropdown.Item as={Link} to={ROUTES.USERPANEL}>User Panel</Dropdown.Item>
             <Dropdown.Item>
               <SignOutButton/>
             </Dropdown.Item>
@@ -46,23 +48,6 @@ const NavigationAuth = ({user}) => (
         </Dropdown>
     </Menu.Menu>
 </Menu>
-  // <ul>
-  //   <li>
-  //     <Link to={ROUTES.LANDING}>Landing</Link>
-  //   </li>
-  //   <li>
-  //     <Link to={ROUTES.HOME}>Home</Link>
-  //   </li>
-  //   <li>
-  //     <Link to={ROUTES.ACCOUNT}>Account</Link>
-  //   </li>
-  //   <li>
-  //     <Link to={ROUTES.ADMIN}>Admin</Link>
-  //   </li>
-  //   <li>
-  //     <SignOutButton />
-  //   </li>
-  // </ul>
 );
 const NavigationNonAuth = () => (
     <Menu
@@ -71,10 +56,14 @@ const NavigationNonAuth = () => (
       fluid
     >
         <Menu.Menu position='left'>
-            <Menu.Item as={Link} to={ROUTES.LANDING} icon='home'/>
+            <Menu.Item as={Link} to={ROUTES.LANDING}>
+            <Icon name='home' size='big'/>
+            </Menu.Item>
         </Menu.Menu>
-        <Menu.Menu position='right'>
-            <Menu.Item as={Link} to={ROUTES.SIGN_IN}>Sign-In</Menu.Item>
+        <Menu.Menu position='right' >
+            <Menu.Item as={Link} to={ROUTES.SIGN_IN}>
+              <Icon name='user' size='big' />
+            </Menu.Item>
         </Menu.Menu>
     </Menu>
 );
