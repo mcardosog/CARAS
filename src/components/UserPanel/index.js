@@ -4,6 +4,8 @@ import { withFirebase } from '../Firebase';
 import { Link } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
 
+import NewUser from '../NewUser/index';
+
 import { 
     Table, 
     Grid, 
@@ -14,6 +16,7 @@ import {
     Icon, 
     Loader, 
     Segment, 
+    Modal,
     Button} from 'semantic-ui-react';
 
 class UserPanel extends Component {
@@ -24,7 +27,8 @@ class UserPanel extends Component {
             users: [],
             addUser: null,
             deleteUser: null,
-            updateUsers: null
+            updateUsers: null,
+            createUserModal: false
         }
     }
 
@@ -42,52 +46,68 @@ class UserPanel extends Component {
             users: users,
             addUser : addUser,
             deleteUser: deleteUser,
-            updateUsers: updateUsers
+            updateUsers: updateUsers,
+            createUserModal: false
         });
     }
 
     render() {
-        const {organization, users, addUser, deleteUser, updateUsers} = this.state;
+        const {organization, users, addUser, deleteUser, updateUsers, createUserModal} = this.state;
         
+        const userModal = (
+            <Modal
+                closeIcon
+                onClose={() => this.setState({createUserModal: false})}
+                open={createUserModal}
+                size='large'
+                closeOnEscape={true}
+                closeOnDimmerClick={false}
+            >
+                <Modal.Header as='h1' content='New User'/>
+                <Modal.Content content={<NewUser children={{'organization': organization}} userUpdate={updateUsers} />}/>
+            </Modal>
+        );
         
         return (
             <>
-            <Container>
-                <Grid
-                columns={1}>
-                    <Grid.Row>
-                        <Header as='h1'>User Panel</Header>
-                    </Grid.Row>
-                    <Grid.Row>
-                        <Grid.Column>
-                            <Button
-                                content="Add User"
-                                icon="add"
-                                labelPosition="left"
-                                floated="right"
-                            />
-                        </Grid.Column>
-                    </Grid.Row>
-                </Grid>
-            </Container>
+                <Container>
+                    <Grid columns={1} >
+                        <Grid.Row>
+                            <Header as='h1'>User Panel</Header>
+                        </Grid.Row>
+                        <Grid.Row>
+                            <Grid.Column>
+                                <Button
+                                    content="Add User"
+                                    icon="add"
+                                    labelPosition="left"
+                                    floated="right"
+                                    onClick={()=>{
+                                        this.setState({createUserModal: true});
+                                    }}
+                                />
+                            </Grid.Column>
+                        </Grid.Row>
+                    </Grid>
+                </Container>
 
-            <Divider horizontal>
+                <Divider horizontal>
                 <Header as="h2">{organization} Users </Header>
             </Divider>
-            <Dimmer active={users ? false : true} inverted>
+                <Dimmer active={users ? false : true} inverted>
                 <Loader/>
              </Dimmer>
-            {users === undefined || users.length === 0 
-            ? (
-              <Segment placeholder>
-                <Header icon>
-                  <Icon name='inbox' size='large'/>
-                  <p>There are currently no users registered</p>
-                </Header>
-              </Segment>
-                )
-            :(
-                <Container>
+                {users === undefined || users.length === 0 
+                ?(
+                    <Segment placeholder>
+                        <Header icon>
+                          <Icon name='inbox' size='large'/>
+                          <p>There are currently no users registered</p>
+                        </Header>
+                    </Segment>
+                    )
+                :(
+                    <Container>
                     <Grid>
                         <Grid.Row>
                             <Table unstackable>
@@ -104,8 +124,9 @@ class UserPanel extends Component {
                         </Grid.Row>
                     </Grid>
                 </Container>
-                )
-            }
+                    )
+                }
+                {userModal}
             </>
         )
     }
