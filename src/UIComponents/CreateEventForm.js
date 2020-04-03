@@ -5,6 +5,8 @@ import { Form, Grid, Button, Icon } from "semantic-ui-react";
 import SemanticDatepicker from 'react-semantic-ui-datepickers';
 
 export default function EventForm({organization, addEvent, updateEvents, closeModal}) {
+    const [code, setCode] = useState('');
+    
     const [values, setValues] = useState({
         id: "",
         name: "",
@@ -57,8 +59,6 @@ export default function EventForm({organization, addEvent, updateEvents, closeMo
         valid = values.name === "" || 
                 values.code === "" ||
                 values.minimum_level === "" || 
-                values.allowedUsers === "" ||
-                values.notAllowedUsers === "" ||
                 values.description === "" ||
                 values.date === "";
         setIsValid(valid);
@@ -103,10 +103,15 @@ export default function EventForm({organization, addEvent, updateEvents, closeMo
                                 label="Event Code"
                                 name="code"
                                 type="text"
-                                // value={values.code}
+                                value={code}
                                 maxLength="5"
                                 onChange={(param, data) => {
-                                    onChange(data.name, data.value.toUpperCase());
+                                    //only allow numeric values to be inputted
+                                    var regex = (/[0-9]|\./);
+                                    if (regex.test(data.value)) {
+                                        setCode(data.value);
+                                        onChange(data.name, data.value);
+                                    }
                                 }}
                             />
                             <Form.Input
