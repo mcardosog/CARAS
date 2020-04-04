@@ -47,11 +47,11 @@ class FileFaceDescriptor extends Component {
             const image =  await faceapi.bufferToImage(imgRaw);
             const detection =  await faceapi.detectAllFaces(image).withFaceLandmarks().withFaceDescriptors();
             if(detection.length === 0) {
-                alert("No face detected one picture "+imgRaw.name);
+                alert("No face detected on the image " + imgRaw.name);
                 return false;
             }
             if(detection.length > 1) {
-                alert("More than one face detected on the image "+imgRaw.name);
+                alert("More than one face detected on the image " + imgRaw.name);
                 return false;
             }
             await fb.insertDescriptor(organization,userID,detection[0].descriptor);

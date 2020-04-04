@@ -5,7 +5,7 @@ import FileFaceDescriptor from "./FileFaceDescriptor";
 import CustomUploadButton from 'react-firebase-file-uploader/lib/CustomUploadButton';
 import { AuthUserContext, withAuthorization } from '../Session';
 
-import {Form, Button, Grid, Modal} from 'semantic-ui-react';
+import {Form, Button, Grid, Modal, Icon} from 'semantic-ui-react';
 
 const genderOptions = [
     {
@@ -58,13 +58,17 @@ var user = {
     age: ''
 }
 
+var answer;
 var imageModal;
+var confirmationImageModal;
 
 class NewUser extends Component {
     constructor(props) {
         super(props);
         this.state = {
             viewImageModal: false,
+            viewConfirmationImageModal: false,
+            answer,
             recognizer: '',
             user: {
                 userID: '',
@@ -112,12 +116,13 @@ class NewUser extends Component {
         //     alert(error);
         //     return;
         // }
-        const organization = this.props.children.organization;
-        const userAdded = await this.props.firebase.addUser(organization,userID,firstName,lastName,email,level,gender,age);
-        if(!userAdded) {
-            alert('User ID already in use. Verify if the user was already entered.')
-            return;
-        }
+
+        // const organization = this.props.children.organization;
+        // const userAdded = await this.props.firebase.addUser(organization,userID,firstName,lastName,email,level,gender,age);
+        // if(!userAdded) {
+        //     alert('User ID already in use. Verify if the user was already entered.')
+        //     return;
+        // }
 
         // document.getElementById('userID').disabled = true;
         // document.getElementById('firstName').disabled = true;
@@ -128,43 +133,78 @@ class NewUser extends Component {
         // document.getElementById('age').disabled = true;
         // document.getElementById('addUser').disabled = true;
 
-        this.props.userUpdate();
+        // this.props.userUpdate();
 
-        const answer =  window.confirm("Do you want to user you camera to take user face descriptions? \n If you want to upload the images files press Cancel");
-        if(answer) {
-            this.setState({
-                recognizer: <CameraFaceDescriptor children={{'organization':organization,'userID':userID}} />,
-            });
-            this.setState({viewImageModal: true})
-        }
-        else {
-            this.setState({
-                recognizer: <FileFaceDescriptor children={{'organization':organization,'userID':userID}} />,
-            });
-            this.setState({viewImageModal: true})
-        }
+        // const answer =  window.confirm("Do you want to user you camera to take user face descriptions? \n If you want to upload the images files press Cancel");
+        // if(answer) {
+        //     this.setState({
+        //         recognizer: <CameraFaceDescriptor children={{'organization':organization,'userID':userID}} />,
+        //     });
+        //     this.setState({viewImageModal: true})
+        // }
+        // else {
+        //     this.setState({
+        //         recognizer: <FileFaceDescriptor children={{'organization':organization,'userID':userID}} />,
+        //     });
+        //     this.setState({viewImageModal: true})
+        // }
 
-        imageModal = (
-            <Modal
-                open={this.state.viewImageModal}
-                size='large'
-                closeOnDimmerClick={false}
-            >
-                <Modal.Header as='h1' content={answer ? 'Take Pictures' : 'Choose Your Pictures'}/>
-                <Modal.Content content={
-                    answer
-                        ? (<CameraFaceDescriptor children={{'organization':organization,'userID':userID}} />)
-                        : (<FileFaceDescriptor children={{'organization':organization,'userID':userID}} />)
-                    }
-                />
-            </Modal>
-        )
+        // imageModal = (
+        //     <Modal
+        //         open={this.state.viewImageModal}
+        //         size='large'
+        //         closeOnDimmerClick={false}
+        //     >
+        //         <Modal.Header as='h1' content={answer ? 'Take Pictures' : 'Choose Your Pictures'}/>
+        //         <Modal.Content content={
+        //             answer
+        //                 ? (<CameraFaceDescriptor children={{'organization':organization,'userID':userID}} />)
+        //                 : (<FileFaceDescriptor children={{'organization':organization,'userID':userID}} />)
+        //             }
+        //         />
+        //     </Modal>
+        // )
+        this.setState({viewConfirmationImageModal: true});
     }
 
     onChange = (event, {name, value}) => {
         user[name] = value
         this.setState({user});
     }
+
+    // async componentDidMount () {
+    //     confirmationImageModal = (
+    //         <Modal
+    //             size='mini'
+    //             closeOnDimmerClick={false}
+    //             open={this.state.viewConfirmationImageModal}
+    //         >
+    //             <Modal.Header as='h1' content='Picture Information'/>
+    //             <Modal.Content>
+    //                 <p> How would you like to input your pictures? </p>
+    //             </Modal.Content>
+    //             <Modal.Actions>
+    //                 <Button
+    //                     content='Upload My Own Pictures'
+    //                 ></Button>
+    //                 <Button
+    //                     content='Take My Pictures Now'
+    //                 ></Button>
+    //             </Modal.Actions>
+    //         </Modal>
+    //     );
+
+    //     imageModal = (
+    //         <Modal
+    //             open={this.state.viewImageModal}
+    //             size='large'
+    //             closeOnDimmerClick={false}
+    //         >
+    //             <Modal.Header as='h1' content={answer ? 'Take Pictures' : 'Choose Your Pictures'}/>
+    //             <Modal.Content content={this.state.recognizer}/>
+    //         </Modal>
+    //     );
+    // }
 
 
     render() {
@@ -176,6 +216,13 @@ class NewUser extends Component {
             age,
             gender,
             level } = this.state.user;
+        
+        const {
+            organization,
+            viewConfirmationImageModal,
+            viewImageModal,
+            recognizer,
+            answer } = this.state
         
         const isInvalid =   userID === '' ||
                             firstName === '' ||
@@ -328,7 +375,117 @@ class NewUser extends Component {
                     </Grid.Row>
                 </Grid>
                 
-                {imageModal}
+                {/* {imageModal}
+                {confirmationImageModal} */}
+
+{/* const confirmationImageModal = ( */}
+            {/* <Modal
+                size='small'
+                centered={false}
+                closeOnDimmerClick={false}
+                open={viewConfirmationImageModal}
+            >
+                <Modal.Header icon>
+                    <Icon name='picture' size='large'/>
+                    Picture Selection
+                </Modal.Header>
+                <Modal.Description>
+                    <p> To complete this user's profile, we need a set of pictures for our AI to
+                        identify this user upon check in. These pictures are securely stored in our database
+                        and will not be shared.
+                    </p>
+                    <p>How would you like to provide this pictures?</p>
+                </Modal.Description>
+                <Modal.Actions>
+                    <Grid>
+                        <Grid.Column>
+                            <Button
+                                primary
+                                icon='file image'
+                                content='Upload My Own Pictures'
+                                labelPosition='left'
+                                floated='left'
+                            />
+                            <Button
+                                primary
+                                floated='right'
+                                icon='camera'
+                                lacontentbel='Take My Pictures Now'
+                                labelPosition='left'
+                            />
+                        </Grid.Column>
+                    </Grid>
+                </Modal.Actions>
+            </Modal> */}
+            <Modal 
+                size='tiny'
+                closeOnDimmerClick={false}
+                open={viewConfirmationImageModal}
+            >
+                <Modal.Header>Required Images</Modal.Header>
+                <Modal.Content>
+                <Modal.Description>
+                    <p> To complete this user's profile, we need a set of pictures for our AI to
+                        identify this user upon check in. These pictures are securely stored in our database
+                        and will not be shared.
+                    </p>
+                    <p> How would you like to provide these pictures?</p>
+                </Modal.Description>
+                </Modal.Content>
+                <Modal.Actions>
+                <Grid 
+                    unstackable
+                >
+                    <Grid.Row columns={1}>
+                        <Grid.Column>
+                    <Button
+                        primary
+                        icon='camera'
+                        labelPosition='left'
+                        floated='left'
+                        content='Take Pictures'
+                        onClick={()=>{
+                            this.setState({answer: true});
+                            this.setState({recognizer:<CameraFaceDescriptor children={{'organization':organization,'userID':userID}} />})
+                            this.setState({viewConfirmationImageModal: false});
+                            this.setState({viewImageModal: true});
+                        }}
+                    />
+                    <Button
+                        primary
+                        icon='image file'
+                        labelPosition='left'
+                        floated='right'
+                        content='Upload Files'
+                        onClick={()=>{
+                            this.setState({answer: false});
+                            this.setState({recognizer:<FileFaceDescriptor children={{'organization':organization,'userID':userID}} />})
+                            this.setState({viewConfirmationImageModal: false});
+                            this.setState({viewImageModal: true});
+                        }}
+                    />
+                    </Grid.Column>
+                    </Grid.Row>
+                </Grid>
+                </Modal.Actions>
+            </Modal>
+        
+        {/* ); */}
+
+         {/* const imageModal = ( */}
+            <Modal
+                open={viewImageModal}
+                size='large'
+                closeOnDimmerClick={false}
+            >
+                <Modal.Header 
+                    icon={answer ? 'camera' : 'image file'}
+                    content={answer ? 'Take Pictures' : 'Select Files To Upload'}
+                />
+                <Modal.Content content={recognizer}/>
+            </Modal>
+        {/* ) */}
+
                 {/* <br/>
                 <div id={'FaceDescriptorArea'}>
                     {this.state.recognizer}
