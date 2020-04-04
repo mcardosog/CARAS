@@ -4,7 +4,9 @@ import * as faceapi from 'face-api.js';
 import * as canvas from 'canvas';
 import { withFirebase } from '../Firebase';
 import 'react-html5-camera-photo/build/css/index.css';
-//
+import { Grid, Segment, Icon, Label, Header } from 'semantic-ui-react';
+
+
 class CameraFaceDescriptor extends Component {
 
     constructor(props) {
@@ -42,7 +44,6 @@ class CameraFaceDescriptor extends Component {
 
         await this.props.firebase.insertDescriptor(organization,userID,detection[0].descriptor);
         this.setState({remainingPhotos:this.state.remainingPhotos-1});
-
     }
 
     render() {
@@ -52,13 +53,32 @@ class CameraFaceDescriptor extends Component {
             faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
         ])
 
+        const {remainingPhotos} = this.state;
+
         return (
-            <div>
-                <Camera id={'cameraControl'}
-                    onTakePhoto = { (dataUri) => { this.handleTakePhoto(dataUri); } }
-                />
-                <p>Remaining Photos: {this.state.remainingPhotos}</p>
-            </div>
+            <Grid
+                centered
+            >
+                <Grid.Row>
+                    <Header as='h1' icon ='camera'>
+                        Take Pictures
+                        <Header.Subheader>
+                            Remaining Photos: <Label icon ='picture' content={remainingPhotos}></Label>
+                        </Header.Subheader>
+                    </Header>
+                </Grid.Row>
+                <Grid.Row>
+                    <Camera id={'cameraControl'}
+                        onTakePhoto = { (dataUri) => { this.handleTakePhoto(dataUri); } }
+                    />
+                </Grid.Row>
+            </Grid>
+            // <div>
+            //     <Camera id={'cameraControl'}
+            //         onTakePhoto = { (dataUri) => { this.handleTakePhoto(dataUri); } }
+            //     />
+            //     <p>Remaining Photos: {this.state.remainingPhotos}</p>
+            // </div>
         );
     }
 }

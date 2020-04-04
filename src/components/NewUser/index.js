@@ -164,6 +164,7 @@ class NewUser extends Component {
         //         />
         //     </Modal>
         // )
+        this.props.closeModal();
         this.setState({viewConfirmationImageModal: true});
     }
 
@@ -478,10 +479,6 @@ class NewUser extends Component {
                 size='large'
                 closeOnDimmerClick={false}
             >
-                <Modal.Header 
-                    icon={answer ? 'camera' : 'image file'}
-                    content={answer ? 'Take Pictures' : 'Select Files To Upload'}
-                />
                 <Modal.Content content={recognizer}/>
             </Modal>
         {/* ) */}
