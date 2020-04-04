@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import Camera from 'react-html5-camera-photo';
 import * as faceapi from 'face-api.js';
-import * as canvas from 'canvas';
 import { withFirebase } from '../Firebase';
-import 'react-html5-camera-photo/build/css/index.css';
 import Webcam from "react-webcam";
 //
 class CameraFaceDescriptor extends Component {
