@@ -409,6 +409,7 @@ class NewUser extends Component {
                                             this.setState({recognizer:<CameraFaceDescriptor children={{'updateUsers': this.props.userUpdate,'organization':organization,'userID':userID, 'closeModal': this.props.closeModal}} />})
                                             this.setState({viewConfirmationImageModal: false});
                                             this.setState({viewImageModal: true});
+
                                         }}
                                     />
                                     <Button
