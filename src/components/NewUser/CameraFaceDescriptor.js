@@ -18,8 +18,9 @@ class CameraFaceDescriptor extends Component {
 
     handleTakePhoto = async (dataUri) => {
 
+        const {organization, userID, closeModal, updateUsers} = this.props.children;
+
         if(this.state.remainingPhotos == 0) {
-            alert('Maximum number of pictures reached.')
             return;
         }
 
@@ -39,8 +40,8 @@ class CameraFaceDescriptor extends Component {
         }
 
         //TAKEN FROM CHILDREN IN THE CONSTRUCTOR
-        const organization = this.props.children.organization;
-        const userID = this.props.children.userID;
+        // const organization = this.props.children.organization;
+        // const userID = this.props.children.userID;
 
         await this.props.firebase.insertDescriptor(organization,userID,detection[0].descriptor);
         this.setState({remainingPhotos:this.state.remainingPhotos-1});
@@ -54,7 +55,13 @@ class CameraFaceDescriptor extends Component {
         ])
 
         const {remainingPhotos} = this.state;
+        const {updateUsers, closeModal} = this.props.children;
 
+        if(remainingPhotos == 0) {
+            alert('Completed!');
+            updateUsers();
+            closeModal();
+        }
         return (
             <Grid
                 centered

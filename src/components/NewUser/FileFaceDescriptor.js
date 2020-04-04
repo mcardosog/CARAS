@@ -13,8 +13,9 @@ class FileFaceDescriptor extends Component {
 
     render() {
         //TAKEN FROM CHILDREN IN THE CONSTRUCTOR
-        const organization = this.props.children.organization;
-        const userID = this.props.children.userID;
+        const {organization, userID} = this.props.children;
+        // const organization = this.props.children.organization;
+        // const userID = this.props.children.userID;
         const fb = this.props.firebase;
 
 
