@@ -262,7 +262,6 @@ class NewUser extends Component {
                                 noValidate
                                 onSubmit={this.onSubmit}
                                 size='large'
-                                fluid
                             >
                                 <Form.Group width='equal'>
                                     <Form.Input
@@ -393,8 +392,8 @@ class NewUser extends Component {
                         </Modal.Description>
                     </Modal.Content>
                     <Modal.Actions>
-                        <Grid 
-                            unstackable
+                        <Grid
+                        stackable={false}
                         >
                             <Grid.Row columns={1}>
                                 <Grid.Column>
@@ -432,7 +431,7 @@ class NewUser extends Component {
                 </Modal>
         
                 <Modal
-                    size='large'
+                    size={answer ? 'large' : 'small'}
                     open={viewImageModal}
                     closeOnDimmerClick={false}
                 >

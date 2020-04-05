@@ -18,7 +18,7 @@ class CameraFaceDescriptor extends Component {
 
     handleTakePhoto = async (dataUri) => {
 
-        const {organization, userID, closeModal, updateUsers} = this.props.children;
+        const {organization, userID} = this.props.children;
 
         if(this.state.remainingPhotos == 0) {
             return;
