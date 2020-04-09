@@ -243,14 +243,19 @@ const config = {
                   'lastName':'',
                   'level':'',
                   'email':'',
-                  'userID':''
+                  'userID':'',
+                  'age':'',
+                  'sex':''
               };
               userInformation.firstName = tempElement[i].value.firstName;
               userInformation.lastName = tempElement[i].value.lastName;
               userInformation.level = tempElement[i].value.level;
               userInformation.email = tempElement[i].value.email;
               userInformation.userID = tempElement[i].uid;
+              userInformation.age = tempElement[i].value.age;
+              userInformation.sex = tempElement[i].value.sex;
               userResults.push(userInformation);
+              console.log(userInformation);
           }
           return userResults;
       }
