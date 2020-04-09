@@ -132,9 +132,10 @@ class UserPanel extends Component {
                         <Grid.Row>
                             <Grid.Column>
                             <Button 
-                                content='close'
+                                content='Close'
                                 color='grey'
                                 floated='left'
+                                onClick={()=>(this.setState({viewUserModal: false}))}
                             />
                             <Button 
                                 icon='edit'
@@ -196,13 +197,16 @@ class UserPanel extends Component {
                     <Container>
                     <Grid>
                         <Grid.Row>
+                            <Grid.Column>
                             <Table 
-                                size='large' 
-                                verticalAlign='middle' 
+                                // size='large' 
+                                // verticalAlign='middle' 
                                 celled 
-                                compact 
                                 unstackable
-                                sortable
+                                // sortable
+                                // singleLine
+                                // striped
+
                             >
                                 <Table.Header>
                                     <Table.Row >
@@ -246,6 +250,7 @@ class UserPanel extends Component {
                                     ))}
                                 </Table.Body>
                              </Table>
+                             </Grid.Column>
                         </Grid.Row>
                     </Grid>
                 </Container>
