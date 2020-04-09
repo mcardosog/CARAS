@@ -25,10 +25,12 @@ class UserPanel extends Component {
         this.state = {
             organization: '',
             users: [],
-            addUser: null,
+            // addUser: null,
             deleteUser: null,
             updateUsers: null,
-            createUserModal: false
+            createUserModal: false,
+            viewUserModal: false,
+            selectedUser: {}
         }
     }
 
@@ -44,7 +46,7 @@ class UserPanel extends Component {
         this.setState({
             organization: organization,
             users: users,
-            addUser : addUser,
+            // addUser : addUser,
             deleteUser: deleteUser,
             updateUsers: updateUsers,
             createUserModal: false
@@ -56,9 +58,9 @@ class UserPanel extends Component {
     }
 
     render() {
-        const {organization, users, addUser, deleteUser, updateUsers, createUserModal} = this.state;
+        const {organization, users, deleteUser, updateUsers, createUserModal, viewUserModal, selectedUser: user} = this.state;
         
-        const userModal = (
+        const userFormModal = (
             <Modal
                 closeIcon
                 onClose={() => this.setState({createUserModal: false})}
@@ -71,6 +73,86 @@ class UserPanel extends Component {
                 <Modal.Content content={<NewUser children={{'organization': organization}} closeModal={this.closeModal} userUpdate={updateUsers} />}/>
             </Modal>
         );
+
+        const userModal = (
+            <Modal
+                open={viewUserModal}
+                onClose={() => {this.setState({viewUserModal: false})}}
+                size='tiny'
+                closeOnEscape={true}
+                closeOnDimmerClick={true}
+            >
+                <Modal.Header as='h1' content='User Profile' />
+                <Modal.Content>
+                    <Container>
+                        <Grid>
+                            <Grid.Row>
+                                <Grid.Column>
+                                    <Header textAlign='center' as='h1' icon>
+                                        <Icon name='user circle'/>
+                                        {user.firstName} {user.lastName}
+                                    </Header>
+                                    <Table
+                                        unstackable
+                                        celled
+                                        singleLine
+                                        striped
+                                        definition
+                                    >
+                                        <Table.Body>
+                                            <Table.Row>
+                                                <Table.Cell width={4}>User ID:</Table.Cell>
+                                                <Table.Cell>{user.userID}</Table.Cell>
+                                            </Table.Row>
+                                            <Table.Row>
+                                                <Table.Cell>Level:</Table.Cell>
+                                                <Table.Cell>{user.level}</Table.Cell>
+                                            </Table.Row>
+                                            <Table.Row>
+                                                <Table.Cell>Gender:</Table.Cell>
+                                                <Table.Cell>{user.sex}</Table.Cell>
+                                            </Table.Row>
+                                            <Table.Row>
+                                                <Table.Cell>Age:</Table.Cell>
+                                                <Table.Cell>{user.age}</Table.Cell>
+                                            </Table.Row>
+                                            <Table.Row>
+                                                <Table.Cell>Email:</Table.Cell>
+                                                <Table.Cell>{user.email}</Table.Cell>
+                                            </Table.Row>
+                                        </Table.Body>
+                                    </Table>
+                                </Grid.Column>
+                            </Grid.Row>
+                        </Grid>
+                    </Container>
+                </Modal.Content>
+                <Modal.Actions>
+                    <Grid>
+                        <Grid.Row>
+                            <Grid.Column>
+                            <Button 
+                                content='Close'
+                                color='grey'
+                                floated='left'
+                                onClick={()=>(this.setState({viewUserModal: false}))}
+                            />
+                            <Button 
+                                icon='edit'
+                                labelPosition='left'
+                                content='Edit'
+                                floated='right'
+                                positive
+                            />
+                            </Grid.Column>
+
+                        </Grid.Row>
+                    </Grid>
+
+                </Modal.Actions>
+            </Modal>
+        )
+        
         
         return (
             <>
@@ -115,7 +197,17 @@ class UserPanel extends Component {
                     <Container>
                     <Grid>
                         <Grid.Row>
-                            <Table size='large' verticalAlign='middle' celled compact unstackable>
+                            <Grid.Column>
+                            <Table 
+                                // size='large' 
+                                // verticalAlign='middle' 
+                                celled 
+                                unstackable
+                                // sortable
+                                // singleLine
+                                // striped
+
+                            >
                                 <Table.Header>
                                     <Table.Row >
                                         <Table.HeaderCell>First Name </Table.HeaderCell>
@@ -135,11 +227,17 @@ class UserPanel extends Component {
                                                 <Button
                                                     color='blue'
                                                     icon = "info"
+                                                    onClick = { () => {
+                                                        console.log(user);
+                                                        this.setState({selectedUser: user});
+                                                        this.setState({viewUserModal: true});
+                                                    }}
                                                 />
                                             </Table.Cell>
                                             <Table.Cell collapsing textAlign='center' >
                                                 <Button
                                                     color='red'
+                                                    negative
                                                     icon = "delete"
                                                     onClick={async () =>{
                                                         deleteUser(organization, user.userID).then(()=>{
@@ -152,11 +250,13 @@ class UserPanel extends Component {
                                     ))}
                                 </Table.Body>
                              </Table>
+                             </Grid.Column>
                         </Grid.Row>
                     </Grid>
                 </Container>
                     )
                 }
+                {userFormModal}
                 {userModal}
             </>
         )
