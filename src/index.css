@@ -28,3 +28,8 @@ html, body {
 .ui.card {
     width: 250px !important;
 }
+
+.table-responsive {
+  overflow: scroll;
+  overflow-x: scroll;
+}
