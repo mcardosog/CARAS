@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import Camera from 'react-html5-camera-photo';
 import * as faceapi from 'face-api.js';
-import * as canvas from 'canvas';
 import { withFirebase } from '../Firebase';
-import 'react-html5-camera-photo/build/css/index.css';
+// import 'react-html5-camera-photo/build/css/index.css';
 import { Grid, Segment, Icon, Label, Header } from 'semantic-ui-react';
-
-
+import Webcam from "react-webcam";
+//
 class CameraFaceDescriptor extends Component {
 
     constructor(props) {
@@ -47,13 +45,8 @@ class CameraFaceDescriptor extends Component {
         this.setState({remainingPhotos:this.state.remainingPhotos-1});
     }
 
-    render() {
-        Promise.all([
-            faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
-            faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
-            faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
-        ])
 
+    render() {
         const {remainingPhotos} = this.state;
         const {updateUsers, closeModal} = this.props.children;
 
@@ -62,6 +55,45 @@ class CameraFaceDescriptor extends Component {
             updateUsers();
             closeModal();
         }
+
+        Promise.all([
+            faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
+            faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
+            faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
+        ])
+
+        const videoConstraints = {
+            width: 640,
+            height: 480,
+            facingMode: "user"
+        };
+
+        const WebcamCapture = () => {
+            const webcamRef = React.useRef(null);
+
+            const capture = React.useCallback(
+                () => {
+                    const imageSrc = webcamRef.current.getScreenshot();
+                    this.handleTakePhoto(imageSrc);
+                },
+                [webcamRef]
+            );
+
+            return (
+                <>
+                    <Webcam
+                        audio={false}
+                        height={720}
+                        ref={webcamRef}
+                        screenshotFormat="image/jpeg"
+                        width={1280}
+                        videoConstraints={videoConstraints}
+                    />
+                    <button onClick={capture}>Capture photo</button>
+                </>
+            );
+        };
+
         return (
             <Grid
                 centered
@@ -75,15 +107,12 @@ class CameraFaceDescriptor extends Component {
                     </Header>
                 </Grid.Row>
                 <Grid.Row>
-                    <Camera id={'cameraControl'}
-                        onTakePhoto = { (dataUri) => { this.handleTakePhoto(dataUri); } }
-                    />
+                    <WebcamCapture/>
+                    {/* <p>Remaining Photos: {this.state.remainingPhotos}</p> */}
                 </Grid.Row>
             </Grid>
             // <div>
-            //     <Camera id={'cameraControl'}
-            //         onTakePhoto = { (dataUri) => { this.handleTakePhoto(dataUri); } }
-            //     />
+            //     <WebcamCapture/>
             //     <p>Remaining Photos: {this.state.remainingPhotos}</p>
             // </div>
         );

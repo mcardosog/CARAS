@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import Camera from 'react-html5-camera-photo';
+//import Camera from 'react-html5-camera-photo';
 import * as faceapi from 'face-api.js';
 import * as canvas from 'canvas';
 import { withFirebase } from '../Firebase';
-import 'react-html5-camera-photo/build/css/index.css';
+//import 'react-html5-camera-photo/build/css/index.css';
+
+import Webcam from "react-webcam";
 //
 class Face_Recognition extends Component {
     constructor(props) {
@@ -205,6 +207,40 @@ class Face_Recognition extends Component {
             }
         }
 
+        const videoConstraints = {
+            width: 640,
+            height: 480,
+            facingMode: "user"
+        };
+
+        const WebcamCapture = () => {
+            const webcamRef = React.useRef(null);
+
+            const capture = React.useCallback(
+                () => {
+                    const imageSrc = webcamRef.current.getScreenshot();
+                    handleTakePhoto(imageSrc);
+                },
+                [webcamRef]
+            );
+
+            return (
+                <>
+                    <Webcam
+                        audio={false}
+                        height={720}
+                        ref={webcamRef}
+                        screenshotFormat="image/jpeg"
+                        width={1280}
+                        videoConstraints={videoConstraints}
+                    />
+                    <button onClick={capture}>Capture photo</button>
+                </>
+            );
+        };
+
+
+
         /**
          * LOADS ALL MODULES FO THE FACEAPI
          */
@@ -220,9 +256,7 @@ class Face_Recognition extends Component {
 
         return (
             <div id={'MainControl'}>
-                <Camera
-                    onTakePhoto = { (dataUri) => { handleTakePhoto(dataUri); } }
-                />
+                <WebcamCapture/>
                 <div style={{marginLeft:"50%"}}>
                     <div>
                         <p>User ID</p>
