@@ -255,7 +255,6 @@ const config = {
               userInformation.age = tempElement[i].value.age;
               userInformation.sex = tempElement[i].value.sex;
               userResults.push(userInformation);
-              console.log(userInformation);
           }
           return userResults;
       }
