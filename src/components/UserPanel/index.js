@@ -110,7 +110,7 @@ class UserPanel extends Component {
                                             </Table.Row>
                                             <Table.Row>
                                                 <Table.Cell>Gender:</Table.Cell>
-                                                <Table.Cell>{user.gender}</Table.Cell>
+                                                <Table.Cell>{user.sex}</Table.Cell>
                                             </Table.Row>
                                             <Table.Row>
                                                 <Table.Cell>Age:</Table.Cell>
