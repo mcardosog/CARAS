@@ -51,7 +51,7 @@ class UserEditForm extends React.Component {
 
     const {organization, updateUsers, closeModal, firebase} = this.props;
     console.log(organization);
-    const userAdded = await firebase.addUser(organization,userID,firstName,lastName,email,level,gender,age);
+    const userAdded = await firebase.updateUser(organization,userID,firstName,lastName,email,level,gender,age);
     if (!userAdded) {
         alert("User could not be added");
         return;

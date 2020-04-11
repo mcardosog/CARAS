@@ -176,14 +176,24 @@ const config = {
               return false;
           }
           else {
-              await this.db.ref(path+'age').set(age);
-              await this.db.ref(path+'email').set(email);
-              await this.db.ref(path+'firstName').set(firstName);
-              await this.db.ref(path+'lastName').set(lastName);
-              await this.db.ref(path+'level').set(level);
-              await this.db.ref(path+'sex').set(gender);
+              await this.setUserDatabaseInformation(path, firstName, lastName, email, level, gender, age);
               return true;
           }
+      }
+
+      updateUser = async (organization, userID, firstName, lastName, email, level, gender, age) => {
+          const path = 'organizations/' + organization + '/users/' + userID +'/';
+          await this.setUserDatabaseInformation(path, firstName, lastName, email, level, gender, age);
+          return true;
+
+      }
+      setUserDatabaseInformation = async (path, firstName, lastName, email, level, gender, age) => {
+          await this.db.ref(path+'age').set(age);
+          await this.db.ref(path+'email').set(email);
+          await this.db.ref(path+'firstName').set(firstName);
+          await this.db.ref(path+'lastName').set(lastName);
+          await this.db.ref(path+'level').set(level);
+          await this.db.ref(path+'sex').set(gender);
       }
 
       getUserInformation = async (organization, userID) => {
