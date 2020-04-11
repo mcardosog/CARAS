@@ -352,17 +352,27 @@ const config = {
               return false;
           }
           else {
-              await this.db.ref(path+'name').set(eventName);
-              await this.db.ref(path+'minimumLevel').set(minimumLevel);
-              await this.db.ref(path+'allowedUsers').set(allowedusers);
-              await this.db.ref(path+'notAllowedUsers').set(notAllowedUsers);
-              await this.db.ref(path+'description').set(description);
-              await this.db.ref(path+'eventDate').set(eventDate);
-              await this.db.ref(path+'passcode').set(passcode);
-              await this.db.ref(path+'active').set(false);
+              await this.setEventDatabaseInformation(path, eventName, minimumLevel, allowedusers, notAllowedUsers, description, eventDate, passcode);
 
               return true;
           }
+      }
+
+      updateEvent = async (organization, eventID, eventName, minimumLevel, allowedusers, notAllowedUsers, description, eventDate, passcode) => {
+          const path = 'organizations/' + organization + '/events/' + eventID +'/';
+          await this.setEventDatabaseInformation(path, eventName, minimumLevel, allowedusers, notAllowedUsers, description, eventDate, passcode);
+          return true;
+
+      }
+      setEventDatabaseInformation = async (path, eventName, minimumLevel, allowedusers, notAllowedUsers, description, eventDate, passcode) => {
+          await this.db.ref(path+'name').set(eventName);
+          await this.db.ref(path+'minimumLevel').set(minimumLevel);
+          await this.db.ref(path+'allowedUsers').set(allowedusers);
+          await this.db.ref(path+'notAllowedUsers').set(notAllowedUsers);
+          await this.db.ref(path+'description').set(description);
+          await this.db.ref(path+'eventDate').set(eventDate);
+          await this.db.ref(path+'passcode').set(passcode);
+          await this.db.ref(path+'active').set(false);
       }
 
       loginIntoEvent = async (organization, eventID, passcode) => {
