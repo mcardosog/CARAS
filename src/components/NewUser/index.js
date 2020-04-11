@@ -7,46 +7,7 @@ import { AuthUserContext, withAuthorization } from '../Session';
 
 import {Form, Button, Grid, Modal, Icon} from 'semantic-ui-react';
 
-const genderOptions = [
-    {
-        key: 'ma',
-        value:'Male',
-        text: 'Male'
-    },
-    {
-        key: 'fe',
-        value:'Female',
-        text: 'Female'
-    }
-]
-
-const levelOptions = [
-    {
-        key: '1',
-        text:'1',
-        value:'1'
-    },
-    {
-        key: '2',
-        text:'2',
-        value:'2'
-    },
-    {
-        key: '3',
-        text:'3',
-        value:'3'
-    },
-    {
-        key: '4',
-        text:'4',
-        value:'4'
-    },
-    {
-        key: '5',
-        text:'5',
-        value:'5'
-    }
-]
+import { genderOptions, levelOptions } from "../../util/options";
 
 var user = {
     userID: '',
@@ -358,7 +319,7 @@ class NewUser extends Component {
                                                 age: ''
                                             }
                                             this.setState(user);
-                                            this.props.closeModal();
+                                            this.props.closeModal("Create");
                                         }}
                                     />
                                     <Button

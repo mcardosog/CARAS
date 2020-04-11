@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
 
 import NewUser from '../NewUser/index';
+import UserEditForm from '../../UIComponents/UserEditForm';
 
 import { 
     Table, 
@@ -28,8 +29,9 @@ class UserPanel extends Component {
             // addUser: null,
             deleteUser: null,
             updateUsers: null,
-            createUserModal: false,
+            viewCreateUserModal: false,
             viewUserModal: false,
+            viewEditUserModal: false,
             selectedUser: {}
         }
     }
@@ -53,17 +55,41 @@ class UserPanel extends Component {
         });
     }
 
-    closeModal = () => {
-        this.setState({createUserModal: false});
+    closeModal = (name) => {
+        switch(name){
+            case "View":
+                this.setState({viewUserModal: false});
+                break;
+            case "Create":
+                this.setState({viewCreateUserModal: false});
+                break;
+            case "Edit":
+                this.setState({viewEditUserModal: false});
+                break;
+        }
+    }
+
+    openModal = (name) => {
+        switch(name){
+            case "View":
+                this.setState({viewUserModal: true});
+                break;
+            case "Create":
+                this.setState({viewCreateUserModal: true});
+                break;
+            case "Edit":
+                this.setState({viewEditUserModal: true});
+                break;
+        }
     }
 
     render() {
-        const {organization, users, deleteUser, updateUsers, createUserModal, viewUserModal, selectedUser: user} = this.state;
-        
+        const {organization, users, deleteUser, updateUsers,viewEditUserModal, viewCreateUserModal: createUserModal, viewUserModal, selectedUser: user} = this.state;
+
         const userFormModal = (
             <Modal
                 closeIcon
-                onClose={() => this.setState({createUserModal: false})}
+                onClose={() => this.closeModal("Create")}
                 open={createUserModal}
                 size='large'
                 closeOnEscape={true}
@@ -74,10 +100,30 @@ class UserPanel extends Component {
             </Modal>
         );
 
+        const userEditModal = (
+            <Modal
+                closeIcon
+                onClose={() => this.closeModal("Edit")}
+                open={viewEditUserModal}
+                size='tiny'
+                closeOnEscape={true}
+                closeOnDimmerClick={false}                
+            >
+                <Modal.Header as='h1'>Edit User</Modal.Header>
+                <Modal.Content>
+                    <UserEditForm
+                        user={user} 
+                        organization={organization} 
+                        closeModal={this.closeModal}
+                        updateUsers={updateUsers} />
+                </Modal.Content>
+            </Modal>
+        );
+
         const userModal = (
             <Modal
                 open={viewUserModal}
-                onClose={() => {this.setState({viewUserModal: false})}}
+                onClose={() => this.closeModal("View")}
                 size='tiny'
                 closeOnEscape={true}
                 closeOnDimmerClick={true}
@@ -134,15 +180,21 @@ class UserPanel extends Component {
                             <Button 
                                 content='Close'
                                 color='grey'
+                                size='large'
                                 floated='left'
-                                onClick={()=>(this.setState({viewUserModal: false}))}
+                                onClick={()=>this.closeModal("View")}
                             />
                             <Button 
                                 icon='edit'
                                 labelPosition='left'
                                 content='Edit'
+                                size='large'
                                 floated='right'
                                 positive
+                                onClick={()=>{
+                                    this.openModal("Edit");
+                                    this.closeModal("View");
+                                }}
                             />
                             </Grid.Column>
 
@@ -170,7 +222,7 @@ class UserPanel extends Component {
                                     labelPosition="left"
                                     floated="right"
                                     onClick={()=>{
-                                        this.setState({createUserModal: true});
+                                        this.openModal("Create");
                                     }}
                                 />
                             </Grid.Column>
@@ -258,6 +310,7 @@ class UserPanel extends Component {
                 }
                 {userFormModal}
                 {userModal}
+                {userEditModal}
             </>
         )
     }
