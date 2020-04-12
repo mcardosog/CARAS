@@ -32,12 +32,35 @@ export default function EventCard({ event, organization, activateEvent, updateEv
                     <Card.Header>{event.name}</Card.Header>
                     <Card.Meta>Created on {event.eventDate} </Card.Meta>
                     <Card.Description> {event.description} </Card.Description>
-                    <i className="trash icon" style={{'margin-left':'90%', 'cursor':'pointer'}}
+                    {/* <i className="trash icon" style={{'margin-left':'90%', 'cursor':'pointer'}}
                         onClick={()=>{
                             deleteEvent(organization,event.eventID);
                             updateEvents();
                         }}
-                    />
+                    /> */}
+                </Card.Content>
+                <Card.Content 
+                    extra 
+                    textAlign='center'
+                >
+                    <div className='ui two buttons'>
+                      <Button  
+                        color='blue'
+                        content='View'
+                        icon='eye'
+                        labelPosition='left'
+                        />
+                      <Button 
+                        color='red'
+                        content='Delete'
+                        icon='trash can'
+                        labelPosition='left'
+                        onClick={()=>{
+                            deleteEvent(organization,event.eventID);
+                            updateEvents();
+                        }}
+                        />
+                    </div>
                 </Card.Content>
                 {/*<Card.Content extra>{attendance}</Card.Content>*/}
             </Card>

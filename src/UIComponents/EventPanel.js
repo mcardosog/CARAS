@@ -61,6 +61,7 @@ export default function EventPanel({organization, events, addEvent, updateEvents
                     <Grid.Column>
                         <Button
                             content="Add Event"
+                            color='green'
                             icon="add"
                             labelPosition="left"
                             floated="right"
@@ -79,8 +80,9 @@ export default function EventPanel({organization, events, addEvent, updateEvents
 
             <Container>
                 <Grid stackable>
-                    <Grid.Row verticalAlign="middle">
-                        <Card.Group itemsPerRow={3}>
+                    <Grid.Row >
+                        <Grid.Column>
+                        <Card.Group centered itemsPerRow={3}>
                             {activeEvents &&
                                 activeEvents.map((event, index) => (
                                     <EventCard 
@@ -94,6 +96,7 @@ export default function EventPanel({organization, events, addEvent, updateEvents
                                     />
                                 ))}
                         </Card.Group>
+                        </Grid.Column>
                     </Grid.Row>
                 </Grid>
             </Container>
@@ -103,8 +106,9 @@ export default function EventPanel({organization, events, addEvent, updateEvents
             </Divider>
             <Container>
                 <Grid stackable>
-                    <Grid.Row verticalAlign="middle">
-                        <Card.Group itemsPerRow={3}>
+                    <Grid.Row>
+                        <Grid.Column>
+                        <Card.Group centered itemsPerRow={3}>
                             {inactiveEvents &&
                                 inactiveEvents.map((event, index) => (
                                     <EventCard 
@@ -118,6 +122,7 @@ export default function EventPanel({organization, events, addEvent, updateEvents
                                 ))
                             }
                         </Card.Group>
+                        </Grid.Column>
                     </Grid.Row>
                 </Grid>
             </Container>
