@@ -135,41 +135,6 @@ class NewUser extends Component {
         this.setState({viewImageModal: false});
     }
 
-    // async componentDidMount () {
-    //     confirmationImageModal = (
-    //         <Modal
-    //             size='mini'
-    //             closeOnDimmerClick={false}
-    //             open={this.state.viewConfirmationImageModal}
-    //         >
-    //             <Modal.Header as='h1' content='Picture Information'/>
-    //             <Modal.Content>
-    //                 <p> How would you like to input your pictures? </p>
-    //             </Modal.Content>
-    //             <Modal.Actions>
-    //                 <Button
-    //                     content='Upload My Own Pictures'
-    //                 ></Button>
-    //                 <Button
-    //                     content='Take My Pictures Now'
-    //                 ></Button>
-    //             </Modal.Actions>
-    //         </Modal>
-    //     );
-
-    //     imageModal = (
-    //         <Modal
-    //             open={this.state.viewImageModal}
-    //             size='large'
-    //             closeOnDimmerClick={false}
-    //         >
-    //             <Modal.Header as='h1' content={answer ? 'Take Pictures' : 'Choose Your Pictures'}/>
-    //             <Modal.Content content={this.state.recognizer}/>
-    //         </Modal>
-    //     );
-    // }
-
-
     render() {
         const {
             userID,

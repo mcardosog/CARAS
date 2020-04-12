@@ -33,3 +33,10 @@ html, body {
   overflow: scroll;
   overflow-x: scroll;
 }
+
+.ui.card>.content>.description, 
+.ui.cards>.card>.content>.description {
+  height: 3em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

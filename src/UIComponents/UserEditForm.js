@@ -6,15 +6,6 @@ import { Container, Grid, Form, Button } from "semantic-ui-react";
 
 import { genderOptions, levelOptions } from "../util/options";
 
-// var user = {
-//   firstName: "Alejandro",
-//   lastName: "Alonso",
-//   email: "elkasjdlka",
-//   gender: "male",
-//   age: "asd",
-//   level: "12"
-// };
-
 class UserEditForm extends React.Component {
   constructor(props) {
     super(props);
