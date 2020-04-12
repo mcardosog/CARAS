@@ -74,11 +74,13 @@ export default function EventForm({organization, addEvent, updateEvents, closeMo
             values.notAllowedUsers,
             values.description,
             values.date,
-            values.code);
+            values.code
+        );
+
         if(!eventAdded) {
             alert('Event ID already in use. Verify if the event was already entered.');
         } else {
-            closeModal();
+            closeModal("Create");
             updateEvents();
         }
     };
@@ -87,7 +89,7 @@ export default function EventForm({organization, addEvent, updateEvents, closeMo
         <Grid>
             <Grid.Row>
                 <Grid.Column>
-                    <Form noValidate onSubmit={onSubmit}>
+                    <Form onSubmit={onSubmit}>
                         <Form.Group>
                             <Form.Input
                                 label="Event Name"
@@ -193,12 +195,13 @@ export default function EventForm({organization, addEvent, updateEvents, closeMo
                         <Button
                             content="Cancel"
                             size='large'
+                            type='button'
                             color="red"
                             icon="cancel"
                             labelPosition="left"
                             floated="right"
                             onClick = {()=>{
-                                closeModal();
+                                closeModal("Create");
                             }}
                         />
                         <Button
