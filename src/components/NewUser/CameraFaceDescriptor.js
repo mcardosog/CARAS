@@ -12,7 +12,7 @@ class CameraFaceDescriptor extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: true,
+            loading: false,
             remainingPhotos: 5
         }
     }
@@ -50,7 +50,7 @@ class CameraFaceDescriptor extends Component {
 
 
     render() {
-        const {remainingPhotos} = this.state;
+        const {remainingPhotos, loading} = this.state;
         const {updateUsers, closeModal} = this.props.children;
 
         Promise.all([
@@ -78,10 +78,10 @@ class CameraFaceDescriptor extends Component {
                     </Header>
                 </Grid.Row>
                 <Grid.Row>
-                    <Dimmer active={loading} inverted>
-                        <Loader/>
-                    </Dimmer>
-                    <Grid.Column>
+                    <Grid.Column stretched>
+                        <Dimmer active={loading} inverted >
+                            <Loader content='Processing image'/>
+                        </Dimmer>
                         <Camera
                             onTakePhoto = { (dataUri) => { this.handleTakePhoto(dataUri); } }
                         />
