@@ -31,7 +31,7 @@ class NewUser extends Component {
             viewConfirmationImageModal: false,
             answer: false,
             recognizer: '',
-            organization: '',
+            organization: this.props.children.organization,
             user: {
                 userID: '',
                 firstName: '',
@@ -40,6 +40,10 @@ class NewUser extends Component {
                 level: '',
                 gender: '',
                 age: ''
+            },
+            errors: {
+                userID: null,
+                email: null
             }
         }
     }
@@ -144,15 +148,18 @@ class NewUser extends Component {
             email,
             age,
             gender,
-            level } = this.state.user;
+            level
+        } = this.state.user;
         
         const {
             organization,
             viewConfirmationImageModal,
             viewImageModal,
             recognizer,
-            } = this.state
+        } = this.state
         
+
+
         const {closeModal} = this.props;
                 
         const isInvalid =   userID === '' ||
@@ -212,23 +219,7 @@ class NewUser extends Component {
                                         maxLength="25"
                                         value={lastName}
                                         onChange={this.onChange}
-                                    />
-                                    {/* <Form.Input
-                                        fluid
-                                        label="User ID"
-                                        name="userID"
-                                        type="text"
-                                        width={8}
-                                        maxLength="15"
-                                        value={userID}
-                                        onChange={({param: event}, data) => {
-                                            //only allow alphanumeric values to be inputted
-                                            var regex = (/^[A-Za-z0-9]+/);
-                                            if (regex.test(data.value)) {
-                                                this.onChange(event, data)
-                                            }
-                                        }}
-                                    /> */}
+                                    />}
                                     <Form.Select
                                         fluid
                                         label="Level"
@@ -292,38 +283,38 @@ class NewUser extends Component {
                                         onChange={this.onChange}
                                     />
                                 </Form.Group>
-                                    <Button
-                                        content="Cancel"
-                                        size='large'
-                                        color="red"
-                                        type='button'
-                                        icon="cancel"
-                                        labelPosition="left"
-                                        floated="right"
-                                        onClick={()=>{
-                                            user = {
-                                                userID: '',
-                                                firstName: '',
-                                                lastName: '',
-                                                email: '',
-                                                level: '',
-                                                gender: '',
-                                                age: ''
-                                            }
-                                            this.setState(user);
-                                            this.props.closeModal("Create");
-                                        }}
-                                    />
-                                    <Button
-                                        type="submit"
-                                        content="Submit"
-                                        disabled={isInvalid}
-                                        size='large'
-                                        color="green"
-                                        icon="check"
-                                        labelPosition="left"
-                                        floated="left"
-                                    />            
+                                <Button
+                                    content="Cancel"
+                                    size='large'
+                                    color="red"
+                                    type='button'
+                                    icon="cancel"
+                                    labelPosition="left"
+                                    floated="right"
+                                    onClick={()=>{
+                                        user = {
+                                            userID: '',
+                                            firstName: '',
+                                            lastName: '',
+                                            email: '',
+                                            level: '',
+                                            gender: '',
+                                            age: ''
+                                        }
+                                        this.setState(user);
+                                        this.props.closeModal("Create");
+                                    }}
+                                />
+                                <Button
+                                    type="submit"
+                                    content="Submit"
+                                    disabled={isInvalid}
+                                    size='large'
+                                    color="green"
+                                    icon="check"
+                                    labelPosition="left"
+                                    floated="left"
+                                />            
                             </Form>
                         </Grid.Column>
                     </Grid.Row>
