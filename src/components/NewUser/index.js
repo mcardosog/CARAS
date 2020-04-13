@@ -213,7 +213,7 @@ class NewUser extends Component {
                                         value={lastName}
                                         onChange={this.onChange}
                                     />
-                                    <Form.Input
+                                    {/* <Form.Input
                                         fluid
                                         label="User ID"
                                         name="userID"
@@ -221,8 +221,14 @@ class NewUser extends Component {
                                         width={8}
                                         maxLength="15"
                                         value={userID}
-                                        onChange={this.onChange}
-                                    />
+                                        onChange={({param: event}, data) => {
+                                            //only allow alphanumeric values to be inputted
+                                            var regex = (/^[A-Za-z0-9]+/);
+                                            if (regex.test(data.value)) {
+                                                this.onChange(event, data)
+                                            }
+                                        }}
+                                    /> */}
                                     <Form.Select
                                         fluid
                                         label="Level"
@@ -235,13 +241,19 @@ class NewUser extends Component {
                                 <Form.Group widths='equal'>
                                     <Form.Input
                                         fluid
-                                        label="Email"
-                                        name="email"
+                                        label="User ID"
+                                        name="userID"
                                         type="text"
-                                        width={8}
-                                        maxLength='40'
-                                        value={email}
-                                        onChange={this.onChange}
+                                        width={4}
+                                        maxLength="15"
+                                        value={userID}
+                                        onChange={({param: event}, data) => {
+                                            //only allow alphanumeric values to be inputted
+                                            var regex = (/^[A-Za-z0-9]+/);
+                                            if (regex.test(data.value)) {
+                                                this.onChange(event, data)
+                                            }
+                                        }}
                                     />
                                     <Form.Select
                                         fluid
@@ -266,6 +278,18 @@ class NewUser extends Component {
                                                 this.onChange(event, data)
                                             }
                                         }}
+                                    />
+                                </Form.Group>
+                                <Form.Group widths='equal'>
+                                    <Form.Input
+                                        fluid
+                                        label="Email"
+                                        name="email"
+                                        type="text"
+                                        width={8}
+                                        maxLength='40'
+                                        value={email}
+                                        onChange={this.onChange}
                                     />
                                 </Form.Group>
                                     <Button
@@ -298,7 +322,7 @@ class NewUser extends Component {
                                         color="green"
                                         icon="check"
                                         labelPosition="left"
-                                        floated="right"
+                                        floated="left"
                                     />            
                             </Form>
                         </Grid.Column>
@@ -348,7 +372,7 @@ class NewUser extends Component {
                                         content='Upload Files'
                                         onClick={()=>{
                                             this.setState({answer: false});
-                                            this.setState({recognizer:<FileFaceDescriptor children={{'updateUsers': this.props.userUpdate,'organization':organization,'userID':userID, 'closeModal': this.closeModal})
+                                        this.setState({recognizer:<FileFaceDescriptor children={{'updateUsers': this.props.userUpdate,'organization':organization,'userID':userID, 'closeModal': this.closeModal}}/>})
                                             this.setState({viewConfirmationImageModal: false});
                                             this.setState({viewImageModal: true});
                                         }}

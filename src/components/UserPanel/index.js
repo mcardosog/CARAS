@@ -91,7 +91,7 @@ class UserPanel extends Component {
                 closeIcon
                 onClose={() => this.closeModal("Create")}
                 open={createUserModal}
-                size='large'
+                size='small'
                 closeOnEscape={true}
                 closeOnDimmerClick={false}
             >
