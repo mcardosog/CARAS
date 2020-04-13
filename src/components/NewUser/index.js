@@ -59,6 +59,8 @@ class NewUser extends Component {
             age
         } = this.state.user;
 
+        const {organization} = this.state;
+
         // console.log(this.state);
         // const userID = document.getElementById('userID').value;
         // const firstName = document.getElementById('firstName').value;
@@ -81,8 +83,6 @@ class NewUser extends Component {
         //     alert(error);
         //     return;
         // }
-
-        const organization = this.props.children.organization;
         const userAdded = await this.props.firebase.addUser(organization,userID,firstName,lastName,email,level,gender,age);
         if(!userAdded) {
             alert('User ID already in use. Verify if the user was already entered.')
