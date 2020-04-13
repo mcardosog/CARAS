@@ -444,6 +444,9 @@ const config = {
               eventInformation.name = tempElement[i].value.name;
               eventInformation.eventID = tempElement[i].uid;
               eventInformation.description = tempElement[i].value.description;
+              eventInformation.allowedUsers = tempElement[i].value.allowedUsers;
+              eventInformation.notAllowedUsers = tempElement[i].value.notAllowedUsers;
+              eventInformation.passcode = tempElement[i].value.passcode;
               eventResult.push(eventInformation);
           }
           return eventResult;
