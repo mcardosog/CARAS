@@ -79,12 +79,14 @@ class CameraFaceDescriptor extends Component {
                 </Grid.Row>
                 <Grid.Row>
                     <Grid.Column stretched>
-                        <Dimmer active={loading} inverted >
-                            <Loader content='Processing image'/>
+                        <Dimmer active={loading}>
+                            <Loader content='Processing Image...' size='huge'/>
                         </Dimmer>
-                        <Camera
-                            onTakePhoto = { (dataUri) => { this.handleTakePhoto(dataUri); } }
-                        />
+                        {/* <div> */}
+                            <Camera
+                                onTakePhoto = { (dataUri) => { this.handleTakePhoto(dataUri); } }
+                            />
+                        {/* </div> */}
                     </Grid.Column>
                 </Grid.Row>
             </Grid>

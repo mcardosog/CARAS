@@ -66,3 +66,8 @@ html, body {
   margin: 0px;
   font-size: 3.5rem !important;
 }
+
+.react-html5-camera-photo>img, .react-html5-camera-photo>video {
+  width: 100% !important;
+}
+
