@@ -59,9 +59,8 @@ class CameraFaceDescriptor extends Component {
 
         if(remainingPhotos == 0) {
             alert('Completed!');
-            updateUsers();
             closeModal();
-            return null;
+            updateUsers();
         }
 
         return (
