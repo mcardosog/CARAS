@@ -42,6 +42,8 @@ class FileFaceDescriptor extends Component {
         }
         else {
             alert('Images processed correctly');
+            this.props.children.closeModal();
+            this.props.children.updateUsers();
         }
     }
 

@@ -40,3 +40,29 @@ html, body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.masthead {
+  background-color: #b2bec3;
+  width: 100%;
+  text-align: center;
+}
+
+.masthead-home {
+  background: url(/public/img/faces2.jpg) !important;
+  border-radius: 0px;
+  background-position: 50% 155% !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+}
+
+.overlay-home {
+  background-color: var(--primary-overlay);
+  width: 100%;
+  padding: 10rem 0rem;
+}
+
+.masthead-title {
+  margin: 0px;
+  font-size: 3.5rem !important;
+}

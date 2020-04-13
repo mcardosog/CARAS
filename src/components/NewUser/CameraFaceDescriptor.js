@@ -51,17 +51,17 @@ class CameraFaceDescriptor extends Component {
         const {remainingPhotos} = this.state;
         const {updateUsers, closeModal} = this.props.children;
 
-        if(remainingPhotos == 0) {
-            alert('Completed!');
-            updateUsers();
-            closeModal();
-        }
-
         Promise.all([
             faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
             faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
             faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
         ])
+
+        if(remainingPhotos == 0) {
+            alert('Completed!');
+            closeModal();
+            updateUsers();
+        }
 
         return (
             <Grid
@@ -76,9 +76,11 @@ class CameraFaceDescriptor extends Component {
                     </Header>
                 </Grid.Row>
                 <Grid.Row>
-                    <Camera
-                        onTakePhoto = { (dataUri) => { this.handleTakePhoto(dataUri); } }
-                    />
+                    <Grid.Column>
+                        <Camera
+                            onTakePhoto = { (dataUri) => { this.handleTakePhoto(dataUri); } }
+                        />
+                    </Grid.Column>
                 </Grid.Row>
             </Grid>
             // <div>

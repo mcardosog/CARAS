@@ -131,8 +131,9 @@ class NewUser extends Component {
         this.setState({user});
     }
 
-    closeModal = () => {
-        this.setState({viewImageModal: false});
+    closeModal = async() => {
+        await this.setState({viewImageModal: false});
+        await this.props.closeModal("Create");
     }
 
     render() {
@@ -151,6 +152,8 @@ class NewUser extends Component {
             viewImageModal,
             recognizer,
             } = this.state
+        
+        const {closeModal} = this.props;
                 
         const isInvalid =   userID === '' ||
                             firstName === '' ||
@@ -331,7 +334,7 @@ class NewUser extends Component {
                                         content='Take Pictures'
                                         onClick={()=>{
                                             this.setState({answer: true});
-                                            this.setState({recognizer:<CameraFaceDescriptor children={{'updateUsers': this.props.userUpdate,'organization':organization,'userID':userID, 'closeModal': this.props.closeModal}} />})
+                                            this.setState({recognizer:<CameraFaceDescriptor children={{'updateUsers': this.props.userUpdate,'organization':organization,'userID':userID, 'closeModal': this.closeModal}} />})
                                             this.setState({viewConfirmationImageModal: false});
                                             this.setState({viewImageModal: true});
 
@@ -345,7 +348,7 @@ class NewUser extends Component {
                                         content='Upload Files'
                                         onClick={()=>{
                                             this.setState({answer: false});
-                                            this.setState({recognizer:<FileFaceDescriptor children={{'organization':organization,'userID':userID}} />})
+                                            this.setState({recognizer:<FileFaceDescriptor children={{'updateUsers': this.props.userUpdate,'organization':organization,'userID':userID, 'closeModal': this.closeModal})
                                             this.setState({viewConfirmationImageModal: false});
                                             this.setState({viewImageModal: true});
                                         }}
@@ -359,6 +362,7 @@ class NewUser extends Component {
                 <Modal
                     size={answer ? 'large' : 'small'}
                     open={viewImageModal}
+                    onClose={()=>closeModal("Create")}
                     closeOnDimmerClick={false}
                 >
                     <Modal.Content content={recognizer}></Modal.Content>
