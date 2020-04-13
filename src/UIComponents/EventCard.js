@@ -1,15 +1,58 @@
 import React, { useState } from "react";
-import { Button, Icon, Card } from "semantic-ui-react";
-import GridColumn from "semantic-ui-react/dist/commonjs/collections/Grid/GridColumn";
-import GridRow from "semantic-ui-react/dist/commonjs/collections/Grid/GridRow";
+import { Button, Icon, Card, Modal} from "semantic-ui-react";
+import EditEventForm from "../UIComponents/EditEventForm";
+
 
 export default function EventCard({ event, organization, activateEvent, updateEvents, stopEvent , deleteEvent}) {
-    // const [paused, setPaused] = useState(event.active);
+    const [viewEditEventForm, setViewEditEventForm] = useState(false);
+
     const attendance = (
         <p>
             <Icon name="user" />
             {/*{event.attendance}/{event.totalCount} Attendees*/}
         </p>
+    );
+
+    const closeModal = (name) => {
+        switch(name) {
+            // case "View":
+            //     setViewEvent(false);
+            //     break;
+            case "Edit":
+                setViewEditEventForm(false);
+                break;               
+        }
+    }
+
+    const openModal = (name) => {
+        switch(name) {
+            // case "View":
+            //     setViewEvent(false);
+            //     break;
+            case "Edit":
+                setViewEditEventForm(true);
+                break;               
+        }
+    }
+
+    const editEventModal = (
+        <Modal
+            onClose={() =>{ closeModal("Create")}}
+            open={viewEditEventForm}
+            size='tiny'
+            closeOnEscape={true}
+            closeOnDimmerClick={false}
+        >
+            <Modal.Header as="h1">Edit Event</Modal.Header>
+            <Modal.Content>
+                <EditEventForm
+                    event={event}
+                    organization={organization}
+                    updateEvents={updateEvents}
+                    closeModal={closeModal}
+                />
+            </Modal.Content>
+        </Modal>
     );
 
     return (
@@ -49,11 +92,12 @@ export default function EventCard({ event, organization, activateEvent, updateEv
                         content='View'
                         icon='eye'
                         labelPosition='left'
-                        />
+                        onClick={()=>openModal("Edit")}
+                    />
                       <Button 
                         color='red'
                         content='Delete'
-                        icon='trash can'
+                        icon='trash'
                         labelPosition='left'
                         onClick={()=>{
                             deleteEvent(organization,event.eventID);
@@ -64,6 +108,7 @@ export default function EventCard({ event, organization, activateEvent, updateEv
                 </Card.Content>
                 {/*<Card.Content extra>{attendance}</Card.Content>*/}
             </Card>
+            {editEventModal}
         </>
     );
 }

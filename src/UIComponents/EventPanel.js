@@ -11,10 +11,13 @@ import {
 
 import EventCard from "../UIComponents/EventCard";
 import CreateEventForm from "../UIComponents/CreateEventForm";
+import EditEventForm from "../UIComponents/EditEventForm";
 
 export default function EventPanel({organization, events, addEvent, updateEvents, activateEvent, stopEvent, deleteEvent}) {
 
     const [viewCreateEventForm, setViewCreateEventForm] = useState(false);
+    const [viewEditEventForm, setViewEditEventForm] = useState(false);
+    const [viewEvent, setViewEvent] = useState(false);
 
     const activeEvents = [];
     const inactiveEvents = [];
@@ -28,14 +31,25 @@ export default function EventPanel({organization, events, addEvent, updateEvents
         });
     }
 
-    const closeModal = () => {
-        setViewCreateEventForm(false);
+    const closeModal = (name) => {
+        switch(name) {
+            case "View":
+                setViewEvent(false);
+                break;
+            case "Edit":
+                setViewEditEventForm(false);
+                break;   
+            case "Create":
+                setViewCreateEventForm(false);
+                break;                
+        }
     }
+
 
     const createEventModal = (
         <Modal
             closeIcon
-            onClose={() => setViewCreateEventForm(false)}
+            onClose={() =>{ closeModal("Create")}}
             open={viewCreateEventForm}
             size='large'
             closeOnEscape={true}
@@ -52,6 +66,32 @@ export default function EventPanel({organization, events, addEvent, updateEvents
             </Modal.Content>
         </Modal>
     );
+
+    const editEventModal = (
+        <>
+        </>
+    );
+
+
+    // const viewEventModal = (
+    //     <Modal
+    //         onClose={() =>{ closeModal("Create")}}
+    //         open={viewEditEventForm}
+    //         size='large'
+    //         closeOnEscape={true}
+    //         closeOnDimmerClick={false}
+    //     >
+    //         <Modal.Header as="h1">Edit Event</Modal.Header>
+    //         <Modal.Content>
+    //             <EditEventForm
+    //                 event={selectedEvent}
+    //                 organization={organization}
+    //                 updateEvents={updateEvents}
+    //                 closeModal={closeModal}
+    //             />
+    //         </Modal.Content>
+    //     </Modal>
+    // );
 
     return (
         <>
@@ -127,6 +167,8 @@ export default function EventPanel({organization, events, addEvent, updateEvents
                 </Grid>
             </Container>
             {createEventModal}
+            {/* {editEventModal} */}
+            {/* {viewEventModal} */}
         </>
     );
 }
