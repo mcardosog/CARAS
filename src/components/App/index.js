@@ -54,7 +54,6 @@ class App extends Component {
                           <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
                           <Route path={ROUTES.HOME} component={HomePage} />
                           <Route path={ROUTES.ACCOUNT} component={AccountPage} />
-                          <Route path={ROUTES.ADMIN} component={AdminPage} />
                           <Route path={ROUTES.RECOGNIZER} component={Recognizer} />
                           <Route path={ROUTES.NEWUSER} component={NewUser} />
                           <Route path={ROUTES.USERPANEL} component={UserPanel} />
