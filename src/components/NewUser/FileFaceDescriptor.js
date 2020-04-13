@@ -31,9 +31,9 @@ class FileFaceDescriptor extends Component {
         // ];
 
         for (var i = 0; i< images.length; i++) {
-            if(images[i].length > 0) {
-                const response = await this.handlePhoto(images[i])
-                if (response) { count++; }
+            const response = await this.handlePhoto(images[i])
+            if (response) {
+                count++;
             }
         }
 
