@@ -55,6 +55,7 @@ class CameraFaceDescriptor extends Component {
             alert('Completed!');
             updateUsers();
             closeModal();
+            return;
         }
 
         Promise.all([
