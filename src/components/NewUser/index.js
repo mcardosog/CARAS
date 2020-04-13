@@ -31,7 +31,7 @@ class NewUser extends Component {
             viewConfirmationImageModal: false,
             answer: false,
             recognizer: '',
-            organization: '',
+            organization: this.props.children.organization,
             user: {
                 userID: '',
                 firstName: '',
@@ -40,6 +40,10 @@ class NewUser extends Component {
                 level: '',
                 gender: '',
                 age: ''
+            },
+            errors: {
+                userID: null,
+                email: null
             }
         }
     }
@@ -54,6 +58,8 @@ class NewUser extends Component {
             gender,
             age
         } = this.state.user;
+
+        const {organization} = this.state;
 
         // console.log(this.state);
         // const userID = document.getElementById('userID').value;
@@ -77,8 +83,6 @@ class NewUser extends Component {
         //     alert(error);
         //     return;
         // }
-
-        const organization = this.props.children.organization;
         const userAdded = await this.props.firebase.addUser(organization,userID,firstName,lastName,email,level,gender,age);
         if(!userAdded) {
             alert('User ID already in use. Verify if the user was already entered.')
@@ -144,15 +148,18 @@ class NewUser extends Component {
             email,
             age,
             gender,
-            level } = this.state.user;
+            level
+        } = this.state.user;
         
         const {
             organization,
             viewConfirmationImageModal,
             viewImageModal,
             recognizer,
-            } = this.state
+        } = this.state
         
+
+
         const {closeModal} = this.props;
                 
         const isInvalid =   userID === '' ||
@@ -212,17 +219,7 @@ class NewUser extends Component {
                                         maxLength="25"
                                         value={lastName}
                                         onChange={this.onChange}
-                                    />
-                                    <Form.Input
-                                        fluid
-                                        label="User ID"
-                                        name="userID"
-                                        type="text"
-                                        width={8}
-                                        maxLength="15"
-                                        value={userID}
-                                        onChange={this.onChange}
-                                    />
+                                    />}
                                     <Form.Select
                                         fluid
                                         label="Level"
@@ -235,13 +232,19 @@ class NewUser extends Component {
                                 <Form.Group widths='equal'>
                                     <Form.Input
                                         fluid
-                                        label="Email"
-                                        name="email"
+                                        label="User ID"
+                                        name="userID"
                                         type="text"
-                                        width={8}
-                                        maxLength='40'
-                                        value={email}
-                                        onChange={this.onChange}
+                                        width={4}
+                                        maxLength="15"
+                                        value={userID}
+                                        onChange={({param: event}, data) => {
+                                            //only allow alphanumeric values to be inputted
+                                            var regex = (/^[A-Za-z0-9]+/);
+                                            if (regex.test(data.value)) {
+                                                this.onChange(event, data)
+                                            }
+                                        }}
                                     />
                                     <Form.Select
                                         fluid
@@ -268,38 +271,50 @@ class NewUser extends Component {
                                         }}
                                     />
                                 </Form.Group>
-                                    <Button
-                                        content="Cancel"
-                                        size='large'
-                                        color="red"
-                                        type='button'
-                                        icon="cancel"
-                                        labelPosition="left"
-                                        floated="right"
-                                        onClick={()=>{
-                                            user = {
-                                                userID: '',
-                                                firstName: '',
-                                                lastName: '',
-                                                email: '',
-                                                level: '',
-                                                gender: '',
-                                                age: ''
-                                            }
-                                            this.setState(user);
-                                            this.props.closeModal("Create");
-                                        }}
+                                <Form.Group widths='equal'>
+                                    <Form.Input
+                                        fluid
+                                        label="Email"
+                                        name="email"
+                                        type="text"
+                                        width={8}
+                                        maxLength='40'
+                                        value={email}
+                                        onChange={this.onChange}
                                     />
-                                    <Button
-                                        type="submit"
-                                        content="Submit"
-                                        disabled={isInvalid}
-                                        size='large'
-                                        color="green"
-                                        icon="check"
-                                        labelPosition="left"
-                                        floated="right"
-                                    />            
+                                </Form.Group>
+                                <Button
+                                    content="Cancel"
+                                    size='large'
+                                    color="red"
+                                    type='button'
+                                    icon="cancel"
+                                    labelPosition="left"
+                                    floated="right"
+                                    onClick={()=>{
+                                        user = {
+                                            userID: '',
+                                            firstName: '',
+                                            lastName: '',
+                                            email: '',
+                                            level: '',
+                                            gender: '',
+                                            age: ''
+                                        }
+                                        this.setState(user);
+                                        this.props.closeModal("Create");
+                                    }}
+                                />
+                                <Button
+                                    type="submit"
+                                    content="Submit"
+                                    disabled={isInvalid}
+                                    size='large'
+                                    color="green"
+                                    icon="check"
+                                    labelPosition="left"
+                                    floated="left"
+                                />            
                             </Form>
                         </Grid.Column>
                     </Grid.Row>
@@ -348,7 +363,7 @@ class NewUser extends Component {
                                         content='Upload Files'
                                         onClick={()=>{
                                             this.setState({answer: false});
-                                            this.setState({recognizer:<FileFaceDescriptor children={{'updateUsers': this.props.userUpdate,'organization':organization,'userID':userID, 'closeModal': this.closeModal})
+                                        this.setState({recognizer:<FileFaceDescriptor children={{'updateUsers': this.props.userUpdate,'organization':organization,'userID':userID, 'closeModal': this.closeModal}}/>})
                                             this.setState({viewConfirmationImageModal: false});
                                             this.setState({viewImageModal: true});
                                         }}
