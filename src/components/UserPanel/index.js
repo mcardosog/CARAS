@@ -32,7 +32,7 @@ class UserPanel extends Component {
             viewCreateUserModal: false,
             viewUserModal: false,
             viewEditUserModal: false,
-            selectedUser: {}
+            selectedUser: {},
         }
     }
 
@@ -42,8 +42,10 @@ class UserPanel extends Component {
         const addUser = this.props.firebase.addUser;
         const deleteUser = this.props.firebase.deleteUser;
         const updateUsers  = async () => {
+            this.setState({loading: true})
             const users =  await this.props.firebase.getUsersPreview(this.state.organization);
             this.setState({ users: users });
+            this.setState({loading: false})
         }
         this.setState({
             organization: organization,
@@ -84,7 +86,7 @@ class UserPanel extends Component {
     }
 
     render() {
-        const {organization, users, deleteUser, updateUsers,viewEditUserModal, viewCreateUserModal: createUserModal, viewUserModal, selectedUser: user} = this.state;
+        const {loading, organization, users, deleteUser, updateUsers,viewEditUserModal, viewCreateUserModal: createUserModal, viewUserModal, selectedUser: user} = this.state;
 
         const userFormModal = (
             <Modal
@@ -230,14 +232,14 @@ class UserPanel extends Component {
                 <Divider horizontal>
                 <Header as="h2">{organization} Users </Header>
                 </Divider>
-                    <Dimmer active={users.length === 0} inverted>
+                    <Dimmer active={users ? false : true} inverted>
                     <Loader/>
                 </Dimmer>
                 {users === undefined || users.length === 0 
                 ?(
                     <Segment placeholder>
                         <Header icon>
-                          <Icon name='user' size='large'/>
+                          <Icon name='users' size='large'/>
                           <p>There are currently no users registered</p>
                         </Header>
                     </Segment>
