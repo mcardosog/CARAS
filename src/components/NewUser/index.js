@@ -5,7 +5,7 @@ import FileFaceDescriptor from "./FileFaceDescriptor";
 import CustomUploadButton from 'react-firebase-file-uploader/lib/CustomUploadButton';
 import { AuthUserContext, withAuthorization } from '../Session';
 
-import {Form, Button, Grid, Modal, Icon} from 'semantic-ui-react';
+import {Form, Button, Grid, Modal, Message} from 'semantic-ui-react';
 
 import { genderOptions, levelOptions } from "../../util/options";
 
@@ -41,10 +41,7 @@ class NewUser extends Component {
                 gender: '',
                 age: ''
             },
-            errors: {
-                userID: null,
-                email: null
-            }
+            errors: []
         }
     }
 
@@ -60,6 +57,16 @@ class NewUser extends Component {
         } = this.state.user;
 
         const {organization} = this.state;
+
+        var errors = [];
+
+        var emailRegex = (/^[\w]{1,25}@[\w]+[(.com)]+/);
+        if (!emailRegex.test(email)) {
+            errors.push('Email must be a valid email.');
+        }
+
+        this.setState({errors: errors});
+
 
         // console.log(this.state);
         // const userID = document.getElementById('userID').value;
@@ -83,12 +90,17 @@ class NewUser extends Component {
         //     alert(error);
         //     return;
         // }
-        const userAdded = await this.props.firebase.addUser(organization,userID,firstName,lastName,email,level,gender,age);
-        if(!userAdded) {
-            alert('User ID already in use. Verify if the user was already entered.')
+        if (errors.length === 0) {
+            const userAdded = await this.props.firebase.addUser(organization,userID,firstName,lastName,email,level,gender,age);
+            if(!userAdded) {
+                errors.push('User ID already exists')
+                return;
+            }
+        } else {
             return;
         }
-
+        
+        this.setState({viewConfirmationImageModal: true});    
         // document.getElementById('userID').disabled = true;
         // document.getElementById('firstName').disabled = true;
         // document.getElementById('lastName').disabled = true;
@@ -127,7 +139,6 @@ class NewUser extends Component {
         //         />
         //     </Modal>
         // )
-        this.setState({viewConfirmationImageModal: true});
     }
 
     onChange = (event, {name, value}) => {
@@ -156,10 +167,9 @@ class NewUser extends Component {
             viewConfirmationImageModal,
             viewImageModal,
             recognizer,
+            errors
         } = this.state
         
-
-
         const {closeModal} = this.props;
                 
         const isInvalid =   userID === '' ||
@@ -219,7 +229,7 @@ class NewUser extends Component {
                                         maxLength="25"
                                         value={lastName}
                                         onChange={this.onChange}
-                                    />}
+                                    />
                                     <Form.Select
                                         fluid
                                         label="Level"
@@ -240,8 +250,8 @@ class NewUser extends Component {
                                         value={userID}
                                         onChange={({param: event}, data) => {
                                             //only allow alphanumeric values to be inputted
-                                            var regex = (/^[A-Za-z0-9]+/);
-                                            if (regex.test(data.value)) {
+                                            var regex = (/^[A-Za-z0-9]+$/);
+                                            if (regex.test(data.value) || data.value === '') {
                                                 this.onChange(event, data)
                                             }
                                         }}
@@ -283,6 +293,12 @@ class NewUser extends Component {
                                         onChange={this.onChange}
                                     />
                                 </Form.Group>
+                                <Message
+                                    color='red'
+                                    hidden={(errors.length === 0)}
+                                    header='Invalid Form Fields:'
+                                    list={errors}
+                                />
                                 <Button
                                     content="Cancel"
                                     size='large'
