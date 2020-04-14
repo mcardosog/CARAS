@@ -2,7 +2,7 @@ import React from "react";
 import { withFirebase } from '../components/Firebase';
 import { AuthUserContext, withAuthorization } from '../components/Session';
 
-import { Container, Grid, Form, Button } from "semantic-ui-react";
+import { Grid, Form, Button, Message } from "semantic-ui-react";
 
 import { genderOptions, levelOptions } from "../util/options";
 
@@ -16,7 +16,8 @@ class UserEditForm extends React.Component {
         email: props.user.email,
         gender: props.user.sex,
         age: props.user.age,
-        level: props.user.level
+        level: props.user.level,
+        errors:[]
     };
   }
 
@@ -38,13 +39,25 @@ class UserEditForm extends React.Component {
         age
     } = this.state;
 
-    console.log(this.state);
 
     const {organization, updateUsers, closeModal, firebase} = this.props;
-    console.log(organization);
-    const userAdded = await firebase.updateUser(organization,userID,firstName,lastName,email,level,gender,age);
-    if (!userAdded) {
-        alert("User could not be added");
+
+    var errors = [];
+
+    var emailRegex = (/^[\w]{1,25}@[\w]+[(.com)]+/);
+    if (!emailRegex.test(email)) {
+        errors.push('Email must be a valid email.');
+    }
+
+    this.setState({errors: errors});
+
+    if (errors.length === 0) {
+        const userAdded = await this.props.firebase.addUser(organization,userID,firstName,lastName,email,level,gender,age);
+        if(!userAdded) {
+            errors.push('User ID already exists')
+            return;
+        }
+    } else {
         return;
     }
     updateUsers();
@@ -52,7 +65,7 @@ class UserEditForm extends React.Component {
   }
 
   render() {
-    const { firstName, lastName, email, gender, age, level } = this.state;
+    const { firstName, lastName, email, gender, age, level, errors } = this.state;
     return (
         <Grid>
             <Grid.Row>
@@ -130,6 +143,12 @@ class UserEditForm extends React.Component {
                                 }}
                             />
                         </Form.Group>
+                            <Message
+                                color='red'
+                                hidden={(errors.length === 0)}
+                                header='Invalid Form Fields:'
+                                list={errors}
+                            />
                             <Button
                                 content="Cancel"
                                 size='large'
