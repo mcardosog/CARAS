@@ -230,7 +230,7 @@ class UserPanel extends Component {
                 <Divider horizontal>
                 <Header as="h2">{organization} Users </Header>
                 </Divider>
-                    <Dimmer active={users ? false : true} inverted>
+                    <Dimmer active={users.length === 0} inverted>
                     <Loader/>
                 </Dimmer>
                 {users === undefined || users.length === 0 
