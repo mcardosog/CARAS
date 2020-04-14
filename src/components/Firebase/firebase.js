@@ -299,18 +299,6 @@ const config = {
           if(descriptors.length === 0) {
               return descriptors;
           }
-          /*
-          var avg = [];
-          for(var i = 0; i < descriptors[0].length; i++) {
-              var iAVG = 0;
-              for(var j = 0; j < descriptors.length; j++) {
-                  iAVG += descriptors[j][i];
-              }
-              iAVG /= descriptors.length;
-              avg.push(iAVG);
-          }
-           */
-          //descriptors = [Float32Array.from(avg)];
 
           descriptors = [Float32Array.from(await this.getDescriptorsAVG(descriptors))];
           return descriptors;
@@ -492,9 +480,29 @@ const config = {
       }
 
       deleteOrganizationData = async (organization) => {
-          console.log(organization);
           const path = 'organizations/' + organization + '/';
           this.db.ref(path).remove();
+      }
+
+      changeOrganizationPasscode = async (organization, passcode) => {
+          await this.db.ref('organizations/'+organization+'/passcode').set(passcode);
+      }
+
+      /*
+       *    1 -> passcode match
+       *    0 -> organization is new
+       *    -1-> passcode does not match
+       */
+      verifyOrganizationPasscode = async (organization, passcode) => {
+          const path = 'organizations/' + organization + '/';
+          const tempElement = await this.getElementsInPath(path);
+          if(tempElement == null || tempElement.length === 0) { return 0; }
+          if(tempElement[0].value == passcode) {
+              return 1;
+          }
+          else {
+              return -1;
+          }
       }
 
       //#endregion

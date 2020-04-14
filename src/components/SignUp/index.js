@@ -25,6 +25,7 @@ const INITIAL_STATE = {
     username: '',
     passwordOne: '',
     passwordTwo: '',
+    passcode: '',
     error: null,
 };
 
@@ -35,7 +36,44 @@ class SignUpFormBase extends Component {
         this.state = { ...INITIAL_STATE };
     }
     onSubmit = (event) => {
-        const { name, lastName, companyName, email, username, passwordOne } = this.state;
+        const { name, lastName, companyName, email, username, passwordOne, passcode } = this.state;
+
+        this.props.firebase
+            .verifyOrganizationPasscode(companyName,passcode)
+            .then(respose => {
+                if(respose == -1) {
+                    alert('Unable to process the organization. Try a different organization name or passcode');
+                }
+                else {
+                    this.props.firebase.changeOrganizationPasscode(companyName,passcode)
+                        .then(()=>{
+                            this.props.firebase
+                                .doCreateUserWithEmailAndPassword(email, passwordOne)
+                                .then(authUser => {
+                                    // Create a user in your Firebase realtime database
+                                    return this.props.firebase
+                                        .user(authUser.user.uid)
+                                        .set({
+                                            name,
+                                            lastName,
+                                            companyName,
+                                            email,
+                                            username,
+                                        });
+                                })
+
+                                .then(() => {
+                                    this.setState({ ...INITIAL_STATE });
+                                    this.props.history.push(ROUTES.HOME);
+                                })
+                                .catch(error => {
+                                    this.setState({ error });
+                                });
+                        })
+                }
+            });
+
+        /*
         this.props.firebase
             .doCreateUserWithEmailAndPassword(email, passwordOne)
             .then(authUser => {
@@ -58,6 +96,8 @@ class SignUpFormBase extends Component {
             .catch(error => {
                 this.setState({ error });
             });
+        */
+
         event.preventDefault();
     }
     onChange = event => {
@@ -71,6 +111,7 @@ class SignUpFormBase extends Component {
             companyName,
             email,
             username,
+            passcode,
             passwordOne,
             passwordTwo,
             error,
@@ -81,6 +122,7 @@ class SignUpFormBase extends Component {
             passwordOne === '' ||
             email === '' ||
             username === '' ||
+            passcode === '' ||
             name === '' ||
             lastName === '' ||
             companyName === '';
@@ -134,6 +176,16 @@ class SignUpFormBase extends Component {
                             onChange = {this.onChange}
                             iconPosition = 'left'
                             placeholder = 'email@host.com'
+                        />
+                        <Form.Input
+                            icon = 'lock'
+                            name = 'passcode'
+                            label = 'Passcode'
+                            value = {passcode}
+                            iconPosition = 'left'
+                            onChange = {this.onChange}
+                            placeholder  = 'Passcode'
+                            type = 'password'
                         />
                         <Form.Input
                             icon = 'lock'
