@@ -39,7 +39,7 @@ const NavigationAuth = ({user}) => (
         >
           <Dropdown.Menu>
             <Dropdown.Item as={Link} to={ROUTES.ACCOUNT}>Profile</Dropdown.Item>
-            <Dropdown.Item as={Link} to={ROUTES.ADMIN}>Admin Panel</Dropdown.Item>
+            <Dropdown.Item as={Link} to={ROUTES.HOME}>Event Panel</Dropdown.Item>
             <Dropdown.Item as={Link} to={ROUTES.USERPANEL}>User Panel</Dropdown.Item>
             <Dropdown.Item>
               <SignOutButton/>

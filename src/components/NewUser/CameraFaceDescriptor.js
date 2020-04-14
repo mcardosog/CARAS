@@ -12,7 +12,7 @@ class CameraFaceDescriptor extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: true,
+            loading: false,
             remainingPhotos: 5
         }
     }
@@ -78,13 +78,15 @@ class CameraFaceDescriptor extends Component {
                     </Header>
                 </Grid.Row>
                 <Grid.Row>
-                    <Dimmer active={loading} inverted>
-                        <Loader/>
-                    </Dimmer>
-                    <Grid.Column>
-                        <Camera
-                            onTakePhoto = { (dataUri) => { this.handleTakePhoto(dataUri); } }
-                        />
+                    <Grid.Column stretched>
+                        <Dimmer active={loading}>
+                            <Loader content='Processing Image...' size='huge'/>
+                        </Dimmer>
+                        {/* <div> */}
+                            <Camera
+                                onTakePhoto = { (dataUri) => { this.handleTakePhoto(dataUri); } }
+                            />
+                        {/* </div> */}
                     </Grid.Column>
                 </Grid.Row>
             </Grid>
