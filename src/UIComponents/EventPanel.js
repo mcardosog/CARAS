@@ -23,8 +23,6 @@ export default function EventPanel({organization, events, addEvent, updateEvents
     const activeEvents = [];
     const inactiveEvents = [];
 
-    console.log("Event panel rendered");
-
     if(events) {
         events.forEach(event => {
             if (event.active){
@@ -67,10 +65,9 @@ export default function EventPanel({organization, events, addEvent, updateEvents
 
     const createEventModal = (
         <Modal
-            closeIcon
             onClose={() =>{ closeModal("Create")}}
             open={viewCreateEventForm}
-            size='large'
+            size='tiny'
             closeOnEscape={true}
             closeOnDimmerClick={false}
         >
