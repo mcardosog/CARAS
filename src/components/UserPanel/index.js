@@ -102,7 +102,6 @@ class UserPanel extends Component {
 
         const userEditModal = (
             <Modal
-                closeIcon
                 onClose={() => this.closeModal("Edit")}
                 open={viewEditUserModal}
                 size='tiny'
@@ -197,10 +196,8 @@ class UserPanel extends Component {
                                 }}
                             />
                             </Grid.Column>
-
                         </Grid.Row>
                     </Grid>
-
                 </Modal.Actions>
             </Modal>
         )

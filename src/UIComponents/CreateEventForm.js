@@ -96,7 +96,6 @@ export default function EventForm({organization, addEvent, updateEvents, closeMo
                                 name="name"
                                 type="text"
                                 maxLength="15"
-                                // value={values.name}
                                 onChange={(param, data) => {
                                     onChange(data.name, data.value);
                                 }}

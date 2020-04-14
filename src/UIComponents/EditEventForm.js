@@ -42,10 +42,7 @@ class EditEventForm extends React.Component {
 			code
 		} = this.state;
 
-		console.log(this.state);
-
 		const {organization, updateEvents, closeModal, firebase} = this.props;
-		console.log(organization);
 		const eventAdded = await firebase.updateEvent(
 			organization,
 			id,
@@ -62,7 +59,7 @@ class EditEventForm extends React.Component {
 			return;
 		}
 		updateEvents();
-		closeModal("Edit");
+		closeModal();
 		
 	}
 
@@ -77,6 +74,7 @@ class EditEventForm extends React.Component {
 			code
 		} = this.state;
 
+		const {closeModal} = this.props;
 		
 		return (
 			<Grid>
@@ -175,10 +173,7 @@ class EditEventForm extends React.Component {
 									icon="cancel"
 									labelPosition="left"
 									floated="right"
-									onClick={()=>{
-										this.setState({});
-										this.props.closeModal("Edit");
-									}}
+									onClick={closeModal}
 								/>
 								<Button
 									type="submit"

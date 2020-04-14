@@ -5,6 +5,8 @@ import { AuthUserContext, withAuthorization } from '../components/Session';
 import { Grid, Form, Button, Message } from "semantic-ui-react";
 
 import { genderOptions, levelOptions } from "../util/options";
+import {onlyAlphaNumValues, onlyNumericValues, validEmail} from "../util/validators";
+
 
 class UserEditForm extends React.Component {
   constructor(props) {
@@ -44,8 +46,7 @@ class UserEditForm extends React.Component {
 
     var errors = [];
 
-    var emailRegex = (/^[\w]{1,25}@[\w]+[(.com)]+/);
-    if (!emailRegex.test(email)) {
+    if (!validEmail(email)) {
         errors.push('Email must be a valid email.');
     }
 
@@ -121,7 +122,7 @@ class UserEditForm extends React.Component {
                                 fluid
                                 label="Gender"
                                 name="gender"
-                                width={2}
+                                width={3}
                                 value={gender}
                                 options={genderOptions}
                                 onChange={this.onChange}
@@ -136,8 +137,7 @@ class UserEditForm extends React.Component {
                                 width={2}
                                 onChange={({param: event}, data) => {
                                     //only allow numeric values to be inputted
-                                    var regex = (/^[\d]*$/);
-                                    if (regex.test(data.value)) {
+                                    if (onlyNumericValues(data.value)) {
                                         this.onChange(event, data)
                                     }
                                 }}
