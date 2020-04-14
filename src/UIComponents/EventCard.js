@@ -5,10 +5,7 @@ import ViewEvent from '../UIComponents/ViewEvent';
 
 
 export default function EventCard({ event, organization, activateEvent, updateEvents, stopEvent, deleteEvent, openModal}) {
-    // const [viewEditEventForm, setViewEditEventForm] = useState(false);
-    // const [viewEventModal, setViewEventModal] = useState(false);
-
-
+    console.log("Card Rendered");
     const attendance = (
         <p>
             <Icon name="user" />

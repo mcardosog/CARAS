@@ -53,7 +53,17 @@ class UserEditForm extends React.Component {
     this.setState({errors: errors});
 
     if (errors.length === 0) {
-        const userAdded = await this.props.firebase.addUser(organization,userID,firstName,lastName,email,level,gender,age);
+        const userAdded = await this.props.firebase.addUser(
+            organization,
+            userID,
+            firstName,
+            lastName,
+            email,
+            level,
+            gender,
+            age
+        );
+        
         if(!userAdded) {
             errors.push('User ID already exists')
             return;
@@ -150,10 +160,10 @@ class UserEditForm extends React.Component {
                                 list={errors}
                             />
                             <Button
+                                type='button'
                                 content="Cancel"
                                 size='large'
                                 color="red"
-                                type='button'
                                 icon="cancel"
                                 labelPosition="left"
                                 floated="right"

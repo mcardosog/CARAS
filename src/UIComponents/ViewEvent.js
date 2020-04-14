@@ -1,21 +1,22 @@
 import React, { useState } from "react";
 
-import {Container, Grid, Header, Divider} from 'semantic-ui-react';
+import {Container, Grid, Header, Divider, Label} from 'semantic-ui-react';
 
 export default function ViewEvent ({event}) {
-
-    const {eventDate: date, description, name} = event;
+    console.log(event);
+    const {eventDate: date, description, name, passcode, eventID: id} = event;
 
     return (
         <>
-        <Container  textAlign='right'>
+        <Container textAlign='right'>
             <Grid>
-                <Grid.Row stretched columns={2}>
-                    <Grid.Column textAlign='left'>
+                <Grid.Row columns={2}>
+                    <Grid.Column width={3} textAlign='left' floated='left'>
                         <Header as='h2' content={name}/>
                     </Grid.Column>
-                    <Grid.Column textAlign='right' verticalAlign='middle'>
-                        <p>  <b>Starts on: </b>  {date}</p>
+                    <Grid.Column width={12} floated='right' textAlign='right'>
+                        <Label icon='hashtag' color='blue' size='large' content={passcode}/>
+                        <Label icon='calendar' color='blue' size='large' content={date}/>
                     </Grid.Column>
                 </Grid.Row>
             </Grid>
@@ -29,7 +30,15 @@ export default function ViewEvent ({event}) {
             <b>Description</b>
             <p>{description}</p>
         </Container>
-        
+        <Container>
+            <Grid>
+                <Grid.Row>
+                    <Grid.Column floated='right' textAlign='right'>
+                        <Label icon='keyboard'  color='blue' size='large' content={id}/>
+                    </Grid.Column>
+                </Grid.Row>
+            </Grid>
+        </Container>
         </>
     );
 };

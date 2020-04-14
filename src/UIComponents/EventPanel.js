@@ -23,6 +23,8 @@ export default function EventPanel({organization, events, addEvent, updateEvents
     const activeEvents = [];
     const inactiveEvents = [];
 
+    console.log("Event panel rendered");
+
     if(events) {
         events.forEach(event => {
             if (event.active){
