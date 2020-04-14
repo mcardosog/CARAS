@@ -491,6 +491,12 @@ const config = {
           }
       }
 
+      deleteOrganizationData = async (organization) => {
+          console.log(organization);
+          const path = 'organizations/' + organization + '/';
+          this.db.ref(path).remove();
+      }
+
       //#endregion
 
       //endregion

@@ -41,6 +41,7 @@ class AccountPage extends Component {
 
   deleteOrganization() {
     this.showDeleteModal(false);
+    this.props.firebase.deleteOrganizationData(this.state.organization);
     alert('Deleted');
     //logout
   }
@@ -82,10 +83,10 @@ class AccountPage extends Component {
                                   Deletes all the data stored about the organization
                                 </Card.Description>
                               </Card.Content>
-                              <Modal size={"mini"} open={deleteModal} onClose={{}}>
-                                <Modal.Header>Delete Organization</Modal.Header>
+                              <Modal size={"small"} open={deleteModal}>
+                                <Modal.Header>Delete Organization Data</Modal.Header>
                                 <Modal.Content>
-                                  <p>Are you sure you want to delete the data of {organization}</p>
+                                  <p>Are you sure you want to delete the data of <strong>{organization}</strong>? (There is no way to recover the data in the future)</p>
                                 </Modal.Content>
                                 <Modal.Actions>
                                   <Button negative onClick={ ()=>this.showDeleteModal(false)}>No</Button>
@@ -97,7 +98,7 @@ class AccountPage extends Component {
                                       content='Yes'
                                   />
                                 </Modal.Actions>
-                              </Modal>
+                              </Modal >
                               <Button negative onClick={ ()=> this.showDeleteModal(true) }>
                                 <Icon name='trash alternate outline'/>
                                 Delete
@@ -130,9 +131,8 @@ class AccountPage extends Component {
                                   Replace password for user <strong>{userName}</strong>
                                 </Card.Description>
                               </Card.Content>
-
-                              <Modal
-                                  trigger={<Button color='teal'>
+                              <Modal size={"mini"}
+                                     trigger={<Button color='teal'>
                                 <Icon name='asterisk'/>
                                 Change Password
                               </Button>}>
