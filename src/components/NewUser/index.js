@@ -5,7 +5,7 @@ import FileFaceDescriptor from "./FileFaceDescriptor";
 import CustomUploadButton from 'react-firebase-file-uploader/lib/CustomUploadButton';
 import { AuthUserContext, withAuthorization } from '../Session';
 
-import {Form, Button, Grid, Modal, Icon, Message} from 'semantic-ui-react';
+import {Form, Button, Grid, Modal, Message} from 'semantic-ui-react';
 
 import { genderOptions, levelOptions } from "../../util/options";
 
@@ -58,15 +58,15 @@ class NewUser extends Component {
 
         const {organization} = this.state;
 
-        var emailRegex = (/^[\w]{1,25}@[\w]+[(.com)]+/);
-
         var errors = [];
 
+        var emailRegex = (/^[\w]{1,25}@[\w]+[(.com)]+/);
         if (!emailRegex.test(email)) {
             errors.push('Email must be a valid email.');
         }
 
         this.setState({errors: errors});
+
 
         // console.log(this.state);
         // const userID = document.getElementById('userID').value;
@@ -96,12 +96,11 @@ class NewUser extends Component {
                 errors.push('User ID already exists')
                 return;
             }
-
-            this.setState({viewConfirmationImageModal: true});    
         } else {
             return;
         }
-
+        
+        this.setState({viewConfirmationImageModal: true});    
         // document.getElementById('userID').disabled = true;
         // document.getElementById('firstName').disabled = true;
         // document.getElementById('lastName').disabled = true;
@@ -171,9 +170,6 @@ class NewUser extends Component {
             errors
         } = this.state
         
-        console.log(errors);
-        console.log(errors.length !== 0);
-
         const {closeModal} = this.props;
                 
         const isInvalid =   userID === '' ||
