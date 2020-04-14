@@ -6,7 +6,11 @@ import {
     Divider,
     Header,
     Card,
-    Modal
+    Modal,
+    Dimmer,
+    Loader,
+    Segment,
+    Icon
 } from "semantic-ui-react";
 
 import EventCard from "../UIComponents/EventCard";
@@ -176,6 +180,18 @@ export default function EventPanel({organization, events, addEvent, updateEvents
                 <Grid stackable>
                     <Grid.Row >
                         <Grid.Column>
+                        <Dimmer inverted active={events.length === 0} >
+                            <Loader content='Loading...' size='huge'/>
+                        </Dimmer>
+                       {activeEvents.length === 0 ?(
+                        <Segment placeholder>
+                            <Header icon>
+                              <Icon name='calendar' size='large'/>
+                              <p>There are currently no active events</p>
+                            </Header>
+                        </Segment>
+                        )
+                        :(
                         <Card.Group centered itemsPerRow={3}>
                             {activeEvents &&
                                 activeEvents.map((event, index) => (
@@ -191,6 +207,7 @@ export default function EventPanel({organization, events, addEvent, updateEvents
                                     />
                                 ))}
                         </Card.Group>
+                        )}
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
@@ -204,7 +221,18 @@ export default function EventPanel({organization, events, addEvent, updateEvents
                 <Grid stackable>
                     <Grid.Row>
                         <Grid.Column>
-                        <Card.Group centered itemsPerRow={3}>
+                        <Dimmer active={events.length === 0} inverted>
+                            <Loader content='Loading...' size='huge' />
+                        </Dimmer>
+                        {inactiveEvents.length === 0 ?(
+                        <Segment placeholder>
+                            <Header icon>
+                              <Icon name='calendar' size='large'/>
+                              <p>There are currently no active events</p>
+                            </Header>
+                        </Segment>
+                        )
+                        :(<Card.Group centered itemsPerRow={3}>
                             {inactiveEvents &&
                                 inactiveEvents.map((event, index) => (
                                     <EventCard 
@@ -219,6 +247,7 @@ export default function EventPanel({organization, events, addEvent, updateEvents
                                 ))
                             }
                         </Card.Group>
+                        )}
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
