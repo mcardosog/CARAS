@@ -5,6 +5,8 @@ import { AuthUserContext, withAuthorization } from '../components/Session';
 import { Grid, Form, Button, Message } from "semantic-ui-react";
 
 import { genderOptions, levelOptions } from "../util/options";
+import {onlyAlphaNumValues, onlyNumericValues, validEmail} from "../util/validators";
+
 
 class UserEditForm extends React.Component {
   constructor(props) {
@@ -44,15 +46,24 @@ class UserEditForm extends React.Component {
 
     var errors = [];
 
-    var emailRegex = (/^[\w]{1,25}@[\w]+[(.com)]+/);
-    if (!emailRegex.test(email)) {
+    if (!validEmail(email)) {
         errors.push('Email must be a valid email.');
     }
 
     this.setState({errors: errors});
 
     if (errors.length === 0) {
-        const userAdded = await this.props.firebase.addUser(organization,userID,firstName,lastName,email,level,gender,age);
+        const userAdded = await this.props.firebase.addUser(
+            organization,
+            userID,
+            firstName,
+            lastName,
+            email,
+            level,
+            gender,
+            age
+        );
+        
         if(!userAdded) {
             errors.push('User ID already exists')
             return;
@@ -121,7 +132,7 @@ class UserEditForm extends React.Component {
                                 fluid
                                 label="Gender"
                                 name="gender"
-                                width={2}
+                                width={3}
                                 value={gender}
                                 options={genderOptions}
                                 onChange={this.onChange}
@@ -136,8 +147,7 @@ class UserEditForm extends React.Component {
                                 width={2}
                                 onChange={({param: event}, data) => {
                                     //only allow numeric values to be inputted
-                                    var regex = (/^[\d]*$/);
-                                    if (regex.test(data.value)) {
+                                    if (onlyNumericValues(data.value)) {
                                         this.onChange(event, data)
                                     }
                                 }}
@@ -150,10 +160,10 @@ class UserEditForm extends React.Component {
                                 list={errors}
                             />
                             <Button
+                                type='button'
                                 content="Cancel"
                                 size='large'
                                 color="red"
-                                type='button'
                                 icon="cancel"
                                 labelPosition="left"
                                 floated="right"
