@@ -50,7 +50,7 @@ class CameraFaceDescriptor extends Component {
 
 
     render() {
-        const {remainingPhotos} = this.state;
+        const {remainingPhotos, loading} = this.state;
         const {updateUsers, closeModal} = this.props.children;
 
         Promise.all([
