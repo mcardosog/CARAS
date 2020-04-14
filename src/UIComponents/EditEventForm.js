@@ -5,6 +5,7 @@ import { AuthUserContext, withAuthorization } from '../components/Session';
 import { Container, Grid, Form, Button } from "semantic-ui-react";
 import { genderOptions, levelOptions } from "../util/options";
 import SemanticDatepicker from 'react-semantic-ui-datepickers';
+import { onlyNumericValues} from "../util/validators";
 
 
 class EditEventForm extends React.Component {
@@ -84,13 +85,13 @@ class EditEventForm extends React.Component {
 								onSubmit={this.onSubmit}
 								size='large'
 							>
-								<Form.Group width='equal'>
+								<Form.Group widths='equal'>
 									<Form.Input
 										fluid
 										label="Event Name"
 										name="name"
 										type="text"
-										width={8}
+										width={12}
 										maxLength="25"
 										value={name}
 										onChange={this.onChange}
@@ -164,6 +165,22 @@ class EditEventForm extends React.Component {
 										value={description}
 										onChange={this.onChange}
 									/>
+								</Form.Group>
+								<Form.Group>
+									<Form.Input
+                            		    label="Event Code"
+                            		    name="code"
+                            		    type="text"
+										value={code}
+										width={5}
+                            		    maxLength="5"
+                            		    onChange={(param, data) => {
+                            		        //only allow numeric values to be inputted
+                            		        if (onlyNumericValues(data.value)) {
+                            		            this.onChange(param, data);
+                            		        }
+                            		    }}
+                            		/>
 								</Form.Group>
 								<Button
 									content="Cancel"

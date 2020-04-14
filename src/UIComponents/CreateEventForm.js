@@ -3,6 +3,7 @@ import { withFirebase } from '../components/Firebase';
 
 import { Form, Grid, Button, Icon } from "semantic-ui-react";
 import SemanticDatepicker from 'react-semantic-ui-datepickers';
+import { onlyNumericValues} from "../util/validators";
 
 export default function EventForm({organization, addEvent, updateEvents, closeModal}) {
     const [code, setCode] = useState('');
@@ -110,8 +111,7 @@ export default function EventForm({organization, addEvent, updateEvents, closeMo
                                 maxLength="5"
                                 onChange={(param, data) => {
                                     //only allow numeric values to be inputted
-                                    var regex = (/[0-9]|\./);
-                                    if (regex.test(data.value)) {
+                                    if (onlyNumericValues(data.value)) {
                                         setCode(data.value);
                                         onChange(data.name, data.value);
                                     }
