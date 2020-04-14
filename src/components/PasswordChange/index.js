@@ -57,7 +57,13 @@ class PasswordChangeForm extends Component {
                 style={{'width':'100%'}}>
           Reset My Password
         </Button>
-        {error && alert(error.message)}
+        {error &&
+        < div className="ui negative message">
+            <div className="header">
+                Error
+            </div>
+            <p>{error.message}
+            </p></div>}
       </form>
     );
   }

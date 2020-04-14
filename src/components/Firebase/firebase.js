@@ -492,9 +492,12 @@ const config = {
       }
 
       deleteOrganizationData = async (organization) => {
-          console.log(organization);
           const path = 'organizations/' + organization + '/';
           this.db.ref(path).remove();
+      }
+
+      changeOrganizationPasscode = async (organization, passcode) => {
+          await this.db.ref('organizations/'+organization+'/passcode').set(passcode);
       }
 
       //#endregion

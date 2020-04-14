@@ -28,7 +28,8 @@ class AccountPage extends Component {
       userName: organizationInfo.username,
       deleteModal: false,
       passcodeModal: false,
-      passwordModal: false
+      passwordModal: false,
+      passcodeChanged: false,
     });
 
   }
@@ -46,9 +47,28 @@ class AccountPage extends Component {
     //logout
   }
 
+  changePasscode() {
+    const passcode = document.getElementById('passcodeForm').value;
+    if(passcode ==null || passcode.length == 0) {
+      alert('You need to enter a passcode!')
+      return;
+    }
+    this.props.firebase.changeOrganizationPasscode(this.state.organization, passcode);
+    alert('Passcode changed!');
+    //this.setState({passcodeChage:true});
+    document.getElementById('passcodeForm').value = '';
+  }
+
+  changePasscodeModal() {
+    this.setState({
+      //passcodeChanged: false
+    });
+  }
+
+
   render() {
-    const {organization, email, userFirstName, userLastName,userName, deleteModal, passcodeModal, passwordModal } = this.state;
-    return(
+    const {organization, email, userFirstName, userLastName, userName, deleteModal, passcodeModal, passwordModal, passcodeChanged} = this.state;
+    return (
         <AuthUserContext.Consumer>
           {authUser => (
               <>
@@ -58,17 +78,17 @@ class AccountPage extends Component {
 
                 <div>
                   <Header as='h2' icon textAlign='center'>
-                    <Icon name='users' circular />
+                    <Icon name='users' circular/>
                     <Header.Content>{userName}</Header.Content>
                     <Header.Content>{email}</Header.Content>
-                    <Header.Content>{userLastName+', '+userFirstName}</Header.Content>
+                    <Header.Content>{userLastName + ', ' + userFirstName}</Header.Content>
                   </Header>
                 </div>
                 <br/>
 
                 <Container>
                   <Grid stackable>
-                    <Grid.Row >
+                    <Grid.Row>
                       <Grid.Column>
                         <Card.Group centered itemsPerRow={3}>
                           <Card.Group>
@@ -86,10 +106,11 @@ class AccountPage extends Component {
                               <Modal size={"small"} open={deleteModal}>
                                 <Modal.Header>Delete Organization Data</Modal.Header>
                                 <Modal.Content>
-                                  <p>Are you sure you want to delete the data of <strong>{organization}</strong>? (There is no way to recover the data in the future)</p>
+                                  <p>Are you sure you want to delete the data of <strong>{organization}</strong>? (There
+                                    is no way to recover the data in the future)</p>
                                 </Modal.Content>
                                 <Modal.Actions>
-                                  <Button negative onClick={ ()=>this.showDeleteModal(false)}>No</Button>
+                                  <Button negative onClick={() => this.showDeleteModal(false)}>No</Button>
                                   <Button
                                       onClick={() => this.deleteOrganization()}
                                       positive
@@ -98,8 +119,8 @@ class AccountPage extends Component {
                                       content='Yes'
                                   />
                                 </Modal.Actions>
-                              </Modal >
-                              <Button negative onClick={ ()=> this.showDeleteModal(true) }>
+                              </Modal>
+                              <Button negative onClick={() => this.showDeleteModal(true)}>
                                 <Icon name='trash alternate outline'/>
                                 Delete
                               </Button>
@@ -115,10 +136,37 @@ class AccountPage extends Component {
                                   Replace the current organization passcode. It affects admin users.
                                 </Card.Description>
                               </Card.Content>
-                              <Button color='blue'>
-                                <Icon name='th'/>
-                                Change Passcode
-                              </Button>
+                              <Modal size={"tiny"}
+                                     trigger={<Button color='blue' onClick={()=>this.changePasscodeModal()}>
+                                       <Icon name='th'/>
+                                       Change Passcode
+                                       </Button>}>
+                                <Modal.Header>Change {organization} passcode</Modal.Header>
+                                <Modal.Content>
+                                  <Modal.Description>
+                                    <div className="ui one column stackable center aligned page grid">
+                                      <div className="column wide">
+                                        <div className="ui action input ">
+                                          <input type="password" id='passcodeForm'/>
+                                          <button className="ui green center button" onClick={()=>this.changePasscode()} >
+                                            Change Passcode
+                                          </button>
+                                        </div>
+                                        { passcodeChanged &&
+                                          < div className="ui positive message">
+                                            <div className="header">
+
+                                            </div>
+                                            <p> The passcode was changed!
+                                            </p></div>}
+                                      </div>
+                                    </div>
+                                  </Modal.Description>
+                                </Modal.Content>
+                              </Modal>
+
+
+
                             </Card>
 
                             <Card>
@@ -133,18 +181,16 @@ class AccountPage extends Component {
                               </Card.Content>
                               <Modal size={"mini"}
                                      trigger={<Button color='teal'>
-                                <Icon name='asterisk'/>
-                                Change Password
-                              </Button>}>
+                                       <Icon name='asterisk'/>
+                                       Change Password
+                                     </Button>}>
                                 <Modal.Header>Change {email} password</Modal.Header>
                                 <Modal.Content image>
-                                  <Modal.Description>
-                                    <PasswordChangeForm />
+                                  <Modal.Description style={{'width':'100px'}}>
+                                    <PasswordChangeForm/>
                                   </Modal.Description>
                                 </Modal.Content>
                               </Modal>
-
-
                             </Card>
 
                           </Card.Group>
