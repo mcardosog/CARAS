@@ -480,6 +480,17 @@ const config = {
           }
       }
 
+      getOrganizationInformation = async () => {
+          var userID = this.auth.currentUser.uid;
+          var admin = await this.getElementsInPath('users/', userID);
+          if(admin != null){
+              return admin[0].value;
+          }
+          else{
+              return null;
+          }
+      }
+
       //#endregion
 
       //endregion
