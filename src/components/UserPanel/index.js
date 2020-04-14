@@ -237,7 +237,7 @@ class UserPanel extends Component {
                 ?(
                     <Segment placeholder>
                         <Header icon>
-                          <Icon name='inbox' size='large'/>
+                          <Icon name='user' size='large'/>
                           <p>There are currently no users registered</p>
                         </Header>
                     </Segment>
