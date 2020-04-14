@@ -157,6 +157,9 @@ export default function EventPanel({organization, events, addEvent, updateEvents
         <Container>
             <Grid>
                 <Grid.Row>
+                     <Header as='h1'>Event Panel</Header>
+                </Grid.Row>
+                <Grid.Row>
                     <Grid.Column>
                         <Button
                             content="Add Event"
