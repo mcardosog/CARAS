@@ -85,6 +85,7 @@ class CameraFaceDescriptor extends Component {
                         {/* <div> */}
                             <Camera
                                 onTakePhoto = { (dataUri) => { this.handleTakePhoto(dataUri); } }
+                                isSilentMode = {true}
                             />
                         {/* </div> */}
                     </Grid.Column>
