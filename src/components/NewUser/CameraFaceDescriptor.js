@@ -3,7 +3,7 @@ import * as faceapi from 'face-api.js';
 import { withFirebase } from '../Firebase';
 import 'react-html5-camera-photo/build/css/index.css';
 import Camera from 'react-html5-camera-photo';
-import { Grid, Segment, Icon, Label, Header, Loader, Dimmer } from 'semantic-ui-react';
+import { Grid, Message, Icon, Label, Header, Loader, Dimmer } from 'semantic-ui-react';
 //import Webcam from "react-webcam";
 //
 
@@ -53,7 +53,7 @@ class CameraFaceDescriptor extends Component {
     render() {
         const {remainingPhotos, loading} = this.state;
         const {updateUsers, closeModal} = this.props.children;
-
+        var completed = false;
         Promise.all([
             faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
             faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
@@ -61,7 +61,7 @@ class CameraFaceDescriptor extends Component {
         ])
 
         if(remainingPhotos == 0) {
-            alert('Completed!');
+            loading=false;
             closeModal();
             if (updateUsers !== undefined) {
                 updateUsers();
@@ -79,10 +79,18 @@ class CameraFaceDescriptor extends Component {
                             <Icon name='camera'/>
                             Take Pictures
                         </Header>
-                        <Header.Subheader as='h2'>
+                        {completed ?
+                        (
+                            <Message
+                                positive
+                                content='Completed!'
+                            />
+                        ):(
+                            <Header.Subheader as='h2'>
                                 Remaining Pictures: 
                                 <Label size='huge' icon ='picture' content={remainingPhotos}/>
-                        </Header.Subheader>
+                            </Header.Subheader>
+                        )}
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row centered>
