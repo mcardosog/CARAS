@@ -3,7 +3,7 @@ import * as faceapi from 'face-api.js';
 import { withFirebase } from '../Firebase';
 import 'react-html5-camera-photo/build/css/index.css';
 import Camera from 'react-html5-camera-photo';
-import { Grid, Message, Icon, Label, Header, Loader, Dimmer } from 'semantic-ui-react';
+import { Grid, Message, Icon, Label, Header, Loader, Dimmer, Divider } from 'semantic-ui-react';
 //import Webcam from "react-webcam";
 //
 
@@ -74,11 +74,11 @@ class CameraFaceDescriptor extends Component {
                 container
             >
                 <Grid.Row centered>
-                    <Grid.Column stretched textAlign='center'>
-                        <Header as='h1' icon>
-                            <Icon name='camera'/>
-                            Take Pictures
+                    <Grid.Column verticalAlign='middle' textAlign='left'>
+                        <Header as='h1'>
+                            <span><Icon name='camera' size='large'/> </span>Take Pictures
                         </Header>
+                        <Divider/>
                         {completed ?
                         (
                             <Message
@@ -86,10 +86,7 @@ class CameraFaceDescriptor extends Component {
                                 content='Completed!'
                             />
                         ):(
-                            <Header.Subheader as='h2'>
-                                Remaining Pictures: 
-                                <Label size='huge' icon ='picture' content={remainingPhotos}/>
-                            </Header.Subheader>
+                            <Label color='blue' size='huge' icon ='picture' detail='Pictures Remaining' content={remainingPhotos}/>
                         )}
                     </Grid.Column>
                 </Grid.Row>
