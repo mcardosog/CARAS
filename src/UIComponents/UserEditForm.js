@@ -119,7 +119,7 @@ class UserEditForm extends React.Component {
 
     const descriptorModal = (
         <Modal
-            size='small'
+            size='tiny'
             open={viewDescriptorModal}
             onClose={()=>this.closeModal()}
             closeOnDimmerClick={true}

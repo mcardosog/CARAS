@@ -79,8 +79,11 @@ class FileFaceDescriptor extends Component {
     
 
     render() {
-        var isValid = (this.state.images.length == 5) ? true : false;
+        const isValid = (this.state.images.length === 5);
+        const sucessful = (this.state.errors.length === 0);
 
+        console.log(isValid + " " + sucessful);
+        console.log(isValid && sucessful);
         Promise.all([
             faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
             faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
@@ -108,18 +111,30 @@ class FileFaceDescriptor extends Component {
             //     <button onClick={()=> processPhotos()}>Process</button>
             // </div>
 
-            <Grid>
-                <Grid.Row>
-                    <Header textAlign='center' as='h1' icon>
-                        <Icon name='image file'/>
-                        Upload Your Pictures
-                    </Header>
+            <Grid
+                centered
+                container
+            >
+                <Grid.Row centered textAlign='center'>
+                    <Grid.Column verticalAlign='middle' textAlign='left'>
+                        <Header as='h1'>
+                            <span><Icon name='file' size='large'/> </span>Upload Pictures
+                        </Header>
+                        <Divider/>
+
+                        <Message
+                            size='large'
+                            positive
+                            hidden={!(sucessful && isValid)}
+                            content='Images processed sucessfully!'
+                        />
+                    </Grid.Column>
                 </Grid.Row>
-                <Divider/>
                 <Grid.Row centered>
                     <Dimmer active={loading} inverted>
                         <Loader content='Analyzing Images. This might take a while...' size='huge'/>
                     </Dimmer>
+
                     <Form
                         onSubmit={this.onSubmit}
                     >
