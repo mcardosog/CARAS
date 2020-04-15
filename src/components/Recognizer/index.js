@@ -119,7 +119,7 @@ class Recognizer extends Component {
                         </div>
                     </div>
                 </div>
-                <Modal size={"small"} open={this.state.showModal || true }>
+                <Modal size={"small"} open={this.state.showModal }>
 
                     <div className="ui segment">
                         <div className="ui two column very relaxed grid">

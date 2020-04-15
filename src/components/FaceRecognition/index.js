@@ -4,7 +4,7 @@ import * as faceapi from 'face-api.js';
 import * as canvas from 'canvas';
 import { withFirebase } from '../Firebase';
 import 'react-html5-camera-photo/build/css/index.css';
-import {Input, Button, Segment, Loader, Dimmer} from 'semantic-ui-react';
+import {Input, Button, Segment, Loader, Dimmer, Message} from 'semantic-ui-react';
 
 //
 class Face_Recognition extends Component {
@@ -12,7 +12,9 @@ class Face_Recognition extends Component {
         super(props);
         this.state = {
             loading:false,
-            feedback: null
+            feedbackHide: true,
+            feedbackColor: '',
+            feedbackHeader: ''
         }
     }
 
@@ -20,16 +22,58 @@ class Face_Recognition extends Component {
         this.setState({loading:false});
     }
 
-    showLogged = async () => {
-        const controller = ('.message .close')
-            .on('click', function() {
-                (this)
-                    .closest('.message')
-                    .transition('fade')
-                ;
-            })
-        ;
-        this.setState({feedback:controller});
+    hideFeedback = () => {
+        this.setState({feedbackHide: true})
+    }
+
+    showFeedback = async (result) => {
+        if(result === 'AUTHENTICATION CORRECT') {
+            this.setState({
+                feedbackHide: false,
+                feedbackColor: 'green',
+                feedbackHeader: 'Authentication succeed'
+            });
+        }
+        else if (result === 'AUTHENTICATION FAILED') {
+            this.setState({
+                feedbackHide: false,
+                feedbackColor: 'red',
+                feedbackHeader: 'Authentication failed'
+            });
+        }
+        else if (result.includes("ALERT")) {
+            this.setState({
+                feedbackHide: false,
+                feedbackColor: 'yellow',
+                feedbackHeader: result
+            });
+        }
+        else if (result.includes("ERROR")) {
+            this.setState({
+                feedbackHide: false,
+                feedbackColor: 'red',
+                feedbackHeader: result
+            });
+        }
+        else if (result === 'PLEASE TRY AGAIN'){
+            this.setState({
+                feedbackHide: false,
+                feedbackColor: 'yellow',
+                feedbackHeader: 'Please try again'
+            });
+        }
+        else {
+            this.setState({
+                feedbackHide: false,
+                feedbackColor: 'yellow',
+                feedbackHeader: result
+            });
+        }
+        var self = this;
+        setInterval(function () {
+            self.hideFeedback();
+        }, 5000)
+
     }
 
     render() {
@@ -37,6 +81,7 @@ class Face_Recognition extends Component {
         const organization = this.props.children.organization;
         const eventID = this.props.children.event;
         const stopLoadingFunction = this.stopLoading;
+        const showFeedback = this.showFeedback;
 
         //INSTANCE OF FIREBASE
         const fb = this.props.firebase;
@@ -67,13 +112,13 @@ class Face_Recognition extends Component {
             const image = await faceapi.bufferToImage(blob);
             const detection = await faceapi.detectAllFaces(image).withFaceLandmarks().withFaceDescriptors();
             if (detection.length === 0) {
-                alert("No face detected. Please try again.");
+                showFeedback("ERROR. No face detected. Please try again.")
                 stopLoadingFunction();
                 return;
             }
 
             if (detection.length > 1) {
-                alert("Multiple faces detected. Please try again.");
+                showFeedback("ERROR. Multiple faces detected. Please try again.")
                 stopLoadingFunction();
                 return;
             }
@@ -81,7 +126,7 @@ class Face_Recognition extends Component {
             //CHECK IF ELEMENT ID WAS ENTERED
             const userID = document.getElementById("userId").value;
             if (userID == '') {
-                alert("No user ID detected. Process will take longer to detect user");
+                showFeedback("ALERT. No user ID detected. Process will take longer to detect user")
                 await handleTakePhotoNoUserID(image, detection);
                 stopLoadingFunction();
                 return;
@@ -90,19 +135,19 @@ class Face_Recognition extends Component {
             //GET USER INFO, EVENT INFO AND VERIFY IF IT IS ALLOWED
             const userInfo = await fb.getUserInformation(organization, userID);
             if (userInfo == null) {
-                alert("Invalid user id");
+                showFeedback("ERROR. Invalid user id")
                 stopLoadingFunction();
                 return;
             }
 
             const eventInfo = await fb.getEventInformation(organization, eventID);
             if (eventInfo.notAllowedUsers.includes(userID)) {
-                alert('USER NOT ALLOWED');
+                showFeedback("ERROR. User not allowed")
                 stopLoadingFunction();
                 return
             }
             if (eventInfo.minimumLevel > userInfo.level && !eventInfo.allowedUsers.includes(userID)) {
-                alert('USER NOT ALLOWED');
+                showFeedback("ERROR. User not allowed")
                 stopLoadingFunction();
                 return
             }
@@ -110,7 +155,7 @@ class Face_Recognition extends Component {
             //LOAD DESCRIPTOR SET AND VERIFY IF IT IS VALID
             const descriptorSet = await (loadUserDescriptor(userID));
             if (descriptorSet == null || descriptorSet.length == 0) {
-                alert("Unable to process. Invalid user ID or user has no face descriptors stored");
+                showFeedback("ERROR. Unable to process. Invalid user ID or user has no face descriptors stored")
                 stopLoadingFunction();
                 return;
             }
@@ -130,7 +175,7 @@ class Face_Recognition extends Component {
             const sexDetection = (detectionsWithAgeAndGender[0].gender == userInfo.sex);
 
             await evaluateResult(faceAccuracy, ageAccuracy, sexDetection, userID, userInfo);
-
+            stopLoadingFunction();
         }
 
         async function handleTakePhotoNoUserID(image, detection) {
@@ -172,7 +217,7 @@ class Face_Recognition extends Component {
             }
 
             if (index < 0) {
-                alert('Unable to locate user.');
+                showFeedback("ERROR. Unable to locate user.")
                 stopLoadingFunction();
                 return;
             }
@@ -184,12 +229,12 @@ class Face_Recognition extends Component {
 
             const eventInfo = await fb.getEventInformation(organization, eventID);
             if (eventInfo.notAllowedUsers.includes(userID)) {
-                alert('USER NOT ALLOWED');
+                showFeedback("ERROR. User not allowed")
                 stopLoadingFunction();
                 return
             }
             if (eventInfo.minimumLevel > userInfo.level && !eventInfo.allowedUsers.includes(userID)) {
-                alert('USER NOT ALLOWED');
+                showFeedback("ERROR. User not allowed")
                 stopLoadingFunction();
                 return
             }
@@ -226,15 +271,18 @@ class Face_Recognition extends Component {
 
             if (result != 'AUTHENTICATION CORRECT') {
                 //console.log('NO RECORDING ATTENDANCE');
+                showFeedback(result);
+                stopLoadingFunction();
                 return;
             }
 
             const respAttendance = await fb.markUserAttendance(organization, eventID, userID);
             //console.log(respAttendance);
             if (respAttendance != null) {
-                alert('User ' + userInfo.firstName + ' ' + userInfo.lastName + ' ' +
-                    'was registered already at ' + new Date(respAttendance).toLocaleString());
+                result = 'User '+userInfo.firstName+' '+userInfo.lastName+' already authenticated at '+new Date(respAttendance).toLocaleString()
+
             }
+            showFeedback(result);
         }
 
         /**
@@ -253,10 +301,14 @@ class Face_Recognition extends Component {
         return (
             <>
                 <div className="ui two column centered grid">
+                    <div>
+                        <Message
+                            color={this.state.feedbackColor}
+                            hidden={this.state.feedbackHide}
+                            header={this.state.feedbackHeader}
+                        />
+                    </div>
                     <div  class="ui segment">
-                        <div>
-                            {this.state.feedback}
-                        </div>
                         <Dimmer active={this.state.loading}>
                             <Loader content='Processing Image...' size='huge'/>
                         </Dimmer>
