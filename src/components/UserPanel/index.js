@@ -32,7 +32,7 @@ class UserPanel extends Component {
             viewCreateUserModal: false,
             viewUserModal: false,
             viewEditUserModal: false,
-            selectedUser: {}
+            selectedUser: {},
         }
     }
 
@@ -42,8 +42,10 @@ class UserPanel extends Component {
         const addUser = this.props.firebase.addUser;
         const deleteUser = this.props.firebase.deleteUser;
         const updateUsers  = async () => {
+            this.setState({loading: true})
             const users =  await this.props.firebase.getUsersPreview(this.state.organization);
             this.setState({ users: users });
+            this.setState({loading: false})
         }
         this.setState({
             organization: organization,
@@ -84,12 +86,12 @@ class UserPanel extends Component {
     }
 
     render() {
-        const {organization, users, deleteUser, updateUsers,viewEditUserModal, viewCreateUserModal: createUserModal, viewUserModal, selectedUser: user} = this.state;
+        const {loading, organization, users, deleteUser, updateUsers,viewEditUserModal, viewCreateUserModal: createUserModal, viewUserModal, selectedUser: user} = this.state;
 
         const userFormModal = (
             <Modal
                 closeIcon
-                onClose={() => this.closeModal("Create")}
+                onClose={()=>updateUsers()}
                 open={createUserModal}
                 size='small'
                 closeOnEscape={true}
@@ -102,7 +104,6 @@ class UserPanel extends Component {
 
         const userEditModal = (
             <Modal
-                closeIcon
                 onClose={() => this.closeModal("Edit")}
                 open={viewEditUserModal}
                 size='tiny'
@@ -197,10 +198,8 @@ class UserPanel extends Component {
                                 }}
                             />
                             </Grid.Column>
-
                         </Grid.Row>
                     </Grid>
-
                 </Modal.Actions>
             </Modal>
         )
@@ -240,7 +239,7 @@ class UserPanel extends Component {
                 ?(
                     <Segment placeholder>
                         <Header icon>
-                          <Icon name='inbox' size='large'/>
+                          <Icon name='users' size='large'/>
                           <p>There are currently no users registered</p>
                         </Header>
                     </Segment>
@@ -251,14 +250,8 @@ class UserPanel extends Component {
                         <Grid.Row>
                             <Grid.Column>
                             <Table 
-                                // size='large' 
-                                // verticalAlign='middle' 
                                 celled 
                                 unstackable
-                                // sortable
-                                // singleLine
-                                // striped
-
                             >
                                 <Table.Header>
                                     <Table.Row >

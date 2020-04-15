@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Button, Icon, Card, Modal} from "semantic-ui-react";
+import { Button, Icon, Card, Modal, Grid} from "semantic-ui-react";
 import EditEventForm from "../UIComponents/EditEventForm";
+import ViewEvent from '../UIComponents/ViewEvent';
 
 
-export default function EventCard({ event, organization, activateEvent, updateEvents, stopEvent , deleteEvent}) {
-    const [viewEditEventForm, setViewEditEventForm] = useState(false);
-
+export default function EventCard({ event, organization, activateEvent, updateEvents, stopEvent, deleteEvent, openModal}) {
+    console.log("Card Rendered");
     const attendance = (
         <p>
             <Icon name="user" />
@@ -13,47 +13,67 @@ export default function EventCard({ event, organization, activateEvent, updateEv
         </p>
     );
 
-    const closeModal = (name) => {
-        switch(name) {
-            // case "View":
-            //     setViewEvent(false);
-            //     break;
-            case "Edit":
-                setViewEditEventForm(false);
-                break;               
-        }
-    }
+    // const editEventModal = (
+    //     <Modal
+    //         onClose={() =>{ closeModal("Create")}}
+    //         open={viewEditEventForm}
+    //         size='tiny'
+    //         closeOnEscape={true}
+    //         closeOnDimmerClick={false}
+    //     >
+    //         <Modal.Header as="h1">Edit Event</Modal.Header>
+    //         <Modal.Content>
+    //             <EditEventForm
+    //                 event={event}
+    //                 organization={organization}
+    //                 updateEvents={updateEvents}
+    //                 closeModal={closeModal}
+    //             />
+    //         </Modal.Content>
+    //     </Modal>
+    // );
 
-    const openModal = (name) => {
-        switch(name) {
-            // case "View":
-            //     setViewEvent(false);
-            //     break;
-            case "Edit":
-                setViewEditEventForm(true);
-                break;               
-        }
-    }
-
-    const editEventModal = (
-        <Modal
-            onClose={() =>{ closeModal("Create")}}
-            open={viewEditEventForm}
-            size='tiny'
-            closeOnEscape={true}
-            closeOnDimmerClick={false}
-        >
-            <Modal.Header as="h1">Edit Event</Modal.Header>
-            <Modal.Content>
-                <EditEventForm
-                    event={event}
-                    organization={organization}
-                    updateEvents={updateEvents}
-                    closeModal={closeModal}
-                />
-            </Modal.Content>
-        </Modal>
-    );
+    // const eventModal = (
+    //     <Modal
+    //         open={viewEventModal}
+    //         onClose={()=> this.closeModal("view")}
+    //         size='tiny'
+    //         closeOnEscape={true}
+    //         closeOnDimmerClick={true}
+    //     >
+    //         <Modal.Header as='h1' content='Event Detail View'/>
+    //         <Modal.Content>
+    //             <ViewEvent event={event} />
+    //         </Modal.Content>
+    //         <Modal.Actions>
+    //             <Grid>
+    //                 <Grid.Row>
+    //                     <Grid.Column>
+    //                         <Button 
+    //                             content='Close'
+    //                             color='grey'
+    //                             size='large'
+    //                             floated='left'
+    //                             onClick={()=>this.closeModal("View")}
+    //                         />
+    //                         <Button 
+    //                             icon='edit'
+    //                             labelPosition='left'
+    //                             content='Edit'
+    //                             size='large'
+    //                             floated='right'
+    //                             positive
+    //                             onClick={()=>{
+    //                                 this.openModal("Edit");
+    //                                 this.closeModal("View");
+    //                             }}
+    //                         />
+    //                     </Grid.Column>
+    //                 </Grid.Row>
+    //             </Grid>                
+    //         </Modal.Actions>
+    //     </Modal>
+    // );
 
     return (
         <>
@@ -92,7 +112,7 @@ export default function EventCard({ event, organization, activateEvent, updateEv
                         content='View'
                         icon='eye'
                         labelPosition='left'
-                        onClick={()=>openModal("Edit")}
+                        onClick={openModal}
                     />
                       <Button 
                         color='red'
@@ -108,7 +128,8 @@ export default function EventCard({ event, organization, activateEvent, updateEv
                 </Card.Content>
                 {/*<Card.Content extra>{attendance}</Card.Content>*/}
             </Card>
-            {editEventModal}
+            {/* {editEventModal}
+            {eventModal} */}
         </>
     );
 }

@@ -6,8 +6,8 @@ import CustomUploadButton from 'react-firebase-file-uploader/lib/CustomUploadBut
 import { AuthUserContext, withAuthorization } from '../Session';
 
 import {Form, Button, Grid, Modal, Message} from 'semantic-ui-react';
-
 import { genderOptions, levelOptions } from "../../util/options";
+import {onlyAlphaNumValues, onlyNumericValues, validEmail} from "../../util/validators";
 
 var user = {
     userID: '',
@@ -60,8 +60,7 @@ class NewUser extends Component {
 
         var errors = [];
 
-        var emailRegex = (/^[\w]{1,25}@[\w]+[(.com)]+/);
-        if (!emailRegex.test(email)) {
+        if (!validEmail(email)) {
             errors.push('Email must be a valid email.');
         }
 
@@ -93,7 +92,8 @@ class NewUser extends Component {
         if (errors.length === 0) {
             const userAdded = await this.props.firebase.addUser(organization,userID,firstName,lastName,email,level,gender,age);
             if(!userAdded) {
-                errors.push('User ID already exists')
+                errors.push('User ID already exists');
+                this.setState({errors: errors});
                 return;
             }
         } else {
@@ -250,8 +250,7 @@ class NewUser extends Component {
                                         value={userID}
                                         onChange={({param: event}, data) => {
                                             //only allow alphanumeric values to be inputted
-                                            var regex = (/^[A-Za-z0-9]+$/);
-                                            if (regex.test(data.value) || data.value === '') {
+                                            if (onlyAlphaNumValues(data.value) || data.value === '') {
                                                 this.onChange(event, data)
                                             }
                                         }}
@@ -274,8 +273,7 @@ class NewUser extends Component {
                                         width={2}
                                         onChange={({param: event}, data) => {
                                             //only allow numeric values to be inputted
-                                            var regex = (/^[\d]*$/);
-                                            if (regex.test(data.value)) {
+                                            if (onlyNumericValues(data.value)) {
                                                 this.onChange(event, data)
                                             }
                                         }}
@@ -353,7 +351,7 @@ class NewUser extends Component {
                     </Modal.Content>
                     <Modal.Actions>
                         <Grid
-                        stackable={false}
+                            stackable={false}
                         >
                             <Grid.Row columns={1}>
                                 <Grid.Column>

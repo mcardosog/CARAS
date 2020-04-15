@@ -3,6 +3,7 @@ import { withFirebase } from '../components/Firebase';
 
 import { Form, Grid, Button, Icon } from "semantic-ui-react";
 import SemanticDatepicker from 'react-semantic-ui-datepickers';
+import { onlyNumericValues} from "../util/validators";
 
 export default function EventForm({organization, addEvent, updateEvents, closeModal}) {
     const [code, setCode] = useState('');
@@ -90,13 +91,13 @@ export default function EventForm({organization, addEvent, updateEvents, closeMo
             <Grid.Row>
                 <Grid.Column>
                     <Form onSubmit={onSubmit}>
-                        <Form.Group>
+                        <Form.Group widths='equal'>
                             <Form.Input
                                 label="Event Name"
                                 name="name"
                                 type="text"
-                                maxLength="15"
-                                // value={values.name}
+                                width={4}
+                                maxLength="25"
                                 onChange={(param, data) => {
                                     onChange(data.name, data.value);
                                 }}
@@ -105,12 +106,12 @@ export default function EventForm({organization, addEvent, updateEvents, closeMo
                                 label="Event Code"
                                 name="code"
                                 type="text"
+                                width={1}
                                 value={code}
                                 maxLength="5"
                                 onChange={(param, data) => {
                                     //only allow numeric values to be inputted
-                                    var regex = (/[0-9]|\./);
-                                    if (regex.test(data.value)) {
+                                    if (onlyNumericValues(data.value)) {
                                         setCode(data.value);
                                         onChange(data.name, data.value);
                                     }
@@ -120,6 +121,7 @@ export default function EventForm({organization, addEvent, updateEvents, closeMo
                                 label="Event ID"
                                 name="id"
                                 type="text"
+                                width={4}
                                 // value={values.code}
                                 maxLength="10"
                                 onChange={(param, data) => {
@@ -127,25 +129,19 @@ export default function EventForm({organization, addEvent, updateEvents, closeMo
                                 }}
                             />
                         </Form.Group>
-                        <Form.TextArea
-                            label="Description"
-                            name="description"
-                            type="text"
-                            // value={values.description}
-                            onChange={(param, data) => {
-                                onChange(data.name, data.value);
-                            }}
-                        />
-                        <Form.Group>
-                            <Form.Input
-                                label="Allowed Users"
-                                name="allowedUsers"
+                        <Form.Group widths='equal'>
+                            <Form.TextArea
+                                label="Description"
+                                name="description"
                                 type="text"
+                                width={2}
                                 // value={values.description}
                                 onChange={(param, data) => {
                                     onChange(data.name, data.value);
                                 }}
                             />
+                        </Form.Group>
+                        <Form.Group widths='equal'>
                             <Form.Dropdown
                                 label = "Minimum Level"
                                 name = "minimum_level"
@@ -181,7 +177,16 @@ export default function EventForm({organization, addEvent, updateEvents, closeMo
                                 }
                             />
                         </Form.Group>
-                        <Form.Group>
+                        <Form.Group widths='equal'>
+                            <Form.Input
+                                label="Allowed Users"
+                                name="allowedUsers"
+                                type="text"
+                                // value={values.description}
+                                onChange={(param, data) => {
+                                    onChange(data.name, data.value);
+                                }}
+                            />
                             <Form.Input
                                 label="Not Allowed Users"
                                 name="notAllowedUsers"
@@ -212,7 +217,7 @@ export default function EventForm({organization, addEvent, updateEvents, closeMo
                             color="green"
                             icon="check"
                             labelPosition="left"
-                            floated="right"
+                            floated="left"
                         />
                     </Form>
                 </Grid.Column>
