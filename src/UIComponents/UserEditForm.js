@@ -45,7 +45,7 @@ class UserEditForm extends React.Component {
         gender,
         age
     } = this.state;
-
+    console.log('on submit called');
 
     const {organization, updateUsers, closeModal, firebase} = this.props;
 
@@ -58,7 +58,7 @@ class UserEditForm extends React.Component {
     this.setState({errors: errors});
 
     if (errors.length === 0) {
-        const userAdded = await this.props.firebase.addUser(
+        const userAdded = await firebase.addUser(
             organization,
             userID,
             firstName,
@@ -72,12 +72,15 @@ class UserEditForm extends React.Component {
         if(!userAdded) {
             errors.push('User ID already exists')
             return;
+        } else {
+            closeModal();
+            updateUsers();
         }
     } else {
         return;
     }
-    updateUsers();
-    closeModal("Edit");
+
+
   }
 
   onClick = async (Component) =>{

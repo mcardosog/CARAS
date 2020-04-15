@@ -115,7 +115,7 @@ class UserPanel extends Component {
                     <UserEditForm
                         user={user} 
                         organization={organization} 
-                        closeModal={this.closeModal}
+                        closeModal={() => this.closeModal("Edit")}
                         updateUsers={updateUsers} />
                 </Modal.Content>
             </Modal>

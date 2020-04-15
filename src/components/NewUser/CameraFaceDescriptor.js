@@ -85,7 +85,7 @@ class CameraFaceDescriptor extends Component {
                 centered
                 container
             >
-                <Grid.Row centered textAlign='middle'>
+                <Grid.Row centered textAlign='center'>
                     <Grid.Column verticalAlign='middle' textAlign='left'>
                         <Header as='h1'>
                             <span><Icon name='camera' size='large'/> </span>Take Pictures
