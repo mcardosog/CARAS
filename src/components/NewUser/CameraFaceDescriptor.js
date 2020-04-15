@@ -91,10 +91,10 @@ class CameraFaceDescriptor extends Component {
                                 onTakePhoto = { (dataUri) => { this.handleTakePhoto(dataUri); } }
                             />
                             <Message
-                            color='red'
-                            hidden={(errors.length === 0)}
-                            header='Errors Encountered:'
-                            list={errors}
+                                color='red'
+                                hidden={(errors.length === 0)}
+                                header='Errors Encountered:'
+                                list={errors}
                         />  
                     </Grid.Column>
                 </Grid.Row>

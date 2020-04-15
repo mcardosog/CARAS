@@ -94,14 +94,11 @@ class NewUser extends Component {
             if(!userAdded) {
                 errors.push('User ID already exists');
                 this.setState({errors: errors});
-                return;
+            } else {
+                this.setState({viewConfirmationImageModal: true});    
             }
-        } else {
-            return;
         }
-        
-        this.setState({viewConfirmationImageModal: true});    
-        // document.getElementById('userID').disabled = true;
+                // document.getElementById('userID').disabled = true;
         // document.getElementById('firstName').disabled = true;
         // document.getElementById('lastName').disabled = true;
         // document.getElementById('email').disabled = true;
