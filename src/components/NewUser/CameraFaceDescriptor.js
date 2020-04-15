@@ -71,16 +71,21 @@ class CameraFaceDescriptor extends Component {
         return (
             <Grid
                 centered
+                container
             >
-                <Grid.Row>
-                    <Header as='h1' icon ='camera'>
-                        Take Pictures
-                        <Header.Subheader>
-                            Remaining Photos: <Label icon ='picture' content={remainingPhotos}></Label>
+                <Grid.Row centered>
+                    <Grid.Column stretched textAlign='center'>
+                        <Header as='h1' icon>
+                            <Icon name='camera'/>
+                            Take Pictures
+                        </Header>
+                        <Header.Subheader as='h2'>
+                                Remaining Pictures: 
+                                <Label size='huge' icon ='picture' content={remainingPhotos}/>
                         </Header.Subheader>
-                    </Header>
+                    </Grid.Column>
                 </Grid.Row>
-                <Grid.Row>
+                <Grid.Row centered>
                     <Grid.Column stretched>
                         <Dimmer active={loading}>
                             <Loader content='Processing Image...' size='huge'/>

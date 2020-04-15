@@ -7,9 +7,6 @@ import * as ROUTES from '../../constants/routes';
 import NewUser from '../NewUser/index';
 import UserEditForm from '../../UIComponents/UserEditForm';
 
-import CameraFaceDescriptor from "./CameraFaceDescriptor";
-import FileFaceDescriptor from "./FileFaceDescriptor";
-
 import { 
     Table, 
     Grid, 
@@ -205,8 +202,7 @@ class UserPanel extends Component {
                     </Grid>
                 </Modal.Actions>
             </Modal>
-        )
-        
+        )   
         
         return (
             <>
@@ -276,7 +272,6 @@ class UserPanel extends Component {
                                                     color='blue'
                                                     icon = "info"
                                                     onClick = { () => {
-                                                        console.log(user);
                                                         this.setState({selectedUser: user});
                                                         this.setState({viewUserModal: true});
                                                     }}

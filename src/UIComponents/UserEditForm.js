@@ -4,7 +4,7 @@ import { AuthUserContext, withAuthorization } from '../components/Session';
 import CameraFaceDescriptor from "../components/NewUser/CameraFaceDescriptor";
 import FileFaceDescriptor from "../components/NewUser/FileFaceDescriptor";
 
-import { Grid, Form, Button, Message, Container } from "semantic-ui-react";
+import { Grid, Form, Button, Message, Modal } from "semantic-ui-react";
 
 import { genderOptions, levelOptions } from "../util/options";
 import {onlyAlphaNumValues, onlyNumericValues, validEmail} from "../util/validators";
@@ -22,7 +22,9 @@ class UserEditForm extends React.Component {
         gender: props.user.sex,
         age: props.user.age,
         level: props.user.level,
-        errors:[]
+        errors:[],
+        descriptor: null,
+        viewDescriptorModal: false,
     };
   }
 
@@ -78,12 +80,60 @@ class UserEditForm extends React.Component {
     closeModal("Edit");
   }
 
+  onClick = async (Component) =>{
+      this.setState({descriptor: Component});
+      this.setState({viewDescriptorModal: true});
+  }
+
+  closeModal = () => {
+      this.setState({viewDescriptorModal: false})
+  }
+
   render() {
-    const { firstName, lastName, email, gender, age, level, errors } = this.state;
+    const { firstName, lastName, email, gender, age, level, errors, userID, viewDescriptorModal, descriptor } = this.state;
+    const {organization} = this.props;
+
+    const CameraComponent = (
+        <CameraFaceDescriptor
+            children = {
+                {
+                    'organization': organization,
+                    'userID': userID,
+                    'closeModal': this.closeModal
+                }
+            }
+        />
+    );
+
+    const FileComponent = (
+        <FileFaceDescriptor
+            children = {
+                {
+                    'organization': organization,
+                    'userID': userID,
+                    'closeModal': this.closeModal
+                }
+            }
+        />
+    );
+
+    const descriptorModal = (
+        <Modal
+            size='small'
+            open={viewDescriptorModal}
+            onClose={()=>this.closeModal()}
+            closeOnDimmerClick={true}
+            closeOnEscape={true}
+        >
+            <Modal.Content content={descriptor}/>
+        </Modal>
+    );
+
     return (
-        <Grid>
-            <Grid.Row>
-                <Grid.Column>
+        <>
+            <Grid>
+                <Grid.Row>
+                    <Grid.Column>
                     <Form
                         noValidate
                         onSubmit={this.onSubmit}
@@ -163,6 +213,7 @@ class UserEditForm extends React.Component {
                             content='Add New Pictures'
                             icon='camera'
                             labelPosition='left'
+                            onClick={() => {this.onClick(CameraComponent)}}
                         />
                         <Button.Or/>
                         <Button
@@ -170,6 +221,7 @@ class UserEditForm extends React.Component {
                             content='Upload New Pictures'
                             icon='file'
                             labelPosition='right'
+                            onClick={() => {this.onClick(FileComponent)}}
                         />
                     </Button.Group>
                         <Message
@@ -180,34 +232,36 @@ class UserEditForm extends React.Component {
                             list={errors}
                         />    
                 </Grid.Column>
-            </Grid.Row>
-            <Grid.Row>
-                <Grid.Column>
-                    <Button
-                        type='button'
-                        content="Cancel"
-                        size='large'
-                        color="red"
-                        icon="cancel"
-                        labelPosition="left"
-                        floated="right"
-                        onClick={()=>{
-                            this.setState({});
-                            this.props.closeModal("Edit");
-                        }}
-                    />
-                    <Button
-                        onClick={this.onSubmit}
+                </Grid.Row>
+                <Grid.Row>
+                    <Grid.Column>
+                        <Button
+                            type='button'
+                            content="Cancel"
+                            size='large'
+                            color="red"
+                            icon="cancel"
+                            labelPosition="left"
+                            floated="right"
+                            onClick={()=>{
+                                this.setState({});
+                                this.props.closeModal("Edit");
+                            }}
+                        />
+                        <Button
+                            onClick={this.onSubmit}
                         content="Submit"
                         size='large'
                         color="green"
                         icon="check"
                         labelPosition="left"
                         floated="left"
-                    />
-                </Grid.Column>
-            </Grid.Row>
-        </Grid>
+                        />
+                    </Grid.Column>
+                </Grid.Row>
+            </Grid>
+            {descriptorModal}
+        </>
     );
   }
 }
