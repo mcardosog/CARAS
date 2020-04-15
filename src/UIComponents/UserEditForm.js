@@ -1,11 +1,14 @@
 import React from "react";
 import { withFirebase } from '../components/Firebase';
 import { AuthUserContext, withAuthorization } from '../components/Session';
+import CameraFaceDescriptor from "../components/NewUser/CameraFaceDescriptor";
+import FileFaceDescriptor from "../components/NewUser/FileFaceDescriptor";
 
-import { Grid, Form, Button, Message } from "semantic-ui-react";
+import { Grid, Form, Button, Message, Container } from "semantic-ui-react";
 
 import { genderOptions, levelOptions } from "../util/options";
 import {onlyAlphaNumValues, onlyNumericValues, validEmail} from "../util/validators";
+import { fromRenderProps } from "recompose";
 
 
 class UserEditForm extends React.Component {
@@ -21,6 +24,8 @@ class UserEditForm extends React.Component {
         level: props.user.level,
         errors:[]
     };
+
+    console.log(props.user);
   }
 
   onChange = async (event, { name, value }) => {
@@ -152,36 +157,56 @@ class UserEditForm extends React.Component {
                                     }
                                 }}
                             />
-                        </Form.Group>
-                            <Message
-                                color='red'
-                                hidden={(errors.length === 0)}
-                                header='Invalid Form Fields:'
-                                list={errors}
-                            />
-                            <Button
-                                type='button'
-                                content="Cancel"
-                                size='large'
-                                color="red"
-                                icon="cancel"
-                                labelPosition="left"
-                                floated="right"
-                                onClick={()=>{
-                                    this.setState({});
-                                    this.props.closeModal("Edit");
-                                }}
-                            />
-                            <Button
-                                type="submit"
-                                content="Submit"
-                                size='large'
-                                color="green"
-                                icon="check"
-                                labelPosition="left"
-                                floated="left"
-                            />            
+                        </Form.Group>        
                     </Form>
+                    <Button.Group compact fluid size='small'>
+                        <Button
+                            color='blue'
+                            content='Add New Pictures'
+                            icon='camera'
+                            labelPosition='left'
+                        />
+                        <Button.Or/>
+                        <Button
+                            color='blue'
+                            content='Upload New Pictures'
+                            icon='file'
+                            labelPosition='right'
+                        />
+                    </Button.Group>
+                        <Message
+                            color='red'
+                            size='large'
+                            hidden={(errors.length === 0)}
+                            header='Invalid Form Fields:'
+                            list={errors}
+                        />    
+                </Grid.Column>
+            </Grid.Row>
+            <Grid.Row>
+                <Grid.Column>
+                    <Button
+                        type='button'
+                        content="Cancel"
+                        size='large'
+                        color="red"
+                        icon="cancel"
+                        labelPosition="left"
+                        floated="right"
+                        onClick={()=>{
+                            this.setState({});
+                            this.props.closeModal("Edit");
+                        }}
+                    />
+                    <Button
+                        onClick={this.onSubmit}
+                        content="Submit"
+                        size='large'
+                        color="green"
+                        icon="check"
+                        labelPosition="left"
+                        floated="left"
+                    />
                 </Grid.Column>
             </Grid.Row>
         </Grid>

@@ -4,24 +4,29 @@ import * as faceapi from 'face-api.js';
 import * as canvas from 'canvas';
 import { withFirebase } from '../Firebase';
 import 'react-html5-camera-photo/build/css/index.css';
-import { Divider, Grid, Header, Form, Button, Icon } from 'semantic-ui-react';
+import { Divider, Grid, Header, Form, Button, Icon, Message, Dimmer, Loader } from 'semantic-ui-react';
 
 
 var constructorImages = new Array();
+var currentErrors = [];
 
 class FileFaceDescriptor extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            images: []
+            images: [],
+            loading: false,
+            errors:[]
         }
     }
 
     onSubmit = async() => {
+        this.setState({loading: true});
         var count = 0;
         const {images} = this.state;
 
+        const {closeModal, updateUsers} = this.props.children;
         // const images = [
         //     document.getElementById('file0').files,
         //     document.getElementById('file1').files,
@@ -31,34 +36,38 @@ class FileFaceDescriptor extends Component {
         // ];
 
         for (var i = 0; i< images.length; i++) {
-            const response = await this.handlePhoto(images[i])
+            const response = await this.handlePhoto(images[i], i)
             if (response) {
                 count++;
             }
+            currentErrors.push(response);
         }
 
         if(count === 0) {
-            alert('You need to upload at least one valid picture');
+            currentErrors.push('You need to upload at least one valid picture');
+            // this.setState({errors: currentErrors});
         }
         else {
             alert('Images processed correctly');
-            this.props.children.closeModal();
-            this.props.children.updateUsers();
+            closeModal();
+            // updateUsers();
         }
+        this.setState({loading: false});
+        this.setState({errors: currentErrors});
     }
 
-    handlePhoto = async (imgRaw) => {
+    handlePhoto = async (imgRaw, index) => {
         const image =  await faceapi.bufferToImage(imgRaw);
         const detection =  await faceapi.detectAllFaces(image).withFaceLandmarks().withFaceDescriptors();
         const {organization, userID} = this.props.children;
         const fb = this.props.firebase;
 
         if(detection.length === 0) {
-            alert("No face detected on the image " + imgRaw.name);
+            currentErrors.push("No face detected on the image " + imgRaw.name + " - " + index);
             return false;
         }
         if(detection.length > 1) {
-            alert("More than one face detected on the image " + imgRaw.name);
+            currentErrors.push("More than one face detected on the image " + imgRaw.name + " - " + index);
             return false;
         }
         await fb.insertDescriptor(organization,userID,detection[0].descriptor);
@@ -76,6 +85,7 @@ class FileFaceDescriptor extends Component {
             faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
         ])
 
+        const {loading} = this.state;
         //TAKEN FROM CHILDREN IN THE CONSTRUCTOR
         // const {organization, userID} = this.props.children;
         // // const organization = this.props.children.organization;
@@ -105,6 +115,9 @@ class FileFaceDescriptor extends Component {
                 </Grid.Row>
                 <Divider/>
                 <Grid.Row centered>
+                    <Dimmer active={loading} inverted>
+                        <Loader content='Analyzing Images. This might take a while...' size='huge'/>
+                    </Dimmer>
                     <Form
                         onSubmit={this.onSubmit}
                     >
@@ -155,6 +168,12 @@ class FileFaceDescriptor extends Component {
                                 this.setState({images: constructorImages});
                             }}
                         />
+                        <Message
+                            color='red'
+                            hidden={(currentErrors.length === 0)}
+                            header='Errors Encountered:'
+                            list={currentErrors}
+                        />                        
                         <Button
                             type='submit'
                             icon='upload'

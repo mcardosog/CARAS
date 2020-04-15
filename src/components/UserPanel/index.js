@@ -91,7 +91,7 @@ class UserPanel extends Component {
         const userFormModal = (
             <Modal
                 closeIcon
-                onClose={() => this.closeModal("Create")}
+                onClose={()=>updateUsers()}
                 open={createUserModal}
                 size='small'
                 closeOnEscape={true}
@@ -250,14 +250,8 @@ class UserPanel extends Component {
                         <Grid.Row>
                             <Grid.Column>
                             <Table 
-                                // size='large' 
-                                // verticalAlign='middle' 
                                 celled 
                                 unstackable
-                                // sortable
-                                // singleLine
-                                // striped
-
                             >
                                 <Table.Header>
                                     <Table.Row >
