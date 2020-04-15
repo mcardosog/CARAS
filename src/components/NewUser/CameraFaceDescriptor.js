@@ -107,6 +107,7 @@ class CameraFaceDescriptor extends Component {
                         </Dimmer>
                             <Camera
                                 onTakePhoto = { (dataUri) => { this.handleTakePhoto(dataUri); } }
+                                isSilentMode = {true}
                             />
                             <Message
                                 size='large'
