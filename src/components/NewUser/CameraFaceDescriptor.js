@@ -3,7 +3,7 @@ import * as faceapi from 'face-api.js';
 import { withFirebase } from '../Firebase';
 import 'react-html5-camera-photo/build/css/index.css';
 import Camera from 'react-html5-camera-photo';
-import { Grid, Segment, Icon, Label, Header, Loader, Dimmer } from 'semantic-ui-react';
+import { Grid, Segment, Icon, Label, Header, Loader, Dimmer, Message } from 'semantic-ui-react';
 //import Webcam from "react-webcam";
 //
 
@@ -13,11 +13,13 @@ class CameraFaceDescriptor extends Component {
         super(props);
         this.state = {
             loading: false,
-            remainingPhotos: 5
+            remainingPhotos: 5,
+            errors:[]
         }
     }
 
     handleTakePhoto = async (dataUri) => {
+        var currentErrors = []
         const {organization, userID} = this.props.children;
         this.setState({loading: true});
         if(this.state.remainingPhotos == 0) {
@@ -30,27 +32,30 @@ class CameraFaceDescriptor extends Component {
         const detection =  await faceapi.detectAllFaces(image).withFaceLandmarks().withFaceDescriptors();
 
         if(detection.length === 0) {
-            alert("No face detected. Please try again.");
-            return;
+            currentErrors.push("No face detected. Please try again.");
         }
 
         if(detection.length > 1) {
-            alert("Multiple faces detected. Please try again.");
-            return;
+            currentErrors.push("Multiple faces detected. Please try again.");
         }
 
         //TAKEN FROM CHILDREN IN THE CONSTRUCTOR
         // const organization = this.props.children.organization;
         // const userID = this.props.children.userID;
 
-        await this.props.firebase.insertDescriptor(organization,userID,detection[0].descriptor);
-        this.setState({remainingPhotos:this.state.remainingPhotos-1});
-        this.setState({loading: false});
+        if (currentErrors === 0){
+            await this.props.firebase.insertDescriptor(organization,userID,detection[0].descriptor);
+            this.setState({remainingPhotos:this.state.remainingPhotos-1});
+            this.setState({loading: false});
+            this.setState({errors: currentErrors})
+        } else {
+            this.setState({errors: currentErrors})
+        }
     }
 
 
     render() {
-        const {remainingPhotos, loading} = this.state;
+        const {remainingPhotos, loading, errors} = this.state;
         const {updateUsers, closeModal} = this.props.children;
 
         Promise.all([
@@ -62,7 +67,7 @@ class CameraFaceDescriptor extends Component {
         if(remainingPhotos == 0) {
             alert('Completed!');
             closeModal();
-            updateUsers();
+            // updateUsers();
         }
 
         return (
@@ -82,11 +87,15 @@ class CameraFaceDescriptor extends Component {
                         <Dimmer active={loading}>
                             <Loader content='Processing Image...' size='huge'/>
                         </Dimmer>
-                        {/* <div> */}
                             <Camera
                                 onTakePhoto = { (dataUri) => { this.handleTakePhoto(dataUri); } }
                             />
-                        {/* </div> */}
+                            <Message
+                            color='red'
+                            hidden={(errors.length === 0)}
+                            header='Errors Encountered:'
+                            list={errors}
+                        />  
                     </Grid.Column>
                 </Grid.Row>
             </Grid>
