@@ -3,7 +3,7 @@ import * as faceapi from 'face-api.js';
 import { withFirebase } from '../Firebase';
 import 'react-html5-camera-photo/build/css/index.css';
 import Camera from 'react-html5-camera-photo';
-import { Grid, Message, Icon, Label, Header, Loader, Dimmer } from 'semantic-ui-react';
+import { Grid, Message, Icon, Label, Header, Loader, Dimmer, Button } from 'semantic-ui-react';
 //import Webcam from "react-webcam";
 //
 
@@ -13,7 +13,8 @@ class CameraFaceDescriptor extends Component {
         super(props);
         this.state = {
             loading: false,
-            remainingPhotos: 5
+            remainingPhotos: 5,
+            completed: false,
         }
     }
 
@@ -60,13 +61,13 @@ class CameraFaceDescriptor extends Component {
             faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
         ])
 
-        if(remainingPhotos == 0) {
-            loading=false;
-            closeModal();
-            if (updateUsers !== undefined) {
-                updateUsers();
-            }
-        }
+        // if(remainingPhotos == 0) {
+        //     completed=true;
+        //     closeModal();
+        //     if (updateUsers !== undefined) {
+        //         updateUsers();
+        //     }
+        // }
 
         return (
             <Grid
@@ -79,18 +80,12 @@ class CameraFaceDescriptor extends Component {
                             <Icon name='camera'/>
                             Take Pictures
                         </Header>
-                        {completed ?
-                        (
-                            <Message
-                                positive
-                                content='Completed!'
-                            />
-                        ):(
+                        {remainingPhotos !== 0 ?(
                             <Header.Subheader as='h2'>
                                 Remaining Pictures: 
                                 <Label size='huge' icon ='picture' content={remainingPhotos}/>
                             </Header.Subheader>
-                        )}
+                        ):('')}
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row centered>
@@ -101,6 +96,18 @@ class CameraFaceDescriptor extends Component {
                             <Camera
                                 onTakePhoto = { (dataUri) => { this.handleTakePhoto(dataUri); } }
                             />
+                            <Message
+                                size='large'
+                                positive
+                                hidden={remainingPhotos !== 0}
+                                
+                            >
+                                <Header as='h1'>Completed!</Header>
+                                <Button
+                                    positive
+                                    size='large'
+                                >Done</Button>
+                            </Message>
                     </Grid.Column>
                 </Grid.Row>
             </Grid>
