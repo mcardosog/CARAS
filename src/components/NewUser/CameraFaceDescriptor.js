@@ -110,26 +110,23 @@ class CameraFaceDescriptor extends Component {
                                 isSilentMode = {true}
                             />
                             <Message
-                                size='large'
+                                size='mini'
                                 positive
                                 hidden={remainingPhotos !== 0}
                             >
                                 <Container>
                                     <Grid>
                                         <Grid.Row>
-                                            <Grid.Column>
-                                                <Header as='h1'>Completed!</Header>
-                                            </Grid.Column>
-                                        </Grid.Row>
-                                        <Grid.Row centered>
                                             <Grid.Column verticalAlign='middle'>
+                                                <Header as='h2'>Completed!</Header>
                                                 <Button
                                                     positive
-                                                    size='huge'
+                                                    floated='right'
+                                                    size='large'
                                                     content='Done'
                                                     onClick={this.onClick}
                                                 />
-                                            </Grid.Column>
+                                           </Grid.Column>
                                         </Grid.Row>
                                     </Grid>
                                 </Container>
