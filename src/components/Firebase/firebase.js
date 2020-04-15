@@ -208,6 +208,7 @@ const config = {
           };
           const filter = ['email','firstName','lastName','age','level','sex'];
           const tempElement = await this.getElementsInPath(path, filter);
+          if(tempElement == null || tempElement.length == 0) { return null; }
           userInformation.age = tempElement[0].value;
           userInformation.email = tempElement[1].value;
           userInformation.firstName = tempElement[2].value;

@@ -3,9 +3,15 @@ import * as faceapi from 'face-api.js';
 import { withFirebase } from '../Firebase';
 import 'react-html5-camera-photo/build/css/index.css';
 import Camera from 'react-html5-camera-photo';
-import { Grid, Message, Icon, Label, Header, Loader, Dimmer, Divider } from 'semantic-ui-react';
+import { Grid, Message, Icon, Label, Header, Loader, Dimmer, Divider, Button } from 'semantic-ui-react';
 //import Webcam from "react-webcam";
 //
+
+/*TODO
+    - Finish formatting the sucess message
+    - Rewrite the formatting of the modal in general to reduce wasted space
+*/
+
 
 class CameraFaceDescriptor extends Component {
 
@@ -13,7 +19,8 @@ class CameraFaceDescriptor extends Component {
         super(props);
         this.state = {
             loading: false,
-            remainingPhotos: 5
+            remainingPhotos: 5,
+            completed: false,
         }
     }
 
@@ -49,24 +56,30 @@ class CameraFaceDescriptor extends Component {
         this.setState({loading: false});
     }
 
+    onClick = async (event) => {
+        const {closeModal, updateUsers} = this.props.children;
+        closeModal();
+
+        if (updateUsers !== undefined) {
+            updateUsers();
+        }
+    }
 
     render() {
         const {remainingPhotos, loading} = this.state;
-        const {updateUsers, closeModal} = this.props.children;
-        var completed = false;
         Promise.all([
             faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
             faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
             faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
         ])
 
-        if(remainingPhotos == 0) {
-            loading=false;
-            closeModal();
-            if (updateUsers !== undefined) {
-                updateUsers();
-            }
-        }
+        // if(remainingPhotos == 0) {
+        //     completed=true;
+        //     closeModal();
+        //     if (updateUsers !== undefined) {
+        //         updateUsers();
+        //     }
+        // }
 
         return (
             <Grid
@@ -79,14 +92,14 @@ class CameraFaceDescriptor extends Component {
                             <span><Icon name='camera' size='large'/> </span>Take Pictures
                         </Header>
                         <Divider/>
-                        {completed ?
+                        {remainingPhotos === 0 ?
                         (
                             <Message
                                 positive
                                 content='Completed!'
                             />
                         ):(
-                            <Label color='blue' size='huge' icon ='picture' detail='Pictures Remaining' content={remainingPhotos}/>
+                             <Label color='blue' size='huge' icon ='picture' detail='Pictures Remaining' content={remainingPhotos}/>
                         )}
                     </Grid.Column>
                 </Grid.Row>
@@ -97,7 +110,21 @@ class CameraFaceDescriptor extends Component {
                         </Dimmer>
                             <Camera
                                 onTakePhoto = { (dataUri) => { this.handleTakePhoto(dataUri); } }
+                                isSilentMode = {true}
                             />
+                            <Message
+                                size='large'
+                                positive
+                                hidden={remainingPhotos !== 0}
+                            >
+                                <Header as='h1'>Completed!</Header>
+                                <Button
+                                    positive
+                                    size='large'
+                                    content='Done'
+                                    onClick={this.onClick}
+                                />
+                            </Message>
                     </Grid.Column>
                 </Grid.Row>
             </Grid>
