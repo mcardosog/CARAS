@@ -42,10 +42,10 @@ class UserPanel extends Component {
         const addUser = this.props.firebase.addUser;
         const deleteUser = this.props.firebase.deleteUser;
         const updateUsers  = async () => {
-            this.setState({loading: true})
+            this.setState({loading: true});
             const users =  await this.props.firebase.getUsersPreview(this.state.organization);
             this.setState({ users: users });
-            this.setState({loading: false})
+            this.setState({loading: false});
         }
         this.setState({
             organization: organization,
@@ -91,7 +91,7 @@ class UserPanel extends Component {
         const userFormModal = (
             <Modal
                 closeIcon
-                onClose={() => this.closeModal("Create")}
+                onClose={()=>updateUsers()}
                 open={createUserModal}
                 size='small'
                 closeOnEscape={true}
@@ -115,7 +115,7 @@ class UserPanel extends Component {
                     <UserEditForm
                         user={user} 
                         organization={organization} 
-                        closeModal={this.closeModal}
+                        closeModal={() => this.closeModal("Edit")}
                         updateUsers={updateUsers} />
                 </Modal.Content>
             </Modal>
@@ -202,8 +202,7 @@ class UserPanel extends Component {
                     </Grid>
                 </Modal.Actions>
             </Modal>
-        )
-        
+        )   
         
         return (
             <>
@@ -250,14 +249,8 @@ class UserPanel extends Component {
                         <Grid.Row>
                             <Grid.Column>
                             <Table 
-                                // size='large' 
-                                // verticalAlign='middle' 
                                 celled 
                                 unstackable
-                                // sortable
-                                // singleLine
-                                // striped
-
                             >
                                 <Table.Header>
                                     <Table.Row >
@@ -279,7 +272,6 @@ class UserPanel extends Component {
                                                     color='blue'
                                                     icon = "info"
                                                     onClick = { () => {
-                                                        console.log(user);
                                                         this.setState({selectedUser: user});
                                                         this.setState({viewUserModal: true});
                                                     }}
