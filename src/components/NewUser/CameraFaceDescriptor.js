@@ -7,6 +7,12 @@ import { Grid, Message, Icon, Label, Header, Loader, Dimmer, Button } from 'sema
 //import Webcam from "react-webcam";
 //
 
+/*TODO
+    - Finish formatting the sucess message
+    - Rewrite the formatting of the modal in general to reduce wasted space
+*/
+
+
 class CameraFaceDescriptor extends Component {
 
     constructor(props) {
@@ -50,11 +56,17 @@ class CameraFaceDescriptor extends Component {
         this.setState({loading: false});
     }
 
+    onClick = async (event) => {
+        const {closeModal, updateUsers} = this.props.children;
+        closeModal();
+
+        if (updateUsers !== undefined) {
+            updateUsers();
+        }
+    }
 
     render() {
         const {remainingPhotos, loading} = this.state;
-        const {updateUsers, closeModal} = this.props.children;
-        var completed = false;
         Promise.all([
             faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
             faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
@@ -106,7 +118,9 @@ class CameraFaceDescriptor extends Component {
                                 <Button
                                     positive
                                     size='large'
-                                >Done</Button>
+                                    content='Done'
+                                    onClick={this.onClick}
+                                />
                             </Message>
                     </Grid.Column>
                 </Grid.Row>
