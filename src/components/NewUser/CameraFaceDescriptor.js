@@ -32,25 +32,27 @@ class CameraFaceDescriptor extends Component {
         const detection =  await faceapi.detectAllFaces(image).withFaceLandmarks().withFaceDescriptors();
 
         if(detection.length === 0) {
-            currentErrors.push("No face detected. Please try again.");
+            alert("No face detected. Please try again.");
+            return;
         }
 
         if(detection.length > 1) {
-            currentErrors.push("Multiple faces detected. Please try again.");
+            alert("Multiple faces detected. Please try again.");
+            return;
         }
 
         //TAKEN FROM CHILDREN IN THE CONSTRUCTOR
         // const organization = this.props.children.organization;
         // const userID = this.props.children.userID;
 
-        if (currentErrors === 0){
+        // if (currentErrors === 0){
             await this.props.firebase.insertDescriptor(organization,userID,detection[0].descriptor);
             this.setState({remainingPhotos:this.state.remainingPhotos-1});
             this.setState({loading: false});
-            this.setState({errors: currentErrors})
-        } else {
-            this.setState({errors: currentErrors})
-        }
+        //     this.setState({errors: currentErrors})
+        // } else {
+        //     this.setState({errors: currentErrors})
+        // }
     }
 
 
