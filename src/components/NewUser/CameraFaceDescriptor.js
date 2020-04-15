@@ -19,14 +19,16 @@ class CameraFaceDescriptor extends Component {
         super(props);
         this.state = {
             loading: false,
-            remainingPhotos: 5
+            remainingPhotos: 5,
+            errors:[]
         }
     }
 
     handleTakePhoto = async (dataUri) => {
         const {organization, userID} = this.props.children;
+        var errors = [];
         this.setState({loading: true});
-        if(this.state.remainingPhotos == 0) {
+        if(this.state.remainingPhotos === 0) {
             return;
         }
 
@@ -37,21 +39,19 @@ class CameraFaceDescriptor extends Component {
         const detection =  await faceapi.detectAllFaces(image).withFaceLandmarks().withFaceDescriptors();
 
         if(detection.length === 0) {
-            alert("No face detected. Please try again.");
-            return;
-        }
-
-        if(detection.length > 1) {
-            alert("Multiple faces detected. Please try again.");
-            return;
+            errors.push("No face detected. Please try again.");
+        }else if(detection.length > 1) {
+            errors.push("Multiple faces detected. Please try again.");
         }
 
         //TAKEN FROM CHILDREN IN THE CONSTRUCTOR
         // const organization = this.props.children.organization;
         // const userID = this.props.children.userID;
-
-        await this.props.firebase.insertDescriptor(organization,userID,detection[0].descriptor);
-        this.setState({remainingPhotos:this.state.remainingPhotos-1});
+        if (errors.length === 0){
+            await this.props.firebase.insertDescriptor(organization,userID,detection[0].descriptor);
+            this.setState({remainingPhotos:this.state.remainingPhotos-1});
+        }
+        this.setState({errors: errors});
         this.setState({loading: false});
     }
 
@@ -65,7 +65,7 @@ class CameraFaceDescriptor extends Component {
     }
 
     render() {
-        const {remainingPhotos, loading} = this.state;
+        const {remainingPhotos, loading, errors} = this.state;
         Promise.all([
             faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
             faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
@@ -91,6 +91,12 @@ class CameraFaceDescriptor extends Component {
                             <span><Icon name='camera' size='large'/> </span>Take Pictures
                         </Header>
                         <Divider/>
+                        <Message
+                            color='red'
+                            hidden={errors.length === 0}
+                            header='Processing Error'
+                            list={errors}
+                        />
                         {remainingPhotos === 0 
                         ?('')
                         :(
