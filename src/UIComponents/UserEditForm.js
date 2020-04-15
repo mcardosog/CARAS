@@ -24,8 +24,6 @@ class UserEditForm extends React.Component {
         level: props.user.level,
         errors:[]
     };
-
-    console.log(props.user);
   }
 
   onChange = async (event, { name, value }) => {

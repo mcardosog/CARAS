@@ -50,7 +50,9 @@ class FileFaceDescriptor extends Component {
         else {
             alert('Images processed correctly');
             closeModal();
-            // updateUsers();
+            if (updateUsers !== undefined) {
+                updateUsers();
+            }
         }
         this.setState({loading: false});
         this.setState({errors: currentErrors});

@@ -7,6 +7,9 @@ import * as ROUTES from '../../constants/routes';
 import NewUser from '../NewUser/index';
 import UserEditForm from '../../UIComponents/UserEditForm';
 
+import CameraFaceDescriptor from "./CameraFaceDescriptor";
+import FileFaceDescriptor from "./FileFaceDescriptor";
+
 import { 
     Table, 
     Grid, 
@@ -42,10 +45,10 @@ class UserPanel extends Component {
         const addUser = this.props.firebase.addUser;
         const deleteUser = this.props.firebase.deleteUser;
         const updateUsers  = async () => {
-            this.setState({loading: true})
+            this.setState({loading: true});
             const users =  await this.props.firebase.getUsersPreview(this.state.organization);
             this.setState({ users: users });
-            this.setState({loading: false})
+            this.setState({loading: false});
         }
         this.setState({
             organization: organization,
