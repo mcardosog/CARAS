@@ -57,7 +57,7 @@ class CameraFaceDescriptor extends Component {
     }
 
     toggleVisibility = () =>
-        this.setState((prevState) => ({ visible: !prevState.visible }))
+        this.setState((prevState) => ({ visible: !prevState.visible }));
 
     onClick = async (event) => {
         const {closeModal, updateUsers} = this.props.children;

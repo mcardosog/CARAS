@@ -4,7 +4,7 @@ import * as faceapi from 'face-api.js';
 import * as canvas from 'canvas';
 import { withFirebase } from '../Firebase';
 import 'react-html5-camera-photo/build/css/index.css';
-import { Divider, Grid, Header, Form, Button, Icon, Message, Dimmer, Loader } from 'semantic-ui-react';
+import {Divider, Grid, Header, Form, Button, Icon, Message, Dimmer, Loader, Transition} from 'semantic-ui-react';
 
 
 var constructorImages = new Array();
@@ -17,7 +17,8 @@ class FileFaceDescriptor extends Component {
         this.state = {
             images: [],
             loading: false,
-            errors:[]
+            errors:[],
+            visible: false
         }
     }
 
@@ -58,6 +59,9 @@ class FileFaceDescriptor extends Component {
         this.setState({errors: currentErrors});
     }
 
+    toggleVisibility = () =>
+        this.setState((prevState) => ({ visible: !prevState.visible }));
+
     handlePhoto = async (imgRaw, index) => {
         const image =  await faceapi.bufferToImage(imgRaw);
         const detection =  await faceapi.detectAllFaces(image).withFaceLandmarks().withFaceDescriptors();
@@ -81,6 +85,7 @@ class FileFaceDescriptor extends Component {
     render() {
         const isValid = (this.state.images.length === 5);
         const sucessful = (this.state.errors.length === 0);
+        const visible = (this.state.visible);
 
         console.log(isValid + " " + sucessful);
         console.log(isValid && sucessful);
@@ -200,6 +205,14 @@ class FileFaceDescriptor extends Component {
                             disabled={!isValid}
                         />                        
                     </Form>
+                </Grid.Row>
+                <Grid.Row>
+                    <button className="ui button" onClick={this.toggleVisibility}>Help</button>
+                </Grid.Row>
+                <Grid.Row>
+                    <Transition visible={visible} animation='scale' duration={500}>
+                        <img className="ui medium image" src="/img/demo.gif" alt="Landing Image" />
+                    </Transition>
                 </Grid.Row>
             </Grid>
         );
