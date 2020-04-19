@@ -3,7 +3,7 @@ import * as faceapi from 'face-api.js';
 import { withFirebase } from '../Firebase';
 import 'react-html5-camera-photo/build/css/index.css';
 import Camera from 'react-html5-camera-photo';
-import { Grid, Message, Icon, Label, Header, Loader, Dimmer, Divider, Button, Container } from 'semantic-ui-react';
+import { Grid, Message, Icon, Label, Header, Loader, Dimmer, Divider, Button, Container, Transition } from 'semantic-ui-react';
 //import Webcam from "react-webcam";
 //
 
@@ -20,7 +20,8 @@ class CameraFaceDescriptor extends Component {
         this.state = {
             loading: false,
             remainingPhotos: 5,
-            errors:[]
+            errors:[],
+            visible: false
         }
     }
 
@@ -55,6 +56,9 @@ class CameraFaceDescriptor extends Component {
         this.setState({loading: false});
     }
 
+    toggleVisibility = () =>
+        this.setState((prevState) => ({ visible: !prevState.visible }))
+
     onClick = async (event) => {
         const {closeModal, updateUsers} = this.props.children;
         closeModal();
@@ -65,7 +69,7 @@ class CameraFaceDescriptor extends Component {
     }
 
     render() {
-        const {remainingPhotos, loading, errors} = this.state;
+        const {remainingPhotos, loading, errors, visible} = this.state;
         Promise.all([
             faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
             faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
@@ -138,6 +142,14 @@ class CameraFaceDescriptor extends Component {
                                 </Container>
                             </Message>
                     </Grid.Column>
+                </Grid.Row>
+                <Grid.Row>
+                    <button className="ui button" onClick={this.toggleVisibility}>Help</button>
+                </Grid.Row>
+                <Grid.Row>
+                    <Transition visible={visible} animation='scale' duration={500}>
+                        <img className="ui medium image" src="/img/demo.gif" alt="Landing Image" />
+                    </Transition>
                 </Grid.Row>
             </Grid>
             // <div>
