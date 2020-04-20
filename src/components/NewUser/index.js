@@ -92,14 +92,13 @@ class NewUser extends Component {
         if (errors.length === 0) {
             const userAdded = await this.props.firebase.addUser(organization,userID,firstName,lastName,email,level,gender,age);
             if(!userAdded) {
-                errors.push('User ID already exists')
-                return;
+                errors.push('User ID already exists');
+                this.setState({errors: errors});
+            } else {
+                this.setState({viewConfirmationImageModal: true});    
             }
-        } else {
-            return;
         }
         
-        this.setState({viewConfirmationImageModal: true});    
         // document.getElementById('userID').disabled = true;
         // document.getElementById('firstName').disabled = true;
         // document.getElementById('lastName').disabled = true;
@@ -350,7 +349,7 @@ class NewUser extends Component {
                     </Modal.Content>
                     <Modal.Actions>
                         <Grid
-                        stackable={false}
+                            stackable={false}
                         >
                             <Grid.Row columns={1}>
                                 <Grid.Column>

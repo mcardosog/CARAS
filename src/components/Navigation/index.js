@@ -61,6 +61,9 @@ const NavigationNonAuth = () => (
             </Menu.Item>
         </Menu.Menu>
         <Menu.Menu position='right' >
+            <Menu.Item as={Link} to={ROUTES.RECOGNIZER}>
+                Check-In
+            </Menu.Item>
             <Menu.Item as={Link} to={ROUTES.SIGN_IN}>
               <Icon name='user' size='big' />
             </Menu.Item>
