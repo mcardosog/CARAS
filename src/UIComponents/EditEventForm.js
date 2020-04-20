@@ -66,6 +66,7 @@ class EditEventForm extends React.Component {
 
 	render() {
 		const {
+			id,
 			name,
 			level,
 			allowedUsers,
@@ -81,107 +82,111 @@ class EditEventForm extends React.Component {
 			<Grid>
 				<Grid.Row>
 					<Grid.Column>
-							<Form
-								onSubmit={this.onSubmit}
-								size='large'
-							>
-								<Form.Group widths='equal'>
-									<Form.Input
-										fluid
-										label="Event Name"
-										name="name"
-										type="text"
-										width={12}
-										maxLength="25"
-										value={name}
-										onChange={this.onChange}
-									/>
-									<Form.Field
-										content={
-											<SemanticDatepicker 
-												name="date" 
-												label="Start Date"
-												placeholder={date}
-												onChange={(param, data) => {
-													/* Convert the date object to a string. Locale means that the format of the string will
-													 * be in accordance to the region using the application.
-													 * For the use it will be MM/DD/YYYY
-													 */
-													try {
-														const tempData = {
-															name: data.name,
-															value: data.value.toLocaleDateString()
-														}
-														this.onChange(param, tempData);
-													}
-													catch (e) {
-														const tempData = {
-															name: data.name,
-															value: ''
-														}
-														this.onChange(param, tempData);
-													}
-													}
+					<Form onSubmit={this.onSubmit}>
+							<Form.Group widths='equal'>
+						<Form.Input
+							label="Event Name"
+							name="name"
+							type="text"
+							width={4}
+							maxLength="25"
+							value={name}
+							onChange={this.onChange}
+						/>
+						<Form.Input
+							label="Event Code"
+							name="code"
+							type="text"
+							width={1}
+							value={code}
+							maxLength="5"
+                		 	onChange={(param, data) => {
+                		 	    //only allow numeric values to be inputted
+                		 	    if (onlyNumericValues(data.value)) {
+                		 	        this.onChange(param, data);
+                		 	    }
+                		 	}}
+						/>
+						<Form.Input
+							label="Event ID"
+							name="id"
+							type="text"
+							width={4}
+							value={id}
+							maxLength="10"
+							readOnly
+						/>
+						</Form.Group>
+							<Form.Group widths='equal'>
+							<Form.TextArea
+								label="Description"
+								name="description"
+								type="text"
+								width={2}
+								value={description}
+								onChange={this.onChange}
+							/>
+						</Form.Group>
+							<Form.Group widths='equal'>
+							<Form.Dropdown
+								label = "Minimum Level"
+								name = "minimum_level"
+								placeholder = "1 - 5"
+								fluid
+								selection
+								value={level}
+								options = {levelOptions}
+								onChange={this.onChange}
+							/>
+							<Form.Field
+								content={
+									<SemanticDatepicker 
+										name="date" 
+										label="Start Date"
+										placeholder={date}
+										onChange={(param, data) => {
+											/* Convert the date object to a string. Locale means that the format of the string will
+											 * be in accordance to the region using the application.
+											 * For the use it will be MM/DD/YYYY
+											 */
+											try {
+												const tempData = {
+													name: data.name,
+													value: data.value.toLocaleDateString()
 												}
-											/>
+												this.onChange(param, tempData);
+											}
+											catch (e) {
+												const tempData = {
+													name: data.name,
+													value: ''
+												}
+												this.onChange(param, tempData);
+											}
+											}
 										}
 									/>
-								</Form.Group>
-								<Form.Group>
-									<Form.Select
-										fluid
-										label="Level"
-										name="level"
-										width={3}
-										value={level}
-										options={levelOptions}
-										onChange={this.onChange}
-									/>
-									<Form.Input
-										fluid
-										label="Allowed Users"
-										name="allowedUsers"
-										type="text"
-										width={8}
-										value={allowedUsers}
-										onChange={this.onChange}
-									/>
-									<Form.Input
-										fluid
-										label="Not Allowed Users"
-										name="notAllowedUsers"
-										type="text"
-										width={8}
-										value={notAllowedUsers}
-										onChange={this.onChange}
-									/>
-								</Form.Group>
-								<Form.Group widths='equal'>
-									<Form.TextArea
-										label="Description"
-										name="description"
-										type="text"
-										width={8}
-										value={description}
-										onChange={this.onChange}
-									/>
-								</Form.Group>
-								<Form.Group>
-									<Form.Input
-                            		    label="Event Code"
-                            		    name="code"
-                            		    type="text"
-										value={code}
-										width={5}
-                            		    maxLength="5"
-                            		    onChange={(param, data) => {
-                            		        //only allow numeric values to be inputted
-                            		        if (onlyNumericValues(data.value)) {
-                            		            this.onChange(param, data);
-                            		        }
-                            		    }}
-                            		/>
-								</Form.Group>
+								}
+							/>
+						</Form.Group>
+						<Form.Group widths='equal'>
+							<Form.Input
+								label="Allowed Users"
+								name="allowedUsers"
+								width={4}
+								type="text"
+								value={allowedUsers}
+								onChange={this.onChange}
+							/>
+							<Form.Input
+								label="Not Allowed Users"
+								name="notAllowedUsers"
+								type="text"
+								width={4}
+								value={notAllowedUsers}
+								onChange={this.onChange}
+							/>
+						</Form.Group>
 								<Button
 									content="Cancel"
 									size='large'
@@ -200,11 +205,135 @@ class EditEventForm extends React.Component {
 									icon="check"
 									labelPosition="left"
 									floated="left"
-								/>            
-							</Form>
+								/>  
+						</Form>
 					</Grid.Column>
 				</Grid.Row>
 			</Grid>
+			/* // 				<Form
+			// 					onSubmit={this.onSubmit}
+			// 					size='large'
+			// 				>
+			// 					<Form.Group widths='equal'>
+			// 						<Form.Input
+			// 							fluid
+			// 							label="Event Name"
+			// 							name="name"
+			// 							type="text"
+			// 							width={12}
+			// 							maxLength="25"
+			// 							value={name}
+			// 							onChange={this.onChange}
+			// 						/>
+			// 						<Form.Field
+			// 							content={
+			// 								<SemanticDatepicker 
+			// 									name="date" 
+			// 									label="Start Date"
+			// 									placeholder={date}
+			// 									onChange={(param, data) => {
+			// 										/* Convert the date object to a string. Locale means that the format of the string will
+			// 										 * be in accordance to the region using the application.
+			// 										 * For the use it will be MM/DD/YYYY
+			// 										 */
+			// 										try {
+			// 											const tempData = {
+			// 												name: data.name,
+			// 												value: data.value.toLocaleDateString()
+			// 											}
+			// 											this.onChange(param, tempData);
+			// 										}
+			// 										catch (e) {
+			// 											const tempData = {
+			// 												name: data.name,
+			// 												value: ''
+			// 											}
+			// 											this.onChange(param, tempData);
+			// 										}
+			// 										}
+			// 									}
+			// 								/>
+			// 							}
+			// 						/>
+			// 					</Form.Group>
+			// 					<Form.Group>
+			// 						<Form.Select
+			// 							fluid
+			// 							label="Level"
+			// 							name="level"
+			// 							width={3}
+			// 							value={level}
+			// 							options={levelOptions}
+			// 							onChange={this.onChange}
+			// 						/>
+			// 						<Form.Input
+			// 							fluid
+			// 							label="Allowed Users"
+			// 							name="allowedUsers"
+			// 							type="text"
+			// 							width={8}
+			// 							value={allowedUsers}
+			// 							onChange={this.onChange}
+			// 						/>
+			// 						<Form.Input
+			// 							fluid
+			// 							label="Not Allowed Users"
+			// 							name="notAllowedUsers"
+			// 							type="text"
+			// 							width={8}
+			// 							value={notAllowedUsers}
+			// 							onChange={this.onChange}
+			// 						/>
+			// 					</Form.Group>
+			// 					<Form.Group widths='equal'>
+			// 						<Form.TextArea
+			// 							label="Description"
+			// 							name="description"
+			// 							type="text"
+			// 							width={8}
+			// 							value={description}
+			// 							onChange={this.onChange}
+			// 						/>
+			// 					</Form.Group>
+			// 					<Form.Group>
+			// 						<Form.Input
+            //                 		    label="Event Code"
+            //                 		    name="code"
+            //                 		    type="text"
+			// 							value={code}
+			// 							width={5}
+            //                 		    maxLength="5"
+            //                 		    onChange={(param, data) => {
+            //                 		        //only allow numeric values to be inputted
+            //                 		        if (onlyNumericValues(data.value)) {
+            //                 		            this.onChange(param, data);
+            //                 		        }
+            //                 		    }}
+            //                 		/>
+			// 					</Form.Group>
+			// 					<Button
+			// 						content="Cancel"
+			// 						size='large'
+			// 						color="red"
+			// 						type='button'
+			// 						icon="cancel"
+			// 						labelPosition="left"
+			// 						floated="right"
+			// 						onClick={closeModal}
+			// 					/>
+			// 					<Button
+			// 						type="submit"
+			// 						content="Submit"
+			// 						size='large'
+			// 						color="green"
+			// 						icon="check"
+			// 						labelPosition="left"
+			// 						floated="left"
+			// 					/>            
+			// 				</Form>
+			// 		</Grid.Column>
+			// 	</Grid.Row>
+			// </Grid> */}
 		);
 	}
 }
