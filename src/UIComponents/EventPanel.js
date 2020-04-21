@@ -18,7 +18,7 @@ import CreateEventForm from "../UIComponents/CreateEventForm";
 import ViewEvent from '../UIComponents/ViewEvent';
 import EditEventForm from "../UIComponents/EditEventForm";
 
-export default function EventPanel({organization, events, addEvent, updateEvents, activateEvent, stopEvent, deleteEvent}) {
+export default function EventPanel({organization, events, addEvent, updateEvents, activateEvent, stopEvent, deleteEvent, loading}) {
     const [viewEditEventForm, setViewEditEventForm] = useState(false);
     const [viewEventModal, setViewEventModal] = useState(false);
     const [viewCreateEventForm, setViewCreateEventForm] = useState(false);
@@ -183,7 +183,7 @@ export default function EventPanel({organization, events, addEvent, updateEvents
                 <Grid stackable>
                     <Grid.Row >
                         <Grid.Column>
-                        <Dimmer inverted active={events.length === 0} >
+                        <Dimmer inverted active={loading} >
                             <Loader content='Loading...' size='huge'/>
                         </Dimmer>
                        {activeEvents.length === 0 ?(
@@ -224,7 +224,7 @@ export default function EventPanel({organization, events, addEvent, updateEvents
                 <Grid stackable>
                     <Grid.Row>
                         <Grid.Column>
-                        <Dimmer active={events.length === 0} inverted>
+                        <Dimmer active={loading} inverted>
                             <Loader content='Loading...' size='huge' />
                         </Dimmer>
                         {inactiveEvents.length === 0 ?(

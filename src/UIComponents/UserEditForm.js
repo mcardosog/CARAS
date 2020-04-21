@@ -129,10 +129,7 @@ class UserEditForm extends React.Component {
 
     return (
         <>
-            <Grid>
-                <Grid.Row>
-                    <Grid.Column>
-                    <Form
+                    {/* <Form
                         noValidate
                         onSubmit={this.onSubmit}
                         size='large'
@@ -204,7 +201,101 @@ class UserEditForm extends React.Component {
                                 }}
                             />
                         </Form.Group>        
-                    </Form>
+                    </Form> */}
+            <Grid>
+                <Grid.Row>
+                    <Grid.Column>
+                    <Form
+                        noValidate
+                        onSubmit={this.onSubmit}
+                        size='large'
+                    >
+                        <Form.Group width='equal'>
+                            <Form.Input
+                                fluid
+                                label="First Name"
+                                name="firstName"
+                                type="text"
+                                width={8}
+                                maxLength="25"
+                                value={firstName}
+                                onChange={this.onChange}
+                            />
+                            <Form.Input
+                                fluid
+                                label="Last Name"
+                                name="lastName"
+                                type="text"
+                                width={8}
+                                maxLength="25"
+                                value={lastName}
+                                onChange={this.onChange}
+                            />
+                            <Form.Select
+                                fluid
+                                label="Level"
+                                name="level"
+                                width={3}
+                                value={level}
+                                options={levelOptions}
+                                onChange={this.onChange}
+                            />
+                        </Form.Group>
+                        <Form.Group widths='equal'>
+                            <Form.Input
+                                fluid
+                                label="User ID"
+                                readOnly
+                                name="userID"
+                                type="text"
+                                width={4}
+                                maxLength="15"
+                                value={userID}
+                                onChange={({param: event}, data) => {
+                                    //only allow alphanumeric values to be inputted
+                                    if (onlyAlphaNumValues(data.value) || data.value === '') {
+                                        this.onChange(event, data)
+                                    }
+                                }}
+                            />
+                            <Form.Select
+                                fluid
+                                label="Gender"
+                                name="gender"
+                                width={2}
+                                value={gender}
+                                options={genderOptions}
+                                onChange={this.onChange}
+                            />
+                            <Form.Input
+                                fluid
+                                label="Age"
+                                name="age"
+                                type="text"
+                                value={age}
+                                maxLength="2"
+                                width={2}
+                                onChange={({param: event}, data) => {
+                                    //only allow numeric values to be inputted
+                                    if (onlyNumericValues(data.value)) {
+                                        this.onChange(event, data)
+                                    }
+                                }}
+                            />
+                        </Form.Group>
+                        <Form.Group widths='equal'>
+                            <Form.Input
+                                fluid
+                                label="Email"
+                                name="email"
+                                type="text"
+                                width={8}
+                                maxLength='40'
+                                value={email}
+                                onChange={this.onChange}
+                            />
+                        </Form.Group>
+                        </Form>
                     <Button.Group compact fluid size='small'>
                         <Button
                             color='blue'
@@ -229,7 +320,7 @@ class UserEditForm extends React.Component {
                             header='Invalid Form Fields:'
                             list={errors}
                         />    
-                </Grid.Column>
+                    </Grid.Column>
                 </Grid.Row>
                 <Grid.Row>
                     <Grid.Column>

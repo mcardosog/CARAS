@@ -16,7 +16,8 @@ class HomePage extends Component {
             updateEvents: null,
             activateEvent: null,
             stopEvent: null,
-            deleteEvent: null
+            deleteEvent: null,
+            loading: true
         }
     }
 
@@ -28,8 +29,10 @@ class HomePage extends Component {
         const stopEvent = this.props.firebase.stopEvent;
         const deleteEvent = this.props.firebase.deleteEvent;
         const updateEvents  = async () => {
+            this.setState({loading: true});
             const events =  await this.props.firebase.getEventsPreview(this.state.organization);
             this.setState({ events: events });
+            this.setState({loading: false});
         }
         this.setState({
             organization: organization,
@@ -38,12 +41,13 @@ class HomePage extends Component {
             updateEvents: updateEvents,
             activateEvent: activateEvent,
             stopEvent: stopEvent,
-            deleteEvent: deleteEvent
+            deleteEvent: deleteEvent,
+            loading: false
         });
     }
 
     render() {
-        const {organization, events, addEvent, updateEvents, activateEvent, stopEvent, deleteEvent} = this.state;
+        const {organization, events, addEvent, updateEvents, activateEvent, stopEvent, deleteEvent, loading} = this.state;
         return (
             <>
                 <EventPanel
@@ -54,6 +58,7 @@ class HomePage extends Component {
                     activateEvent={activateEvent}
                     stopEvent={stopEvent}
                     deleteEvent = {deleteEvent}
+                    loading = {loading}
                 />
             </>
         )

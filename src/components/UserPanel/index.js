@@ -33,6 +33,7 @@ class UserPanel extends Component {
             viewUserModal: false,
             viewEditUserModal: false,
             selectedUser: {},
+            loading: true
         }
     }
 
@@ -53,7 +54,8 @@ class UserPanel extends Component {
             // addUser : addUser,
             deleteUser: deleteUser,
             updateUsers: updateUsers,
-            createUserModal: false
+            createUserModal: false,
+            loading: false
         });
     }
 
@@ -90,8 +92,12 @@ class UserPanel extends Component {
 
         const userFormModal = (
             <Modal
-                closeIcon
-                onClose={()=>updateUsers()}
+                onClose={
+                    ()=>{
+                        this.closeModal("Create");
+                        updateUsers();
+                    }
+                }
                 open={createUserModal}
                 size='small'
                 closeOnEscape={true}
@@ -106,7 +112,7 @@ class UserPanel extends Component {
             <Modal
                 onClose={() => this.closeModal("Edit")}
                 open={viewEditUserModal}
-                size='tiny'
+                size='small'
                 closeOnEscape={true}
                 closeOnDimmerClick={false}                
             >
@@ -231,8 +237,8 @@ class UserPanel extends Component {
                 <Divider horizontal>
                 <Header as="h2">{organization} Users </Header>
                 </Divider>
-                    <Dimmer active={users ? false : true} inverted>
-                    <Loader/>
+                <Dimmer inverted active={loading} >
+                    <Loader content='Loading...' size='huge'/>
                 </Dimmer>
                 {users === undefined || users.length === 0 
                 ?(
