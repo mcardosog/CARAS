@@ -19,21 +19,11 @@ To setup an event, admins will provide minimum level, allowed users (in case tha
 - /src/FaceRecognition/
 	>  Control that allows the facerecognition. Control needs organization id and event id. This control must be used only if the event and organization were verified. 	After the user is authenticated user attendance is recorded.
 
-<<<<<<< HEAD
 - /src/Recognizer/
 	>  Control that contains FaceRecognition control. This control needs to validate organization, event and event passcode before calling the FaceRecognition control.
 	
 - /src/Firebase/
 	>  Control that handle all the database managment.	
-=======
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-
-## UI-UI Branch
-This branch contains all the main UI components. They will be located in `/src/UIComponents`.
 
 ### Dependencies
 UI components are using the Semantic UI React package. This package is already added to the dependencies in package.json,
