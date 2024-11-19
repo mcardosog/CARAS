@@ -10,7 +10,7 @@
     "@testing-library/user-event": "^7.2.1",
     "canvas": "^2.6.1",
     "face-api.js": "^0.22.1",
-    "firebase": "^7.13.1",
+    "firebase": "^10.9.0",
     "image-data-uri": "^2.0.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
